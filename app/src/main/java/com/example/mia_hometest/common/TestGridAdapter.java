@@ -49,8 +49,6 @@ public class TestGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String getDesc();
         String getPrice();
         String getDate();
-//        void setEnable(boolean enable);
-//        View.OnClickListener onClickListener();
     }
 
     @NonNull
@@ -58,15 +56,6 @@ public class TestGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ListViewHolder(mInflater.inflate(
                 R.layout.list_tile, parent, false));
-
-
-//        switch (viewType) {
-//            case TILE_VIEW_TYPE:
-//                return new ListViewHolder(mInflater.inflate(
-//                        R.layout.list_tile, parent, false));
-//            default:
-//                throw new RuntimeException("unknown view type ... : " + viewType);
-//        }
     }
 
     @Override
@@ -74,7 +63,6 @@ public class TestGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ListItem tile = mTiles.get(position);
         ListViewHolder listViewHolder= (ListViewHolder) holder;
 
-//        listViewHolder.mIcon.setImageResource(tile.getIcon());
         String title = tile.getTitle();
         String desc = tile.getDesc();
         String price = tile.getPrice();
@@ -84,16 +72,6 @@ public class TestGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         listViewHolder.mDesc.setText(desc);
         listViewHolder.mPrice.setText(price);
         listViewHolder.mDate.setText(date);
-
-//        if (!TextUtils.isEmpty(title)) {
-//            listViewHolder.mTitle.setText(title);
-//        } else if (!TextUtils.isEmpty(desc)) {
-//            listViewHolder.mDesc.setText(desc);
-//        } else if (!TextUtils.isEmpty(price)) {
-//            listViewHolder.mPrice.setText(price);
-//        } else if (!TextUtils.isEmpty(date)) {
-//            listViewHolder.mDate.setText(date);
-//        }
     }
 
     private void setTextNotEmpty(TextView textView, String text) {
@@ -118,7 +96,6 @@ public class TestGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
-//        private final ImageView mIcon;
         private final TextView mTitle;
         private final TextView mDesc;
         private final TextView mPrice;

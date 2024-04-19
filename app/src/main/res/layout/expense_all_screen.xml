@@ -1,0 +1,79 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/first_linear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:id="@+id/first_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/poppins"
+                android:text="@string/sec_title"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/all"
+                android:layout_width="21dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="55dp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/all"
+                android:textColor="@color/navy"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/expense"
+                android:layout_width="68dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="55dp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/expense"
+                android:textColor="#BDBDBD"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/income"
+                android:layout_width="62dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="140dp"
+                android:layout_marginTop="55dp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/income"
+                android:textColor="#BDBDBD"
+                android:textSize="16sp" />
+
+        </FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
