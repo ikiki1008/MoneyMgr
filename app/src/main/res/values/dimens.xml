@@ -1,0 +1,10 @@
+<resources>
+    <!-- font size -->
+    <dimen name="title_font">30dp</dimen>
+
+    <dimen name="activity_layout_marginTop">40dp</dimen>
+    <dimen name="activity_layout_marginStart">28dp</dimen>
+
+    <dimen name="fragment_marginTop">235dp</dimen>
+
+</resources>

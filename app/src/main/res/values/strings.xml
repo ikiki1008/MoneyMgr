@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">mia_hometest</string>
+
+    <string name="main_title">Activity</string>
+    <string name="trans_title">Transactions</string>
+    <string name="sec_title">Recent&#160;Transactions</string>
+
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="all">All</string>
+
+    <string name="btn_month">Month</string>
+    <string name="btn_week">Week</string>
+
+    <string name="week_title">Jan DD, YYYY</string>
+    <string name="month_title">Jan DD - Nov DD, YYYY</string>
+
+    <string name="left_week">00</string>
+    <string name="right_week">24</string>
+    <string name="left_month">Nov&#160;DD</string>
+
+    <string name="name">name</string>
+    <string name="desc">Transfer</string>
+    <string name="price">-$432.9</string>
+    <string name="date">3.30AM</string>
+</resources>
