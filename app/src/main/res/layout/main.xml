@@ -78,35 +78,35 @@
 
             <ImageView
                 android:id="@+id/mainScreen"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_columnWeight="1"
-                android:src="@drawable/group" />
+                android:src="@drawable/home" />
 
             <ImageView
                 android:id="@+id/expenseScreen"
-                android:layout_width="22dp"
-                android:layout_height="16dp"
-                android:layout_marginTop="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_columnWeight="1"
-                android:src="@drawable/iconcard" />
+                android:src="@drawable/creadi" />
 
             <ImageView
                 android:id="@+id/chartScreen"
-                android:layout_width="21dp"
-                android:layout_height="19dp"
-                android:layout_marginTop="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_columnWeight="1"
-                android:src="@drawable/iconchart_navy" />
+                android:src="@drawable/bar" />
 
             <ImageView
                 android:id="@+id/infoScreen"
-                android:layout_width="22.36dp"
-                android:layout_height="22dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_columnWeight="1"
-                android:src="@drawable/iconuser" />
+                android:src="@drawable/setting" />
         </GridLayout>
 
 <!--        <ImageView-->

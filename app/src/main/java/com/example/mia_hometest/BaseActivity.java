@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.example.mia_hometest.fragments.CardScreenFragment;
 import com.example.mia_hometest.fragments.ChartScreenFragment;
+import com.example.mia_hometest.fragments.InfoScreenFragment;
 import com.example.mia_hometest.fragments.MainScreenFragment;
 import com.example.mia_hometest.fragments.MonthFragment;
 import com.example.mia_hometest.fragments.WeekFragment;
@@ -24,7 +25,7 @@ public class BaseActivity extends FragmentActivity {
     private MonthFragment mMonthFragment = null;
     private CardScreenFragment mCardFragment = null;
     private MainScreenFragment mMainFragment = null;
-//    private InfoFragment mInfoFragment = null;
+    private InfoScreenFragment mInfoFragment = null;
     private ChartScreenFragment mChartFragment = null;
 
     private ImageView[] mImage = new ImageView[4];
@@ -76,18 +77,18 @@ public class BaseActivity extends FragmentActivity {
             }
         });
 
-//        mImage[3].setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                launchFragment(mInfoFragment);
-//            }
-//        });
+        mImage[3].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchFragment(mInfoFragment);
+            }
+        });
     }
 
     private void initFragments() {
         mMainFragment = new MainScreenFragment(mContext);
         mChartFragment = new ChartScreenFragment(mContext);
-//        mInfoFragment = new InfoFragment(mContext);
+        mInfoFragment = new InfoScreenFragment(mContext);
         mCardFragment = new CardScreenFragment(mContext);
     }
 

@@ -9,18 +9,13 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
 
-        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            android:id="@+id/cal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@style/CalenderNumber"
-            app:mcv_selectionColor="#B6B6B6"
-           />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp" />
 
     </FrameLayout>
 

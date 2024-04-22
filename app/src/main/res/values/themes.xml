@@ -11,6 +11,21 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+
+
+    </style>
+
+    <!-- 여기서 요일, 달력 안 숫자들의 폰트 설정을 수행할 수 있다 -->
+    <style name="CalenderNumber" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SelectedDateTextAppearance" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="DefaultDateTextAppearance" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/normal</item> <!-- 기본 색상으로 변경 -->
     </style>
 </resources>
