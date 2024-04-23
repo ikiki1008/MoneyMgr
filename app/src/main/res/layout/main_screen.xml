@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:theme="@style/CalenderNumber"
-            app:mcv_selectionColor="#B6B6B6"
+            app:mcv_selectionColor="#E0CFFF"
            />
 
 

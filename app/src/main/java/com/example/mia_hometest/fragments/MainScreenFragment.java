@@ -1,9 +1,6 @@
 package com.example.mia_hometest.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,27 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
 import com.example.mia_hometest.common.CalDialogView;
-import com.example.mia_hometest.common.CalenderDecorator;
+import com.example.mia_hometest.common.WeekdaysDecorator;
 import com.example.mia_hometest.common.TestGridAdapter;
 import com.example.mia_hometest.common.WeekendDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
-import com.prolificinteractive.materialcalendarview.OnRangeSelectedListener;
 
 import org.threeten.bp.DayOfWeek;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class MainScreenFragment extends Fragment {
     private final String TAG = MainScreenFragment.class.getSimpleName();
@@ -39,7 +31,7 @@ public class MainScreenFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private TestGridAdapter mAdapter;
     MaterialCalendarView mCal;
-    private CalenderDecorator mDecorate;
+    private WeekdaysDecorator mDecorate;
     private WeekendDecorator mWeekendDaco;
     private CalDialogView mDialog;
 
@@ -64,12 +56,12 @@ public class MainScreenFragment extends Fragment {
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit();
 
-        mDecorate = new CalenderDecorator(mContext);
+        mDecorate = new WeekdaysDecorator(mContext);
         mWeekendDaco = new WeekendDecorator(mContext);
         mDialog = new CalDialogView(mContext);
 
         mCal.addDecorator(mWeekendDaco);
-//        mCal.addDecorator(mDecorate);
+        mCal.addDecorator(mDecorate);
         mCal.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
@@ -81,6 +73,7 @@ public class MainScreenFragment extends Fragment {
                     mDialog.show(getFragmentManager(), "tag");
 
                 } else {
+                    Log.d(TAG, " 메인 스크린 화면에서 다이얼로그뷰를 끈다");
                     mDialog.dismiss();
                 }
             }

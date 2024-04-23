@@ -31,7 +31,7 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="75dp"
                 android:textSize="16sp"
-                android:textColor="#000000"
+                android:textColor="@color/white"
                 android:fontFamily="@font/poppins" />
 
             <TextView
@@ -41,7 +41,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginStart="75dp"
                 android:textSize="14sp"
-                android:textColor="#6B6B6B" />
+                android:textColor="@color/dirty_white" />
 
             <TextView
                 android:id="@+id/price"
@@ -50,7 +50,7 @@
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
                 android:textSize="14sp"
-                android:textColor="#363062"
+                android:textColor="@color/main_p"
                 android:fontFamily="@font/poppins"/>
 
             <TextView
@@ -62,7 +62,7 @@
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
                 android:textSize="14sp"
-                android:textColor="#6B6B6B" />
+                android:textColor="#BE9AFF" />
 
         </RelativeLayout>
 

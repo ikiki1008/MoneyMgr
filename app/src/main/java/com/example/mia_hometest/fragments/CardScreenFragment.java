@@ -1,6 +1,7 @@
 package com.example.mia_hometest.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,14 +56,15 @@ public class CardScreenFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
 
+        mAll.setTextColor(mContext.getColor(R.color.main_p));
         getData("AllItems.json");
 
         mAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAll.setTextColor(mContext.getColor(R.color.navy));
-                mExpense.setTextColor(mContext.getColor(R.color.normal));
-                mIncome.setTextColor(mContext.getColor(R.color.normal));
+                mAll.setTextColor(mContext.getColor(R.color.main_p));
+                mAll.setTextColor(mContext.getColor(R.color.dirty_white));
+                mIncome.setTextColor(mContext.getColor(R.color.dirty_white));
                 getData("AllItems.json");
             }
         });
@@ -70,9 +72,9 @@ public class CardScreenFragment extends Fragment {
         mExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAll.setTextColor(mContext.getColor(R.color.normal));
-                mIncome.setTextColor(mContext.getColor(R.color.normal));
-                mExpense.setTextColor(mContext.getColor(R.color.navy));
+                mAll.setTextColor(mContext.getColor(R.color.dirty_white));
+                mIncome.setTextColor(mContext.getColor(R.color.dirty_white));
+                mExpense.setTextColor(mContext.getColor(R.color.main_p));
                 getData("Expenses.json");
             }
         });
@@ -80,9 +82,9 @@ public class CardScreenFragment extends Fragment {
         mIncome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAll.setTextColor(mContext.getColor(R.color.normal));
-                mIncome.setTextColor(mContext.getColor(R.color.navy));
-                mExpense.setTextColor(mContext.getColor(R.color.normal));
+                mAll.setTextColor(mContext.getColor(R.color.dirty_white));
+                mIncome.setTextColor(mContext.getColor(R.color.main_p));
+                mExpense.setTextColor(mContext.getColor(R.color.dirty_white));
                 getData("Incomes.json");
             }
         });

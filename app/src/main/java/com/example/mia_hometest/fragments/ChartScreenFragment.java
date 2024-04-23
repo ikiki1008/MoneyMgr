@@ -36,8 +36,8 @@
         private final String TAG = ChartScreenFragment.class.getSimpleName();
         private Context mContext = null;
         private LineChart mChart;
-        ImageView mWeek = null;
-        ImageView mMonth = null;
+        TextView mWeek = null;
+        TextView mMonth = null;
         TextView mLeft = null;
         TextView mRight = null;
 
@@ -64,7 +64,7 @@
             mRight = view.findViewById(R.id.right);
 
             createWeekData();
-            mWeek.setImageResource(R.drawable.week_frame);
+            mMonth.setBackgroundColor(R.drawable.radius_right);
             mLeft.setText(R.string.left_week);
             mRight.setText(R.string.right_week);
 
@@ -72,8 +72,8 @@
                 @Override
                 public void onClick(View view) {
                     createWeekData();
-                    mWeek.setImageResource(R.drawable.week_frame);
-                    mMonth.setImageResource(R.drawable.month_unframe);
+                    mWeek.setBackgroundColor(R.drawable.radius_back_cliked);
+                    mMonth.setBackgroundColor(R.drawable.radius_right);
                     mLeft.setText(R.string.left_week);
                     mRight.setText(R.string.right_week);
                 }
@@ -83,8 +83,8 @@
                 @Override
                 public void onClick(View view) {
                     createMonthData();
-                    mWeek.setImageResource(R.drawable.week_unframe);
-                    mMonth.setImageResource(R.drawable.month_frame);
+                    mWeek.setBackgroundColor(R.drawable.radius_right);
+                    mMonth.setBackgroundColor(R.drawable.radius_back_cliked);
                     mLeft.setText(R.string.week_title);
                     mRight.setText(R.string.month_title);
                 }

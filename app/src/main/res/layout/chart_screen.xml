@@ -26,20 +26,28 @@
                 android:background="@drawable/radius_right" />
 
             <!-- btn views -->
-            <ImageView
+            <TextView
                 android:id="@+id/imgWeek"
-                android:layout_width="86dp"
+                android:text="@string/btn_week"
+                android:gravity="center"
+                android:fontFamily="@font/poppins"
+                android:textColor="@color/white"
+                android:layout_width="85dp"
                 android:layout_height="34dp"
                 android:layout_marginTop="12dp"
-                android:src="@drawable/week_unframe" />
+                android:background="@drawable/radius_back_cliked"/>
 
-            <ImageView
+            <TextView
                 android:id="@+id/imgMonth"
-                android:layout_width="86dp"
+                android:text="@string/btn_month"
+                android:gravity="center"
+                android:fontFamily="@font/poppins"
+                android:textColor="@color/white"
+                android:layout_width="87.5dp"
                 android:layout_height="34dp"
                 android:layout_marginStart="85dp"
                 android:layout_marginTop="12dp"
-                android:src="@drawable/month_unframe" />
+                android:background="@drawable/radius_back_cliked"/>
 
             <TextView
                 android:id="@+id/tv"
@@ -65,7 +73,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="68dp"
                 android:text="@string/income"
-                android:textColor="#363062"
+                android:textColor="@color/dirty_white"
                 android:textSize="12sp" />
 
             <ImageView
@@ -81,7 +89,7 @@
                 android:layout_marginStart="147dp"
                 android:layout_marginTop="68dp"
                 android:text="@string/expense"
-                android:textColor="#363062"
+                android:textColor="@color/dirty_white"
                 android:textSize="12sp" />
 
         </FrameLayout>
