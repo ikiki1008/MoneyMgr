@@ -1,2 +1,2 @@
-# MPChartApp
-toy project with Kakao API
+# Money Manager App
+toy project (가계부앱)
