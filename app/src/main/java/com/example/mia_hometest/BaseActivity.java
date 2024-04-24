@@ -14,15 +14,11 @@ import com.example.mia_hometest.fragments.CardScreenFragment;
 import com.example.mia_hometest.fragments.ChartScreenFragment;
 import com.example.mia_hometest.fragments.InfoScreenFragment;
 import com.example.mia_hometest.fragments.MainScreenFragment;
-import com.example.mia_hometest.fragments.MonthFragment;
-import com.example.mia_hometest.fragments.WeekFragment;
 
 public class BaseActivity extends FragmentActivity {
     
     private static final String TAG = BaseActivity.class.getSimpleName();
     private Context mContext;
-    private WeekFragment mWeekFragment = null;
-    private MonthFragment mMonthFragment = null;
     private CardScreenFragment mCardFragment = null;
     private MainScreenFragment mMainFragment = null;
     private InfoScreenFragment mInfoFragment = null;

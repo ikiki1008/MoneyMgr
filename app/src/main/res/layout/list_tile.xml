@@ -62,7 +62,7 @@
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
                 android:textSize="14sp"
-                android:textColor="#BE9AFF" />
+                android:textColor="@color/side_p" />
 
         </RelativeLayout>
 

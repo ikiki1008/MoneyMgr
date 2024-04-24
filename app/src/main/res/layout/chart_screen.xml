@@ -13,84 +13,82 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
-            android:id="@+id/second_sec"
+            android:id="@+id/first_section"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <!-- btn background -->
-            <ImageView
-                android:id="@+id/btnBack"
-                android:layout_width="172dp"
-                android:layout_height="34dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/radius_right" />
-
-            <!-- btn views -->
             <TextView
-                android:id="@+id/imgWeek"
-                android:text="@string/btn_week"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:fontFamily="@font/poppins"
-                android:textColor="@color/white"
-                android:layout_width="85dp"
-                android:layout_height="34dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/radius_back_cliked"/>
+                android:text="@string/chart_title"
+                android:textColor="@color/main_p"
+                android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/imgMonth"
-                android:text="@string/btn_month"
-                android:gravity="center"
-                android:fontFamily="@font/poppins"
-                android:textColor="@color/white"
-                android:layout_width="87.5dp"
-                android:layout_height="34dp"
-                android:layout_marginStart="85dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/radius_back_cliked"/>
-
-            <TextView
-                android:id="@+id/tv"
+                android:id="@+id/listText"
                 android:layout_width="wrap_content"
-                android:layout_height="22dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="2.5dp"
                 android:layout_gravity="right"
-                android:layout_marginTop="18dp"
-                android:layout_marginEnd="28dp"
-                android:textColor="#363062"
-                android:textSize="12sp" />
-
-            <!-- income and expense img views -->
+                android:layout_marginEnd="32dp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/list_day"
+                android:textColor="@color/dirty_white"
+                android:textSize="15sp" />
 
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="76dp"
-                android:src="@drawable/line2" />
+                android:id="@+id/listBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="248dp"
+                android:src="@drawable/downbtn"
+                android:layout_gravity="right"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/second_section"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/first_section">
 
             <TextView
-                android:layout_width="46dp"
-                android:layout_height="22dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="68dp"
-                android:text="@string/income"
-                android:textColor="@color/dirty_white"
-                android:textSize="12sp" />
-
-            <ImageView
+                android:id="@+id/sign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="107dp"
-                android:layout_marginTop="76dp"
-                android:src="@drawable/line1" />
+                android:layout_gravity="left"
+                android:layout_marginStart="35dp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/budeng"
+                android:textColor="@color/dirty_white"
+                android:textSize="25sp" />
 
             <TextView
-                android:layout_width="46dp"
-                android:layout_height="22dp"
-                android:layout_marginStart="147dp"
-                android:layout_marginTop="68dp"
-                android:text="@string/expense"
+                android:id="@+id/signText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/poppins"
+                android:text="month"
                 android:textColor="@color/dirty_white"
-                android:textSize="12sp" />
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/sign2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="35dp"
+                android:layout_gravity="right"
+                android:fontFamily="@font/poppins"
+                android:text="@string/budeng2"
+                android:textColor="@color/dirty_white"
+                android:textSize="25sp" />
 
         </FrameLayout>
 
@@ -110,25 +108,11 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins"
-                android:textSize="16sp"
-                android:textColor="#BDBDBD" />
-
-            <TextView
-                android:id="@+id/right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:fontFamily="@font/poppins"
-                android:textSize="16sp"
-                android:textColor="#BDBDBD" />
 
         </FrameLayout>
 

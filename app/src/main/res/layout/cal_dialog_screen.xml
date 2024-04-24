@@ -47,40 +47,197 @@
 
         </FrameLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <FrameLayout
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:scrollbars="none"
-            android:layout_marginTop="60dp"
-            android:padding="15dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@id/frame_layout">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/income"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:text="@string/income"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/poppins"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="50dp"
+                    android:textColor="@color/income"
+                    />
+
+                <TextView
+                    android:id="@+id/outcome"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:text="@string/expense"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/poppins"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="50dp"
+                    android:textColor="@color/outcome"/>
+
+                <ImageView
+                    android:id="@+id/leftCheck"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="165dp"/>
+
+                <ImageView
+                    android:id="@+id/rightCheck"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="265dp"/>
+
+                <!-- textviews -->
+                <TextView
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:overScrollMode="never" />
+                    android:text="@string/dialog_date"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/poppins"
+                    android:textSize="14sp"
+                    android:textColor="@color/dirty_white"
+                    android:gravity="end"/>
 
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_amm"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/poppins"
+                    android:textSize="14sp"
+                    android:textColor="@color/dirty_white"
+                    android:gravity="end"/>
 
-        </androidx.core.widget.NestedScrollView>
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_cat"
+                    android:layout_marginTop="140dp"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/poppins"
+                    android:textSize="14sp"
+                    android:textColor="@color/dirty_white"
+                    android:gravity="end"/>
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_acc"
+                    android:layout_marginTop="180dp"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/poppins"
+                    android:textSize="14sp"
+                    android:textColor="@color/dirty_white"
+                    android:gravity="end"/>
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_note"
+                    android:layout_marginTop="220dp"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/poppins"
+                    android:textSize="14sp"
+                    android:textColor="@color/dirty_white"
+                    android:gravity="end"/>
+
+                <!-- lines -->
+                <TextView
+                    android:id="@+id/line1"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="68dp"
+                    android:layout_marginStart="95dp"
+                    android:textColor="@color/dirty_white"
+                    android:fontFamily="@font/poppins"
+                    android:background="@drawable/draw_line" />
+
+                <TextView
+                    android:id="@+id/line2"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="108dp"
+                    android:layout_marginStart="95dp"
+                    android:textColor="@color/dirty_white"
+                    android:fontFamily="@font/poppins"
+                    android:background="@drawable/draw_line" />
+
+                <TextView
+                    android:id="@+id/line3"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="148dp"
+                    android:layout_marginStart="95dp"
+                    android:textColor="@color/dirty_white"
+                    android:fontFamily="@font/poppins"
+                    android:background="@drawable/draw_line" />
+
+                <TextView
+                    android:id="@+id/line4"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="188dp"
+                    android:layout_marginStart="95dp"
+                    android:textColor="@color/dirty_white"
+                    android:fontFamily="@font/poppins"
+                    android:background="@drawable/draw_line" />
+
+                <TextView
+                    android:id="@+id/line5"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="228dp"
+                    android:layout_marginStart="95dp"
+                    android:textColor="@color/dirty_white"
+                    android:fontFamily="@font/poppins"
+                    android:background="@drawable/draw_line" />
+
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/frame_layout2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/scrollView"
+            android:padding="10dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintTop_toBottomOf="@+id/scrollView"
             app:layout_constraintEnd_toEndOf="@+id/scrollView">
 
-                <ImageView
+                <TextView
                     android:id="@+id/editBtn"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/edit"/>
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save"
+                    android:textColor="@color/dirty_white"
+                    android:fontFamily="@font/poppins"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@drawable/save_btn"
+                    android:layout_marginEnd="80dp"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:id="@+id/cancelBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    android:textColor="@color/dirty_white"
+                    android:fontFamily="@font/poppins"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@drawable/save_btn"
+                    android:layout_marginStart="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="30dp"/>
 
         </FrameLayout>
 

@@ -4,6 +4,7 @@
     <string name="main_title">Activity</string>
     <string name="trans_title">Transactions</string>
     <string name="sec_title">Recent&#160;Transactions</string>
+    <string name="chart_title">Chart&#160;of&#160;Transactions</string>
 
     <string name="income">Income</string>
     <string name="expense">Expense</string>
@@ -23,4 +24,31 @@
     <string name="desc">Transfer</string>
     <string name="price">-$432.9</string>
     <string name="date">3.30AM</string>
+
+    <!-- 선택 리스트뷰 버튼 -->
+    <string-array name="list_dialog">
+        <item>Annually</item>
+        <item>Monthly</item>
+        <item>Weekly</item>
+        <item>Daily</item>
+    </string-array>
+
+    <string name="list_year">Annually</string>
+    <string name="list_month">Monthly</string>
+    <string name="list_week">Weekly</string>
+    <string name="list_day">Daily</string>
+
+    <string name="budeng">&lt;</string>
+    <string name="budeng2">&gt;</string>
+
+    <string name="dialog_date">Date</string>
+    <string name="dialog_amm">Amount</string>
+    <string name="dialog_cat">Category</string>
+    <string name="dialog_acc">Account</string>
+    <string name="dialog_note">Note</string>
+
+    <string name="save">SAVE</string>
+    <string name="cancel">CANCEL</string>
+    <string name="cal_price">price</string>
+
 </resources>

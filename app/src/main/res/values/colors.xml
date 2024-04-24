@@ -8,7 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="bg_color">#FFFFFFFF</color>
+    <color name="bg_color">#252525</color>
+    <color name="bg_side_color">#303030</color>
+
     <color name="x_color">#5BDAA4</color>
     <color name="navy">#363062</color>
     <color name="normal">#BDBDBD</color>
@@ -16,4 +18,8 @@
     <color name="weekend">#FF8B82</color>
     <color name="dirty_white">#BDBDBD</color>
     <color name="main_p">#965BFF</color>
+    <color name="side_p">#BE9AFF</color>
+
+    <color name="income">#FF8B82</color>
+    <color name="outcome">#7D91FF</color>
 </resources>
