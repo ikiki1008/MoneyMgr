@@ -12,10 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
-import com.example.mia_hometest.common.CalDialogView;
 import com.example.mia_hometest.common.WeekdaysDecorator;
 import com.example.mia_hometest.common.TestGridAdapter;
 import com.example.mia_hometest.common.WeekendDecorator;
+import com.example.mia_hometest.fragments.CalenderDialogs.CalDialogView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;

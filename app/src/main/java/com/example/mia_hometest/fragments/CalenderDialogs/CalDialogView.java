@@ -1,36 +1,28 @@
-package com.example.mia_hometest.common;
+package com.example.mia_hometest.fragments.CalenderDialogs;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.media.Image;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
-import com.example.mia_hometest.fragments.CalculatorDialogView;
+import com.example.mia_hometest.common.TestGridAdapter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.DateFormatSymbols;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
-public class CalDialogView extends DialogFragment implements View.OnClickListener{
+public class CalDialogView extends DialogFragment implements View.OnClickListener, CalCulListener {
     private final String TAG = CalDialogView.class.getSimpleName();
     private Context mContext = null;
     private RecyclerView mRecyclerView;
@@ -42,8 +34,13 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
     private TextView mYearMonth;
     private TextView mDay;
     private TextView mLine1;
+    private TextView mLine2;
+    private TextView mLine3;
+    private TextView mLine4;
+    private TextView mLine5;
 
     private CalculatorDialogView mCalDialog;
+    private CateDialogView mCategory;
 
     public CalDialogView (Context context) {
         mContext = context;
@@ -63,7 +60,6 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         String date = dateString.substring(dateString.lastIndexOf("-") + 1); // 날짜 추출 (예: 21)
         String yearMonth = dateString.substring(0, dateString.lastIndexOf("-")); // 년/월 추출 (예: 2025-04)
         String dayOfWeek = getDayOfWeek(day.getYear(), day.getMonth(), Integer.parseInt(date)); // 요일 추출
-        mCalDialog = new CalculatorDialogView(mContext);
 
         mDate.setText(date);
         mYearMonth.setText(yearMonth.replace("-", "/"));
@@ -101,7 +97,12 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         mDate = view.findViewById(textViews[0]);
         mYearMonth = view.findViewById(textViews[1]);
         mDay = view.findViewById(textViews[2]);
+
         mLine1 = view.findViewById(textViews[7]);
+        mLine2 = view.findViewById(textViews[8]);
+        mLine3 = view.findViewById(textViews[9]);
+        mLine4 = view.findViewById(textViews[10]);
+        mLine5 = view.findViewById(textViews[11]);
 
         mLeftCheck = view.findViewById(imagesViews[0]);
         mRightCheck = view.findViewById(imagesViews[1]);
@@ -135,7 +136,27 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                 mLeftCheck.setImageResource(0);
                 break;
             case R.id.line2:
-                mCalDialog.show(getChildFragmentManager(), "child_fragmemt");
+                mCalDialog = new CalculatorDialogView(mContext, this);
+                mCalDialog.show(getChildFragmentManager(), "child_fragment");
+                break;
+            case R.id.line3:
+                mCategory = new CateDialogView(mContext, this);
+                mCategory.show(getChildFragmentManager(), "child_category");
+                break;
+            case R.id.line4:
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onClicked(Intent intent, String type) {
+        switch (type) {
+            case "calculator" :
+                int value = intent.getIntExtra("value", 0);
+                String result = String.valueOf(value);
+                mLine2.setText(result);
                 break;
             default:
                 break;

@@ -51,4 +51,19 @@
     <string name="cancel">CANCEL</string>
     <string name="cal_price">price</string>
 
+    <string name="food">Food</string>
+    <string name="rent">House&#160;Rent</string>
+    <string name="phone">Mobile</string>
+    <string name="trans">Transports</string>
+    <string name="card">Card</string>
+    <string name="loan">Loan</string>
+    <string name="social">Social&#160;life</string>
+    <string name="hospital">Hospital</string>
+    <string name="hobby">Hobby</string>
+    <string name="sports">Sports</string>
+    <string name="ott">OTT</string>
+    <string name="edu">Education</string>
+    <string name="household">House&#160;holds</string>
+    <string name="etc">etc</string>
+
 </resources>

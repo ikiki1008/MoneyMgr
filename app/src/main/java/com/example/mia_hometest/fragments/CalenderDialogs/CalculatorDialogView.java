@@ -1,34 +1,34 @@
-package com.example.mia_hometest.fragments;
+package com.example.mia_hometest.fragments.CalenderDialogs;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
 import com.example.mia_hometest.R;
-import com.example.mia_hometest.common.CalDialogView;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 public class CalculatorDialogView extends DialogFragment implements View.OnClickListener {
     private final String TAG = CalculatorDialogView.class.getSimpleName();
     private Context mContext = null;
     private AlertDialog.Builder mBuilder;
+    private CalCulListener mListener;
+    private Intent mIntent = new Intent();
+    private String mType = "calculator";
     private TextView mResult;
     private double mValue;
     private char mOper;
 
-    public CalculatorDialogView (Context context) {
+    public CalculatorDialogView (Context context, CalCulListener listener) {
         mContext = context;
+        mListener = listener;
     }
 
     @Override
@@ -37,17 +37,18 @@ public class CalculatorDialogView extends DialogFragment implements View.OnClick
         View view = inflater.inflate(R.layout.calculator, null);
 
         mBuilder = new AlertDialog.Builder(mContext);
-        AlertDialog dialog = mBuilder.create();
-        Window window = dialog.getWindow();
-
-        if (window != null) {
-            WindowManager.LayoutParams layoutParams = window.getAttributes();
-            layoutParams.gravity = Gravity.BOTTOM; //다이얼로그 화면 하단에 부착
-            window.setAttributes(layoutParams);
-        }
-
         mBuilder.setView(view);
         mBuilder.setCancelable(true);
+
+        AlertDialog dialog = mBuilder.create();
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+//        Window window = dialog.getWindow();
+//        if (window != null) {
+//            WindowManager.LayoutParams layoutParams = window.getAttributes();
+//            layoutParams.gravity = Gravity.BOTTOM; //다이얼로그 화면 하단에 부착
+//            window.setAttributes(layoutParams);
+//        }
+
         mResult = view.findViewById(R.id.result);
 
         int[] btn = {
@@ -62,7 +63,7 @@ public class CalculatorDialogView extends DialogFragment implements View.OnClick
             textView.setOnClickListener(this);
         }
 
-        return mBuilder.create();
+        return dialog;
     }
 
     @SuppressLint("SetTextI18n")
@@ -166,7 +167,10 @@ public class CalculatorDialogView extends DialogFragment implements View.OnClick
                 }
                 break;
             case R.id.ok:
-                Log.d(TAG, "onClick: ");
+                int finalValue = Integer.parseInt(mResult.getText().toString());
+                Log.d(TAG, "onClick: 이건 값이 얼마냐 .... = " + finalValue);
+                mIntent.putExtra("value" , finalValue);
+                mListener.onClicked(mIntent, mType);
                 break;
             default:
                 break;
