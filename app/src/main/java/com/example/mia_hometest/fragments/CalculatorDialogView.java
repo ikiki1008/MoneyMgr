@@ -161,7 +161,7 @@ public class CalculatorDialogView extends DialogFragment implements View.OnClick
                             break;
                     }
                     int intValue = (int) mFinal;
-                    mResult.setText(intValue);
+                    mResult.setText(String.valueOf(intValue));
                     mValue = 0;
                 }
                 break;
