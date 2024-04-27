@@ -3,12 +3,10 @@ package com.example.mia_hometest.common;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +19,7 @@ import com.example.mia_hometest.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Context mContext;
     private final int mColumnCount;
@@ -30,7 +28,7 @@ public class TestGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final GridSpanSizeLookup mSpanSizeLookup = new GridSpanSizeLookup();
     private List<ListItem> mTiles = new ArrayList<>();
 
-    public TestGridAdapter (Context context) {
+    public CardListAdapter(Context context) {
         mContext = context;
         mColumnCount = 1;
         mInflater = LayoutInflater.from(context);

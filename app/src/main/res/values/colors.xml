@@ -14,6 +14,7 @@
     <color name="x_color">#5BDAA4</color>
     <color name="navy">#363062</color>
     <color name="normal">#BDBDBD</color>
+    <color name="light_normal">#B0B0B0</color>
     <color name="light_black">#7C000000</color>
     <color name="weekend">#FF8B82</color>
     <color name="dirty_white">#BDBDBD</color>

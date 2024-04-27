@@ -24,7 +24,7 @@ public class WeekdaysDecorator implements DayViewDecorator {
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        DayOfWeek dayOfWeek = DayOfWeek.of(day.getDate().getDayOfWeek().getValue());
+        DayOfWeek dayOfWeek  = DayOfWeek.of(day.getDate().getDayOfWeek().getValue());
 
         //주중 색상 변경
         return dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.TUESDAY ||
@@ -34,6 +34,6 @@ public class WeekdaysDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
-        view.addSpan(new ForegroundColorSpan(Color.parseColor("#707070")));
+        view.addSpan(new ForegroundColorSpan(Color.parseColor("#BDBDBD")));
     }
 }

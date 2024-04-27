@@ -13,20 +13,29 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
-import com.example.mia_hometest.common.TestGridAdapter;
+import com.example.mia_hometest.common.DialogItem;
+import com.example.mia_hometest.common.DialogListAdapter;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-public class CalDialogView extends DialogFragment implements View.OnClickListener, CalCulListener {
+public class CalDialogView extends DialogFragment implements View.OnClickListener, CalCulListener, DialogListAdapter.OnItemClickListener {
     private final String TAG = CalDialogView.class.getSimpleName();
     private Context mContext = null;
     private RecyclerView mRecyclerView;
-    private TestGridAdapter mAdapter;
+    private DialogListAdapter mAdapter;
+    private CalculatorDialogView mCalDialog;
+    private CateDialogView mCategory;
+    private AccountDialogView mAccount;
+    private NoteDialogView mNote;
+
     private ImageView mLeftCheck;
     private ImageView mRightCheck;
     private AlertDialog.Builder mBuilder;
@@ -34,13 +43,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
     private TextView mYearMonth;
     private TextView mDay;
     private TextView mLine1;
-    private TextView mLine2;
-    private TextView mLine3;
-    private TextView mLine4;
-    private TextView mLine5;
-
-    private CalculatorDialogView mCalDialog;
-    private CateDialogView mCategory;
+    private List<DialogItem> mItemList = new ArrayList<>();
 
     public CalDialogView (Context context) {
         mContext = context;
@@ -56,6 +59,14 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
 
         initViews(view);
 
+        mAdapter = new DialogListAdapter(mContext, this);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setAdapter(mAdapter);
+        mBuilder = new AlertDialog.Builder(mContext);
+        mBuilder.setView(view);
+        mBuilder.setCancelable(true);
+
         String dateString = day.getDate().toString();
         String date = dateString.substring(dateString.lastIndexOf("-") + 1); // 날짜 추출 (예: 21)
         String yearMonth = dateString.substring(0, dateString.lastIndexOf("-")); // 년/월 추출 (예: 2025-04)
@@ -64,12 +75,12 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         mDate.setText(date);
         mYearMonth.setText(yearMonth.replace("-", "/"));
         mDay.setText(dayOfWeek);
-        mLeftCheck.setImageResource(R.drawable.check);
+
+        setItems();
+
+        mRightCheck.setImageResource(R.drawable.check); //set the Expense Screen first bc we already know it
         mLine1.setText(dateString.replace("-", "/")); //다이얼로그 선택 시 해당 날짜 추가
 
-        mBuilder = new AlertDialog.Builder(mContext);
-        mBuilder.setView(view);
-        mBuilder.setCancelable(true);
         return mBuilder.create();
     }
 
@@ -77,7 +88,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         int[] textViews= {
                 R.id.selected_date, R.id.selected_month_year, R.id.selected_day,
                 R.id.income, R.id.outcome, R.id.cancelBtn, R.id.editBtn,
-                R.id.line1, R.id.line2, R.id.line3, R.id.line4, R.id.line5
+                R.id.line1
         };
 
         int[] imagesViews = {
@@ -99,13 +110,20 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         mDay = view.findViewById(textViews[2]);
 
         mLine1 = view.findViewById(textViews[7]);
-        mLine2 = view.findViewById(textViews[8]);
-        mLine3 = view.findViewById(textViews[9]);
-        mLine4 = view.findViewById(textViews[10]);
-        mLine5 = view.findViewById(textViews[11]);
-
         mLeftCheck = view.findViewById(imagesViews[0]);
         mRightCheck = view.findViewById(imagesViews[1]);
+    }
+
+    private void setItems() {
+        String[] titles = getResources().getStringArray(R.array.dialogs_title);
+        String[] descs = new String[4];
+
+        for (int i=0; i<4; i++) {
+            DialogItem item = new DialogItem(titles[i], descs[i]);
+            mItemList.add(item);
+        }
+
+        mAdapter.setItems(mItemList);
     }
 
     private String getDayOfWeek(int year, int month, int day) {
@@ -130,20 +148,14 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
             case R.id.income:
                 mLeftCheck.setImageResource(R.drawable.check);
                 mRightCheck.setImageResource(0);
+                mItemList.get(1).setVisible(false);
+                mAdapter.setItems(mItemList);
                 break;
             case R.id.outcome:
                 mRightCheck.setImageResource(R.drawable.check);
                 mLeftCheck.setImageResource(0);
-                break;
-            case R.id.line2:
-                mCalDialog = new CalculatorDialogView(mContext, this);
-                mCalDialog.show(getChildFragmentManager(), "child_fragment");
-                break;
-            case R.id.line3:
-                mCategory = new CateDialogView(mContext, this);
-                mCategory.show(getChildFragmentManager(), "child_category");
-                break;
-            case R.id.line4:
+                mItemList.get(1).setVisible(true);
+                mAdapter.setItems(mItemList);
                 break;
             default:
                 break;
@@ -156,7 +168,60 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
             case "calculator" :
                 int value = intent.getIntExtra("value", 0);
                 String result = String.valueOf(value);
-                mLine2.setText(result);
+                mItemList.get(0).setDesc(result);
+                mAdapter.notifyItemChanged(0);
+                break;
+            case "category" :
+                String cate = intent.getStringExtra("value");
+                if (cate.equals(" ") || cate.isEmpty()) {
+                    Log.d(TAG, "onClicked: 1");
+                    mItemList.get(1).setDesc(null);
+                } else {
+                    Log.d(TAG, "onClicked: 2");
+                    mItemList.get(1).setDesc(cate);
+                }
+                mAdapter.notifyItemChanged(1);
+                break;
+            case "account" :
+                String acc = intent.getStringExtra("value");
+                if (acc.equals(" ") || acc.isEmpty()) {
+                    mItemList.get(2).setDesc(null);
+                } else {
+                    mItemList.get(2).setDesc(acc);
+                }
+                mAdapter.notifyItemChanged(2);
+                break;
+            case "note" :
+                String note = intent.getStringExtra("value");
+                if (note.equals(" ") || note.isEmpty()) {
+                    mItemList.get(3).setDesc(null);
+                } else {
+                    mItemList.get(3).setDesc(note);
+                }
+                mAdapter.notifyItemChanged(3);
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        switch (position) {
+            case 0 :
+                mCalDialog = new CalculatorDialogView(mContext, this);
+                mCalDialog.show(getChildFragmentManager(), "child_fragment");
+                break;
+            case 1 :
+                mCategory = new CateDialogView(mContext, this);
+                mCategory.show(getChildFragmentManager(), "child_category");
+                break;
+            case 2:
+                mAccount = new AccountDialogView(mContext, this);
+                mAccount.show(getChildFragmentManager(), "child_acc");
+                break;
+            case 3:
+                mNote = new NoteDialogView(mContext, this);
+                mNote.show(getChildFragmentManager(), "child_note");
                 break;
             default:
                 break;

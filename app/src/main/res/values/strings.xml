@@ -5,6 +5,8 @@
     <string name="trans_title">Transactions</string>
     <string name="sec_title">Recent&#160;Transactions</string>
     <string name="chart_title">Chart&#160;of&#160;Transactions</string>
+    <string name="main_screen_small_title">Add&#160;new&#160;transaction</string>
+    <string name="today_trans">Today\'s&#160;transaction</string>
 
     <string name="income">Income</string>
     <string name="expense">Expense</string>
@@ -33,6 +35,13 @@
         <item>Daily</item>
     </string-array>
 
+    <string-array name="dialogs_title">
+        <item>Amount</item>
+        <item>Category</item>
+        <item>Account</item>
+        <item>Note</item>
+    </string-array>
+
     <string name="list_year">Annually</string>
     <string name="list_month">Monthly</string>
     <string name="list_week">Weekly</string>
@@ -48,8 +57,13 @@
     <string name="dialog_note">Note</string>
 
     <string name="save">SAVE</string>
-    <string name="cancel">CANCEL</string>
+    <string name="real_cancel">CANCEL</string>
+    <string name="cancel">ERASE</string>
     <string name="cal_price">price</string>
+
+    <string name="cash">Cash</string>
+    <string name="bank">Bank&#160;account</string>
+    <string name="credit">Credit&#160;card</string>
 
     <string name="food">Food</string>
     <string name="rent">House&#160;Rent</string>
@@ -65,5 +79,7 @@
     <string name="edu">Education</string>
     <string name="household">House&#160;holds</string>
     <string name="etc">etc</string>
+
+    <string name="note_desc">Description</string>
 
 </resources>

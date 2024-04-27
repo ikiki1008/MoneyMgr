@@ -9,18 +9,49 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/poppins"
+            android:text="@string/main_screen_small_title"
+            android:textColor="@color/main_p"
+            android:textSize="18sp" />
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             android:id="@+id/cal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
             android:theme="@style/CalenderNumber"
-            app:mcv_selectionColor="#E0CFFF"
+            app:mcv_selectionColor="@color/light_normal"
+            app:mcv_weekDayTextAppearance="@style/CalenderWeekDays"
            />
 
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/layout" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/poppins"
+            android:text="@string/today_trans"
+            android:textColor="@color/main_p"
+            android:textSize="18sp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chartLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"/>
 
     </FrameLayout>
 

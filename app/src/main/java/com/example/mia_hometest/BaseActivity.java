@@ -15,6 +15,8 @@ import com.example.mia_hometest.fragments.ChartScreenFragment;
 import com.example.mia_hometest.fragments.InfoScreenFragment;
 import com.example.mia_hometest.fragments.MainScreenFragment;
 
+import java.io.File;
+
 public class BaseActivity extends FragmentActivity {
     
     private static final String TAG = BaseActivity.class.getSimpleName();
@@ -34,6 +36,10 @@ public class BaseActivity extends FragmentActivity {
         mContext = this;
         setContentView(R.layout.main);
         initViews();
+
+        File codeCacheDir = getCodeCacheDir();
+        File dexOutputDir = codeCacheDir;
+        dexOutputDir.setReadOnly();
 
         //첫화면 loading
         initFragments();

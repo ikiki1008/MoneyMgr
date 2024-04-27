@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
 import com.example.mia_hometest.common.WeekdaysDecorator;
-import com.example.mia_hometest.common.TestGridAdapter;
+import com.example.mia_hometest.common.CardListAdapter;
 import com.example.mia_hometest.common.WeekendDecorator;
 import com.example.mia_hometest.fragments.CalenderDialogs.CalDialogView;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -29,7 +29,7 @@ public class MainScreenFragment extends Fragment {
     private final String TAG = MainScreenFragment.class.getSimpleName();
     private Context mContext = null;
     private RecyclerView mRecyclerView;
-    private TestGridAdapter mAdapter;
+    private CardListAdapter mAdapter;
     MaterialCalendarView mCal;
     private WeekdaysDecorator mDecorate;
     private WeekendDecorator mWeekendDaco;
@@ -62,6 +62,7 @@ public class MainScreenFragment extends Fragment {
 
         mCal.addDecorator(mWeekendDaco);
         mCal.addDecorator(mDecorate);
+        mCal.setHeaderTextAppearance(R.style.CalenderHeader);
         mCal.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {

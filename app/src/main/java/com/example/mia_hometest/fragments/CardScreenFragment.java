@@ -3,7 +3,6 @@ package com.example.mia_hometest.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
 import com.example.mia_hometest.common.ListItem;
-import com.example.mia_hometest.common.TestGridAdapter;
+import com.example.mia_hometest.common.CardListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,7 +39,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private String[] mlist;
     private AlertDialog.Builder mBuilder;
     private RecyclerView mRecyclerView;
-    private TestGridAdapter mAdapter;
+    private CardListAdapter mAdapter;
 
     @Override
     public void onAttach(Context context) {
@@ -60,7 +59,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mBtn = view.findViewById(R.id.listBtn);
         mListTitle = view.findViewById(R.id.listText);
 
-        mAdapter = new TestGridAdapter(mContext);
+        mAdapter = new CardListAdapter(mContext);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
