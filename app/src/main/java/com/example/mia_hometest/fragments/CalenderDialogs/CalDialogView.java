@@ -77,6 +77,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         mDay.setText(dayOfWeek);
 
         setItems();
+        Log.d(TAG, "onCreateDialog: set items 이후.......");
 
         mRightCheck.setImageResource(R.drawable.check); //set the Expense Screen first bc we already know it
         mLine1.setText(dateString.replace("-", "/")); //다이얼로그 선택 시 해당 날짜 추가
@@ -115,10 +116,10 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
     }
 
     private void setItems() {
-        String[] titles = getResources().getStringArray(R.array.dialogs_title);
-        String[] descs = new String[4];
+        String[] titles = getResources().getStringArray(R.array.outcome_dialog_title);
+        String[] descs = new String[titles.length];
 
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<titles.length; i++) {
             DialogItem item = new DialogItem(titles[i], descs[i]);
             mItemList.add(item);
         }
@@ -133,7 +134,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         return new DateFormatSymbols().getShortWeekdays()[dayOfWeek];
     }
 
-    @SuppressLint("NonConstantResourceId")
+    @SuppressLint({"NonConstantResourceId", "NotifyDataSetChanged"})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -146,16 +147,21 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                 }
                 break;
             case R.id.income:
+                Log.d(TAG, "onClick: incomeeeeeeeeee");
                 mLeftCheck.setImageResource(R.drawable.check);
                 mRightCheck.setImageResource(0);
-                mItemList.get(1).setVisible(false);
-                mAdapter.setItems(mItemList);
+                mItemList.remove(1);
+                mAdapter.notifyItemRemoved(1);
                 break;
             case R.id.outcome:
+                Log.d(TAG, "onClick:  outcomeeeeeeeeeeeeeee");
                 mRightCheck.setImageResource(R.drawable.check);
                 mLeftCheck.setImageResource(0);
-                mItemList.get(1).setVisible(true);
-                mAdapter.setItems(mItemList);
+
+                String[] outcomeTitles = getResources().getStringArray(R.array.outcome_dialog_title);
+                String category = outcomeTitles[1];
+                mItemList.add(1, new DialogItem(category, ""));
+                mAdapter.notifyItemInserted(1);
                 break;
             default:
                 break;

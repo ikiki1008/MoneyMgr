@@ -25,9 +25,9 @@
             android:id="@+id/cal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="45dp"
             android:theme="@style/CalenderNumber"
-            app:mcv_selectionColor="@color/light_normal"
+            app:mcv_selectionColor="#EFE6FF"
             app:mcv_weekDayTextAppearance="@style/CalenderWeekDays"
            />
 
@@ -37,7 +37,10 @@
         android:id="@+id/layout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/layout" >
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout"
+        android:background="@color/bg_color">
 
         <TextView
             android:layout_width="match_parent"
@@ -47,11 +50,13 @@
             android:textColor="@color/main_p"
             android:textSize="18sp" />
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chartLine"
+        <!-- you can edit the last part of charts layout to use whether Line or Pie, or etc -->
+        <com.anychart.AnyChartView
+            android:id="@+id/pieChart"
+            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="40dp"/>
+            android:layout_height="300dp" />
+
 
     </FrameLayout>
 

@@ -1,21 +1,37 @@
 package com.example.mia_hometest.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
+import com.anychart.chart.common.dataentry.DataEntry;
+import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.chart.common.listener.Event;
+import com.anychart.chart.common.listener.ListenersInterface;
+import com.anychart.charts.Pie;
+import com.anychart.enums.Align;
+import com.anychart.enums.LegendLayout;
 import com.example.mia_hometest.R;
 import com.example.mia_hometest.common.WeekdaysDecorator;
 import com.example.mia_hometest.common.CardListAdapter;
 import com.example.mia_hometest.common.WeekendDecorator;
 import com.example.mia_hometest.fragments.CalenderDialogs.CalDialogView;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieEntry;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -23,7 +39,9 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import org.threeten.bp.DayOfWeek;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainScreenFragment extends Fragment {
     private final String TAG = MainScreenFragment.class.getSimpleName();
@@ -34,6 +52,8 @@ public class MainScreenFragment extends Fragment {
     private WeekdaysDecorator mDecorate;
     private WeekendDecorator mWeekendDaco;
     private CalDialogView mDialog;
+    private AnyChartView mPieView;
+    private Pie mPie;
 
     @Override
     public void onAttach(Context context) {
@@ -42,11 +62,13 @@ public class MainScreenFragment extends Fragment {
         mContext = context;
     }
 
+    @SuppressLint("CutPasteId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: ");
         View view = inflater.inflate(R.layout.main_screen, container, false);
 
+        mPieView = (AnyChartView) view.findViewById(R.id.pieChart);
         mCal = view.findViewById(R.id.cal);
         mCal.setSelectedDate(CalendarDay.today());
         mCal.state().edit()
@@ -63,6 +85,23 @@ public class MainScreenFragment extends Fragment {
         mCal.addDecorator(mWeekendDaco);
         mCal.addDecorator(mDecorate);
         mCal.setHeaderTextAppearance(R.style.CalenderHeader);
+
+        Pie pie = AnyChart.pie();
+        pie.labels().position("outside");
+
+        List<DataEntry> data = new ArrayList<>();
+        data.add(new ValueDataEntry("Apples", 6371664));
+        data.add(new ValueDataEntry("Pears", 789622));
+        data.add(new ValueDataEntry("Bananas", 7216301));
+        data.add(new ValueDataEntry("Grapes", 1486621));
+        data.add(new ValueDataEntry("Oranges", 1200000));
+        pie.data(data);
+
+        pie.legend().title().enabled(false);
+        pie.legend().enabled(false);
+        pie.background().fill("#252525");
+        mPieView.setChart(pie);
+
         mCal.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
@@ -79,6 +118,7 @@ public class MainScreenFragment extends Fragment {
                 }
             }
         });
+
         return view;
     }
 

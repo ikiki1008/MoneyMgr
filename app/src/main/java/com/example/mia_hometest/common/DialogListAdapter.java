@@ -54,7 +54,7 @@ public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         dialogViewHolder.mText.setText(title);
         dialogViewHolder.mNote.setText(note);
-        holder.itemView.setVisibility(tile.isVisible() ? View.VISIBLE : View.GONE);
+//        holder.itemView.setVisibility(tile.isVisible() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -62,17 +62,7 @@ public class DialogListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @SuppressLint("NotifyDataSetChanged")
     public void setItems(List<DialogItem> items) {
-        for (int i = mTiles.size() - 1; i >= 0; i--) {
-            notifyItemRemoved(i);
-        }
-        mTiles.clear();
-
-        // 새로운 아이템들 추가
-        for (int i = 0; i < items.size(); i++) {
-            mTiles.add(items.get(i));
-            notifyItemInserted(i);
-        }
-//        mTiles = items;
+        mTiles = items;
         notifyDataSetChanged();
     }
 
