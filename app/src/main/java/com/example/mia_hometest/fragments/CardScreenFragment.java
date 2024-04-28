@@ -104,11 +104,11 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
             for (int i=0; i<jsonArray.length(); i++) {
                 JSONObject item = jsonArray.getJSONObject(i);
                 String title = item.getString("title");
-                String desc = item.getString("desc");
+//                String desc = item.getString("desc");
                 String price = item.getString("price");
                 String date = item.getString("date");
 
-                listItems.add(new ListItem(title, desc, price, date));
+                listItems.add(new ListItem(title, price, date));
             }
 
             mAdapter.setItems(listItems);

@@ -7,6 +7,13 @@
     <string name="chart_title">Chart&#160;of&#160;Transactions</string>
     <string name="main_screen_small_title">Add&#160;new&#160;transaction</string>
     <string name="today_trans">Today\'s&#160;transaction</string>
+    <string name="setting">Settings</string>
+
+    <string name="user_info">My&#160;information</string>
+    <string name="theme_color">Theme&#160;color</string>
+    <string name="user_list">User&#160;list</string>
+    <string name="lang">Language</string>
+    <string name="sign_out">Sign&#160;out</string>
 
     <string name="income">Income</string>
     <string name="expense">Expense</string>

@@ -62,12 +62,12 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ListViewHolder listViewHolder= (ListViewHolder) holder;
 
         String title = tile.getTitle();
-        String desc = tile.getDesc();
+//        String desc = tile.getDesc();
         String price = tile.getPrice();
         String date = tile.getDate();
 
         listViewHolder.mTitle.setText(title);
-        listViewHolder.mDesc.setText(desc);
+//        listViewHolder.mDesc.setText(desc);
         listViewHolder.mPrice.setText(price);
         listViewHolder.mDate.setText(date);
     }
@@ -95,7 +95,7 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTitle;
-        private final TextView mDesc;
+//        private final TextView mDesc;
         private final TextView mPrice;
         private final TextView mDate;
 
@@ -103,7 +103,7 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
 //            mIcon = itemView.findViewById(R.id.icon);
             mTitle = itemView.findViewById(R.id.title);
-            mDesc = itemView.findViewById(R.id.desc);
+//            mDesc = itemView.findViewById(R.id.desc);
             mPrice = itemView.findViewById(R.id.price);
             mDate = itemView.findViewById(R.id.date);
         }
