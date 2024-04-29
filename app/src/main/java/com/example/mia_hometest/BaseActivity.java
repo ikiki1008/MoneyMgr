@@ -10,10 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.example.mia_hometest.fragments.CardScreenFragment;
-import com.example.mia_hometest.fragments.ChartScreenFragment;
-import com.example.mia_hometest.fragments.InfoScreenFragment;
-import com.example.mia_hometest.fragments.MainScreenFragment;
+import com.example.mia_hometest.fragments.main.CardScreenFragment;
+import com.example.mia_hometest.fragments.main.ChartScreenFragment;
+import com.example.mia_hometest.fragments.main.InfoScreenFragment;
+import com.example.mia_hometest.fragments.main.MainScreenFragment;
 
 import java.io.File;
 

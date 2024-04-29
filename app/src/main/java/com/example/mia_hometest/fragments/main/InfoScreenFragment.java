@@ -1,4 +1,4 @@
-package com.example.mia_hometest.fragments;
+package com.example.mia_hometest.fragments.main;
 
 import android.content.Context;
 import android.os.Bundle;

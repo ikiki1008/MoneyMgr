@@ -1,4 +1,4 @@
-package com.example.mia_hometest.fragments;
+package com.example.mia_hometest.fragments.main;
 
 import android.app.AlertDialog;
 import android.content.Context;
