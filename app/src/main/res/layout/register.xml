@@ -1,0 +1,85 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/regis_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/register_title"
+            android:textSize="30sp"
+            android:fontFamily="@font/poppins"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="100dp"
+            android:text="@string/register_email"
+            android:textSize="30sp"
+            android:fontFamily="@font/poppins"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/set_email"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginStart="50dp"
+            android:textColor="@color/dirty_white"
+            android:fontFamily="@font/poppins"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="150dp"
+            android:text="@string/register_name"
+            android:textSize="30sp"
+            android:fontFamily="@font/poppins"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/set_name"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginStart="50dp"
+            android:textColor="@color/dirty_white"
+            android:fontFamily="@font/poppins"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="200dp"
+            android:text="@string/cancel"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/save_title"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="130dp"
+            android:layout_marginTop="200dp"
+            android:text="@string/save"
+            android:textSize="30sp" />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

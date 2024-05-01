@@ -1,97 +1,56 @@
 package com.example.mia_hometest;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-
-import com.example.mia_hometest.fragments.main.CardScreenFragment;
-import com.example.mia_hometest.fragments.main.ChartScreenFragment;
-import com.example.mia_hometest.fragments.main.InfoScreenFragment;
-import com.example.mia_hometest.fragments.main.MainScreenFragment;
-
-import java.io.File;
-
 public class BaseActivity extends FragmentActivity {
-    
-    private static final String TAG = BaseActivity.class.getSimpleName();
+    private final String TAG = BaseActivity.class.getSimpleName();
+    private SharedPreferences mSharedPreference;
     private Context mContext;
-    private CardScreenFragment mCardFragment = null;
-    private MainScreenFragment mMainFragment = null;
-    private InfoScreenFragment mInfoFragment = null;
-    private ChartScreenFragment mChartFragment = null;
+    private Intent mIntent;
+    private LoginFragment mLogin = null;
 
-    private ImageView[] mImage = new ImageView[4];
-
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         mContext = this;
-        setContentView(R.layout.main);
-        initViews();
+        setContentView(R.layout.base);
+        init();
 
-        File codeCacheDir = getCodeCacheDir();
-        File dexOutputDir = codeCacheDir;
-        dexOutputDir.setReadOnly();
+        launchFragment(mLogin);
 
-        //첫화면 loading
-        initFragments();
-        launchFragment(mMainFragment);
-
-        //이 후
-        onCLick();
+//        if (isLoggedIn()) {
+//            Log.d(TAG, "onCreate: no user ... lets create new user");
+//            launchFragment(mLogin);
+//        } else {
+//            Log.d(TAG, "onCreate: user is logged in... ");
+//            mIntent = new Intent(mContext, UserMainActivity.class);
+//            startActivity(mIntent);
+//        }
     }
 
-    private void initViews() {
-        mImage[0] = findViewById(R.id.mainScreen);
-        mImage[1] = findViewById(R.id.expenseScreen);
-        mImage[2] = findViewById(R.id.chartScreen);
-        mImage[3] = findViewById(R.id.infoScreen);
+    private void init() {
+        mLogin = new LoginFragment(mContext);
     }
 
-    private void onCLick() {
-        mImage[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchFragment(mMainFragment);
-            }
-        });
-
-
-        mImage[1].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchFragment(mCardFragment);
-            }
-        });
-
-        mImage[2].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchFragment(mChartFragment);
-            }
-        });
-
-        mImage[3].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchFragment(mInfoFragment);
-            }
-        });
+    private boolean isLoggedIn() {
+        mSharedPreference = getSharedPreferences("check_login", MODE_PRIVATE);
+        return mSharedPreference.getBoolean("login", false);
     }
 
-    private void initFragments() {
-        mMainFragment = new MainScreenFragment(mContext);
-        mChartFragment = new ChartScreenFragment(mContext);
-        mInfoFragment = new InfoScreenFragment(mContext);
-        mCardFragment = new CardScreenFragment(mContext);
+    public void goBack() {
+        Log.d(TAG, "onBackPressed: ");
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     public void launchFragment(Fragment fragment) {
@@ -100,6 +59,5 @@ public class BaseActivity extends FragmentActivity {
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();
-
     }
 }

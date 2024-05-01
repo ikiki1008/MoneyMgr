@@ -95,4 +95,8 @@
 
     <string name="note_desc">Description</string>
 
+    <string name="register_title">REGISTER&#160;ACCOUNT</string>
+    <string name="register_email">Email</string>
+    <string name="register_name">Name</string>
+
 </resources>
