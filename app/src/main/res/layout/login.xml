@@ -100,6 +100,12 @@
                     android:fontFamily="@font/poppins"
                     android:textSize="20sp" />
 
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/google_login_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="360dp" />
+
 
         </FrameLayout>
 
