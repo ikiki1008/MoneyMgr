@@ -95,8 +95,12 @@
 
     <string name="note_desc">Description</string>
 
-    <string name="register_title">REGISTER&#160;ACCOUNT</string>
+    <string name="register_title">SIGN&#160;UP</string>
     <string name="register_email">Email</string>
-    <string name="register_name">Name</string>
+    <string name="register_pwd">Pwd</string>
+    <string name="login_title">LOG&#160;IN</string>
+    <string name="logout_title">LOG&#160;OUT</string>
+    <string name="register_desc">Create&#160;new&#160;account</string>
+    <string name="sign_in">SIGN&#160;IN</string>
 
 </resources>
