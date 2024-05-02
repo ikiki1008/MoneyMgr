@@ -34,12 +34,20 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
@@ -48,7 +56,7 @@ public class LoginFragment extends Fragment {
     private TextView mRegister = null;
     private TextView mLogin = null;
     private EditText mEmail = null;
-    private EditText mPwd = null;
+    private EditText mName = null;
     private ImageView mPiggy = null;
     private RegisterFragment mRegisFragment = null;
     private SignInButton mGoogleLoginBtn = null;
@@ -80,7 +88,7 @@ public class LoginFragment extends Fragment {
         mLogin = view.findViewById(R.id.loginBtn);
         mRegister = view.findViewById(R.id.registerBtn);
         mEmail = view.findViewById(R.id.set_email);
-        mPwd = view.findViewById(R.id.set_pwd);
+        mName = view.findViewById(R.id.setName);
         mPiggy = view.findViewById(R.id.piggy);
         mGoogleLoginBtn = view.findViewById(R.id.google_login_btn);
 
@@ -99,19 +107,18 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String email = mEmail.getText().toString();
-                String pwd = mPwd.getText().toString();
+                String name = mName.getText().toString();
 
                 if (email.isEmpty()) {
-                    Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
-                    mEmail.startAnimation(shake);
+                    startShake(mEmail);
                 }
-                else if (pwd.isEmpty()) {
+                else if (name.isEmpty()) {
                     Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
-                    mPwd.startAnimation(shake);
+                    startShake(mName);
                 }
                 else {
                     Log.d(TAG, "onClick: 클릭했다 로그인하자");
-
+                    checkDb();
                 }
             }
         });
@@ -120,6 +127,8 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ((BaseActivity) getActivity()).launchFragment(mRegisFragment);
+                mEmail.setText("");
+                mName.setText("");
             }
         });
 
@@ -130,6 +139,11 @@ public class LoginFragment extends Fragment {
     public void onDestroy() {
         Log.d(TAG, " LoginFragment 끌게요");
         super.onDestroy();
+    }
+
+    private void startShake(EditText editText) {
+        Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
+        editText.startAnimation(shake);
     }
 
     private void googleSignInit() {
@@ -167,15 +181,16 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: 로그인 성공....");
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                            Intent activityIntent = new Intent(mContext, UserMainActivity.class);
-                            startActivity(activityIntent);
+                            mEmail.setText(firebaseUser.getEmail());
+                            checkGoogleName();
                         } else {
                             Log.d(TAG, " #### 로그인 실패...");
+                            startShake(mEmail);
                         }
+                        return;
                     }
                 });
     }
-    
 
     private void googleSignIn() {
         Log.d(TAG, "googleSignIn: ");
@@ -191,4 +206,62 @@ public class LoginFragment extends Fragment {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(mContext, gsi);
     }
+
+    private void checkGoogleName() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        String email = mEmail.getText().toString();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user")
+                .whereEqualTo("email" , email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                String name = doc.getString("name");
+                                if (name != null) {
+                                    mName.setText(name);
+
+                                    Intent intent = new Intent(mContext, UserMainActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    private void checkDb() {
+        Log.d(TAG, "checkDb: ");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String email = mEmail.getText().toString();
+        String name = mName.getText().toString();
+
+        db.collection("user")
+                .whereEqualTo("email", email)
+                .whereEqualTo("name", name)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            Log.d(TAG, "checkDb: 모두 다 일치하므로 로그인");
+                            Intent intent = new Intent(mContext, UserMainActivity.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            Log.d(TAG, "checkDb: 뭔가 일치 하지 않음 " + mEmail.toString() + mName.toString());
+                            startShake(mEmail);
+                            startShake(mName);
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "checkDb: 또또또또 뭔가 일치 하지 않음 " + mEmail.toString() + mName.toString());
+                        startShake(mEmail);
+                        startShake(mName);
+                    }
+                });
+    }
+
 }

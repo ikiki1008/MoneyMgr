@@ -51,18 +51,18 @@
             android:background="@drawable/etc_back"/>
 
         <TextView
-            android:id="@+id/pwd"
+            android:id="@+id/nickname"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="252dp"
-            android:text="@string/register_pwd"
+            android:text="@string/register_nickname"
             android:textColor="@color/side_p"
             android:textSize="20sp"
             android:fontFamily="@font/poppins"
             android:textAlignment="center" />
 
         <EditText
-            android:id="@+id/set_pwd"
+            android:id="@+id/set_name"
             android:layout_width="250dp"
             android:layout_height="35dp"
             android:textSize="15sp"
@@ -99,6 +99,22 @@
             android:fontFamily="@font/poppins"
             android:textSize="20sp" />
 
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_login_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="380dp"
+            android:layout_marginStart="25dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Oh, you have google account? try this"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/side_p"
+            android:textSize="13sp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="385dp" />
 
     </FrameLayout>
 

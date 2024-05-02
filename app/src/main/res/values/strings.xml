@@ -97,7 +97,7 @@
 
     <string name="register_title">SIGN&#160;UP</string>
     <string name="register_email">Email</string>
-    <string name="register_pwd">Pwd</string>
+    <string name="register_nickname">Name</string>
     <string name="login_title">LOG&#160;IN</string>
     <string name="logout_title">LOG&#160;OUT</string>
     <string name="register_desc">Create&#160;new&#160;account</string>

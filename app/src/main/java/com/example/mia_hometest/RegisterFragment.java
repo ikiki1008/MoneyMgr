@@ -1,6 +1,7 @@
 package com.example.mia_hometest;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,11 +18,34 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +58,12 @@ public class RegisterFragment extends Fragment {
     private TextView mCancel = null;
     private TextView mSave = null;
     private EditText mEmail = null;
-    private EditText mPwd = null;
+    private EditText mName = null;
     private ImageView mMoneyImg = null;
+    private FirebaseAuth mAuth;
+    private SignInButton mGoogleRegister = null;
+    private ActivityResultLauncher<Intent> activityResultLauncher;
+    private GoogleSignInClient mGoogleSignInClient;
 
     public RegisterFragment (Context context) {
         mContext = context;
@@ -53,38 +81,40 @@ public class RegisterFragment extends Fragment {
         Log.d(TAG, " LoginFragment onCreateView: ");
         View view = inflater.inflate(R.layout.register, container, false);
 
-        mSharedPreference = mContext.getSharedPreferences("check_login", Context.MODE_PRIVATE);
+        mAuth = FirebaseAuth.getInstance();
+        mGoogleRegister = view.findViewById(R.id.google_login_btn);
         mSave = view.findViewById(R.id.signBtn);
         mCancel = view.findViewById(R.id.cancelBtn);
         mEmail = view.findViewById(R.id.set_email);
-        mPwd = view.findViewById(R.id.set_pwd);
+        mName = view.findViewById(R.id.set_name);
         mMoneyImg = view.findViewById(R.id.moneyImg);
         GlideDrawableImageViewTarget gif = new GlideDrawableImageViewTarget(mMoneyImg); //gif setting
         Glide.with(mContext).load(R.drawable.money_stack).into(gif);
+        googleSignInit();
 
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = mEmail.getText().toString();
-                String pwd = mPwd.getText().toString();
+                String pwd = mName.getText().toString();
 
                 if (email.isEmpty()) {
                     Log.d(TAG, " ##### you cannot login without typing yout id on textbox ");
-                    Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
-                    mEmail.startAnimation(shake);
+                    startShake(mEmail);
                 }
                 else if (pwd.isEmpty()) {
-                    Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
-                    mPwd.startAnimation(shake);
+                   startShake(mName);
                 }
                 else {
-                    addNewData();
-                    SharedPreferences.Editor editor = mSharedPreference.edit();
-                    editor.putBoolean("login", true);
-                    editor.apply();
-                    Intent intent = new Intent(mContext, UserMainActivity.class);
-                    startActivity(intent);
+                    checkDoubleComps();
                 }
+            }
+        });
+
+        mGoogleRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                googleSignIn();
             }
         });
 
@@ -97,23 +127,130 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, " LoginFragment 끌게요");
+        super.onDestroy();
+    }
+
+    private void startShake(EditText editText) {
+        Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
+        editText.startAnimation(shake);
+    }
+
+    private void checkDoubleComps() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String email = mEmail.getText().toString();
+        String name = mName.getText().toString();
+
+        db.collection("user")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (!task.getResult().isEmpty()) {
+                            Log.d(TAG, "Email already exists.");
+                            startShake(mEmail);
+                        } else {
+                            db.collection("user") //check if theres same nickname after check email
+                                    .whereEqualTo("name", name)
+                                    .get()
+                                    .addOnCompleteListener(task1 -> {
+                                        if (task1.isSuccessful()) {
+                                            if (!task1.getResult().isEmpty()) {
+                                                Log.d(TAG, "Name already exists.");
+                                                startShake(mName);
+                                            } else {
+                                                addNewData(); //save up to db if theres no same email / name
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task1.getException());
+                                        }
+                                    });
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                });
+    }
+
+
     private void addNewData() {
         Log.d(TAG, " ##### put new data resource into the db");
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Map<String, Object> user = new HashMap<>();
         user.put("email", mEmail.getText().toString());
-        user.put("name", mPwd.getText().toString());
-        
+        user.put("name", mName.getText().toString());
+
         db.collection("user")
                 .add(user)
                 .addOnSuccessListener(documentReference -> Log.d(TAG, "Documents added with ID : " + documentReference.getId()))
                 .addOnFailureListener(e -> Log.d(TAG, "Failed to add new data"));
+
+        Log.d(TAG, "addNewData: 디비에 저장도 했고 이제 메인 액티비티로 드가자~");
+        Intent intent = new Intent(mContext, UserMainActivity.class);
+        startActivity(intent);
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, " LoginFragment 끌게요");
-        super.onDestroy();
+    private void googleSignInit() {
+        Log.d(TAG, "googleSignInit: ");
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            Intent intent = result.getData();
+                            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(intent);
+
+                            try {
+                                GoogleSignInAccount account = task.getResult(ApiException.class);
+                                firebaseAuthGoogle(account);
+
+                            } catch (ApiException e) {
+                                Log.d(TAG, " 뭔가 또 실패... " + e);
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                });
+        configSignIn();
+        mAuth = FirebaseAuth.getInstance();
     }
+
+    private void firebaseAuthGoogle (GoogleSignInAccount account) {
+        Log.d(TAG, "firebaseAuthGoogle: ");
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener((Activity) mContext, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: 로그인 성공....");
+                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                            mEmail.setText(firebaseUser.getEmail());
+                        } else {
+                            Log.d(TAG, " #### 로그인 실패...");
+                        }
+                        return;
+                    }
+                });
+    }
+
+
+    private void googleSignIn() {
+        Log.d(TAG, "googleSignIn: ");
+        Intent intent = mGoogleSignInClient.getSignInIntent();
+        activityResultLauncher.launch(intent);
+    }
+
+    private void configSignIn() {
+        Log.d(TAG, "configSignIn: ");
+        GoogleSignInOptions gsi = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(mContext, gsi);
+    }
+
 }

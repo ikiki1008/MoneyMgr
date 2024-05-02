@@ -25,23 +25,11 @@ public class BaseActivity extends FragmentActivity {
 
         launchFragment(mLogin);
 
-//        if (isLoggedIn()) {
-//            Log.d(TAG, "onCreate: no user ... lets create new user");
-//            launchFragment(mLogin);
-//        } else {
-//            Log.d(TAG, "onCreate: user is logged in... ");
-//            mIntent = new Intent(mContext, UserMainActivity.class);
-//            startActivity(mIntent);
-//        }
+
     }
 
     private void init() {
         mLogin = new LoginFragment(mContext);
-    }
-
-    private boolean isLoggedIn() {
-        mSharedPreference = getSharedPreferences("check_login", MODE_PRIVATE);
-        return mSharedPreference.getBoolean("login", false);
     }
 
     public void goBack() {
