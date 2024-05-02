@@ -133,6 +133,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void googleSignInit() {
+        Log.d(TAG, "googleSignInit: ");
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
@@ -157,12 +158,14 @@ public class LoginFragment extends Fragment {
     }
 
     private void firebaseAuthGoogle (GoogleSignInAccount account) {
+        Log.d(TAG, "firebaseAuthGoogle: ");
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener((Activity) mContext, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Log.d(TAG, "onComplete: 로그인 성공....");
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             Intent activityIntent = new Intent(mContext, UserMainActivity.class);
                             startActivity(activityIntent);
@@ -172,15 +175,18 @@ public class LoginFragment extends Fragment {
                     }
                 });
     }
+    
 
     private void googleSignIn() {
+        Log.d(TAG, "googleSignIn: ");
         Intent intent = mGoogleSignInClient.getSignInIntent();
         activityResultLauncher.launch(intent);
     }
 
     private void configSignIn() {
+        Log.d(TAG, "configSignIn: ");
         GoogleSignInOptions gsi = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.my_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(mContext, gsi);
