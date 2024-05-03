@@ -2,22 +2,27 @@ package com.example.mia_hometest.fragments.informations;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.mia_hometest.BaseActivity;
 import com.example.mia_hometest.UserMainActivity;
 import com.example.mia_hometest.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class UserInfoFragment extends Fragment {
     private final String TAG = UserInfoFragment.class.getSimpleName();
     private Context mContext = null;
     private ImageView mGoback = null;
+    private TextView mOff = null;
 
     public UserInfoFragment (Context context) {
         mContext = context;
@@ -35,6 +40,18 @@ public class UserInfoFragment extends Fragment {
         Log.d(TAG, " UserInfoFragment onCreateView: ");
         View view = inflater.inflate(R.layout.user_info, container, false);
         mGoback = view.findViewById(R.id.back);
+        mOff = view.findViewById(R.id.offline);
+
+        mOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(mContext, BaseActivity.class);
+                intent.putExtra("logoff", true);
+                startActivity(intent);
+            }
+        });
+
         mGoback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -32,6 +32,8 @@
                 android:layout_height="wrap_content"
                 android:text="LOGOUT"
                 android:textSize="40sp"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="50dp"
                 android:fontFamily="@font/poppins" />
 
         </FrameLayout>

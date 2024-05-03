@@ -9,12 +9,16 @@ import android.util.Log;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class BaseActivity extends FragmentActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
     private SharedPreferences mSharedPreference;
     private Context mContext;
     private Intent mIntent;
     private LoginFragment mLogin = null;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +27,17 @@ public class BaseActivity extends FragmentActivity {
         setContentView(R.layout.base);
         init();
 
-        launchFragment(mLogin);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
 
-
+        if (user != null) {
+            Log.d(TAG, "onCreate: 이미 로그인한 유저입니다. " + user.getEmail());
+            startActivity(new Intent(mContext, UserMainActivity.class));
+            finish();
+        } else {
+            Log.d(TAG, "onCreate: 로그인 하지 않은 유저입니다. ");
+            launchFragment(mLogin);
+        }
     }
 
     private void init() {

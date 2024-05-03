@@ -118,7 +118,8 @@ public class LoginFragment extends Fragment {
                 }
                 else {
                     Log.d(TAG, "onClick: 클릭했다 로그인하자");
-                    checkDb();
+//                    checkDb();
+                    emailSignIn();
                 }
             }
         });
@@ -232,36 +233,22 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-
-    private void checkDb() {
-        Log.d(TAG, "checkDb: ");
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private void emailSignIn() {
         String email = mEmail.getText().toString();
-        String name = mName.getText().toString();
+        String password = mName.getText().toString();
 
-        db.collection("user")
-                .whereEqualTo("email", email)
-                .whereEqualTo("name", name)
-                .get()
-                .addOnCompleteListener(task -> {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener((Activity) mContext, task -> {
                     if (task.isSuccessful()) {
-                        if (!task.getResult().isEmpty()) {
-                            Log.d(TAG, "checkDb: 모두 다 일치하므로 로그인");
-                            Intent intent = new Intent(mContext, UserMainActivity.class);
-                            startActivity(intent);
-                        }
-                        else {
-                            Log.d(TAG, "checkDb: 뭔가 일치 하지 않음 " + mEmail.toString() + mName.toString());
-                            startShake(mEmail);
-                            startShake(mName);
-                        }
+                        Log.d(TAG, "emailSignIn: 로그인에 성공하였습니다...");
+                        Intent intent = new Intent(mContext, UserMainActivity.class);
+                        startActivity(intent);
                     }
                     else {
-                        Log.d(TAG, "checkDb: 또또또또 뭔가 일치 하지 않음 " + mEmail.toString() + mName.toString());
+                        Log.d(TAG, "emailSignIn: 아무튼 로그인에 실패하였습니다.");
                         startShake(mEmail);
                         startShake(mName);
                     }
                 });
     }
-
 }
