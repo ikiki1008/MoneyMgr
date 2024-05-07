@@ -56,7 +56,7 @@ public class LoginFragment extends Fragment {
     private TextView mRegister = null;
     private TextView mLogin = null;
     private EditText mEmail = null;
-    private EditText mName = null;
+    private EditText mPwd = null;
     private ImageView mPiggy = null;
     private RegisterFragment mRegisFragment = null;
     private SignInButton mGoogleLoginBtn = null;
@@ -88,7 +88,7 @@ public class LoginFragment extends Fragment {
         mLogin = view.findViewById(R.id.loginBtn);
         mRegister = view.findViewById(R.id.registerBtn);
         mEmail = view.findViewById(R.id.set_email);
-        mName = view.findViewById(R.id.setName);
+        mPwd = view.findViewById(R.id.setPwd);
         mPiggy = view.findViewById(R.id.piggy);
         mGoogleLoginBtn = view.findViewById(R.id.google_login_btn);
 
@@ -107,18 +107,17 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String email = mEmail.getText().toString();
-                String name = mName.getText().toString();
+                String pwd = mPwd.getText().toString();
 
                 if (email.isEmpty()) {
                     startShake(mEmail);
                 }
-                else if (name.isEmpty()) {
+                else if (pwd.isEmpty()) {
                     Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
-                    startShake(mName);
+                    startShake(mPwd);
                 }
                 else {
                     Log.d(TAG, "onClick: 클릭했다 로그인하자");
-//                    checkDb();
                     emailSignIn();
                 }
             }
@@ -129,7 +128,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 ((BaseActivity) getActivity()).launchFragment(mRegisFragment);
                 mEmail.setText("");
-                mName.setText("");
+                mPwd.setText("");
             }
         });
 
@@ -220,9 +219,9 @@ public class LoginFragment extends Fragment {
                     if (task.isSuccessful()) {
                         if (!task.getResult().isEmpty()) {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-                                String name = doc.getString("name");
-                                if (name != null) {
-                                    mName.setText(name);
+                                String pwd = doc.getString("password");
+                                if (pwd != null) {
+                                    mPwd.setText(pwd);
 
                                     Intent intent = new Intent(mContext, UserMainActivity.class);
                                     startActivity(intent);
@@ -235,9 +234,9 @@ public class LoginFragment extends Fragment {
 
     private void emailSignIn() {
         String email = mEmail.getText().toString();
-        String name = mName.getText().toString();
+        String pwd = mPwd.getText().toString();
 
-        mAuth.signInWithEmailAndPassword(email, name)
+        mAuth.signInWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener((Activity) mContext, task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "emailSignIn: 로그인에 성공하였습니다...");
@@ -249,6 +248,8 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "onFailure: 이유가 뭘까요??? " + e);
+                        startShake(mEmail);
+                        startShake(mPwd);
                     }
                 });
     }

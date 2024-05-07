@@ -22,11 +22,14 @@ import com.example.mia_hometest.fragments.informations.ThemeFragment;
 import com.example.mia_hometest.fragments.informations.UserInfoFragment;
 import com.example.mia_hometest.fragments.informations.UserListFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class InfoScreenFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = InfoScreenFragment.class.getSimpleName();
@@ -76,6 +79,45 @@ public class InfoScreenFragment extends Fragment implements View.OnClickListener
         ((UserMainActivity) getActivity()).launchFragment(fragment);
     }
 
+    private void deleteUser() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseFirestore.getInstance().collection("user")
+                    .whereEqualTo("email", user.getEmail())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    document.getReference().delete();
+                                    Log.d(TAG, "onSuccess: 사용자 정보를 완전히 삭제하였습니다.");
+                                }
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: 이건 또 뭐야 ???? "+ e);
+                        }
+                    });
+            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "onComplete: 사용자 인증 정보도 삭제 완료..");
+                        Intent intent = new Intent(mContext, BaseActivity.class);
+                        intent.putExtra("logoff", true);
+                        startActivity(intent);
+                        Toast.makeText(mContext, "Delete account Succeed", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d(TAG, "onComplete: 사용자 인증 정보 삭제 실패함ㅠㅠㅠ");
+                    }
+                }
+            });
+        }
+    }
+
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.myinfo) {
@@ -94,25 +136,7 @@ public class InfoScreenFragment extends Fragment implements View.OnClickListener
             Toast.makeText(mContext, "logout Succeed", Toast.LENGTH_SHORT).show();
 
         } else if (view.getId() == R.id.delete) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null) {
-                FirebaseFirestore.getInstance().collection("user")
-                        .document(user.getUid())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d(TAG, "onSuccess: 사용자 정보를 완전히 삭제하였습니다.");
-                                Intent intent = new Intent(mContext, BaseActivity.class);
-                                intent.putExtra("logoff", true);
-                                startActivity(intent);
-                                Toast.makeText(mContext, "Delete account Succeed", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnFailureListener(e -> {
-                            Log.d(TAG, "onClick: 사용자 정보를 삭제하지 못하였습니다.... " + e);
-                        });
-            }
+            deleteUser();
         } else {
             Log.d(TAG, "onClick: do nothing....");
         }

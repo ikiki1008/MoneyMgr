@@ -182,23 +182,13 @@ public class RegisterFragment extends Fragment {
         user.put("email", mEmail.getText().toString());
         user.put("name", mName.getText().toString());
         user.put("password", mPass.getText().toString());
-//
-//        db.collection("users").document("user")
-//                .add(user)
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        registerFirebaseAuth(mEmail.getText().toString(), mName.getText().toString()); //auth 등록하기
-//                        Log.d(TAG, "addNewData: 등록완료 이제 넘어가자");
-//                    }
-//                })
-//                .addOnFailureListener(e -> Log.d(TAG, "Failed to add new data"));
 
         db.collection("user")
                 .add(user)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "addNewData: 데이터를 추가하였음");
-                        registerFirebaseAuth(mEmail.getText().toString(), mName.getText().toString());
+                        registerFirebaseAuth(mEmail.getText().toString(), mPass.getText().toString());
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -207,14 +197,14 @@ public class RegisterFragment extends Fragment {
 
     }
 
-    private void registerFirebaseAuth (String email, String name) {
+    private void registerFirebaseAuth (String email, String pwd) {
         Log.d(TAG, "registerFirebaseAuth: ");
 
-        mAuth.createUserWithEmailAndPassword(email, name)
+        mAuth.createUserWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener((Activity) mContext, task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "registerFirebaseAuth: 로그인 등록 완료");
-                        loginWAuth(email, name);
+                        loginWAuth(email, pwd);
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -222,9 +212,9 @@ public class RegisterFragment extends Fragment {
                 });
     }
 
-    private void loginWAuth (String email, String name) {
+    private void loginWAuth (String email, String pwd) {
         Log.d(TAG, "loginWAuth: ");
-        mAuth.signInWithEmailAndPassword(email, name)
+        mAuth.signInWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener((Activity) mContext, task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "loginWAuth: 가입 완료 후 로그인 성공");

@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -147,11 +148,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                                                 @Override
                                                 public void onSuccess(Void unused) {
                                                     Log.d(TAG, "onSuccess: 업데이트 성공...");
-                                                    mEditTexts.get(0).setText(newName);
-                                                    mEditTexts.get(2).setText(newPwd);
-                                                    mEditTexts.get(0).setEnabled(false);
-                                                    mEditTexts.get(2).setEnabled(false);
-                                                    mIsEditing = false;
+                                                    updateAuth(newName, newPwd);
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
@@ -167,12 +164,44 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
 
     }
 
+    private void updateAuth(String newName, String newPwd) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                .setDisplayName(newName).build();
+        user.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "onComplete: 일단 auth 의 이름은 바꿨음");
+                    user.updatePassword(newPwd).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "onComplete: 이제 모두 성공적으로 다 변경했다...");
+                                mEditTexts.get(0).setText(newName);
+                                mEditTexts.get(2).setText(newPwd);
+                                mEditTexts.get(0).setEnabled(false);
+                                mEditTexts.get(2).setEnabled(false);
+                                mIsEditing = false;
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: 이건 왜 실패했을까용용 " + e);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
-                Log.d(TAG, "onClick: 뒤로가기 눌렀다...");
                 if (mIsEditing) {
                     Toast.makeText(mContext, "수정중인 정보를 저장해 주세요.", Toast.LENGTH_SHORT).show();
                 } else {

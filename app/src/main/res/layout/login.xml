@@ -52,18 +52,18 @@
                     android:background="@drawable/etc_back"/>
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/pwd"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginTop="252dp"
-                    android:text="@string/register_nickname"
+                    android:text="@string/register_pwd"
                     android:textColor="@color/side_p"
                     android:textSize="20sp"
                     android:fontFamily="@font/poppins"
                     android:textAlignment="center" />
 
                 <EditText
-                    android:id="@+id/setName"
+                    android:id="@+id/setPwd"
                     android:layout_width="250dp"
                     android:layout_height="35dp"
                     android:textSize="15sp"
