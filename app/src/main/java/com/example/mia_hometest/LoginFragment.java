@@ -235,19 +235,20 @@ public class LoginFragment extends Fragment {
 
     private void emailSignIn() {
         String email = mEmail.getText().toString();
-        String password = mName.getText().toString();
+        String name = mName.getText().toString();
 
-        mAuth.signInWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(email, name)
                 .addOnCompleteListener((Activity) mContext, task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "emailSignIn: 로그인에 성공하였습니다...");
                         Intent intent = new Intent(mContext, UserMainActivity.class);
                         startActivity(intent);
                     }
-                    else {
-                        Log.d(TAG, "emailSignIn: 아무튼 로그인에 실패하였습니다.");
-                        startShake(mEmail);
-                        startShake(mName);
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "onFailure: 이유가 뭘까요??? " + e);
                     }
                 });
     }

@@ -3,41 +3,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/bg_color">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="360dp"
-        android:layout_height="350dp"
+    <FrameLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
 
-        <FrameLayout
-            android:id="@+id/first_linear"
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:gravity="center"
+            android:fontFamily="@font/poppins"
+            android:text="@string/user_info"
+            android:textColor="@color/main_p"
+            android:textSize="20sp" />
 
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="45dp"
-                android:layout_height="35dp"
-                android:src="@drawable/back" />
+    </FrameLayout>
 
-            <TextView
-                android:id="@+id/offline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="LOGOUT"
-                android:textSize="40sp"
-                android:layout_marginStart="100dp"
-                android:layout_marginTop="50dp"
-                android:fontFamily="@font/poppins" />
+    <RelativeLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout">
 
-        </FrameLayout>
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/user"
+            android:layout_centerHorizontal="true"/>
 
-    </LinearLayout>
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="280dp"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/side_p"
+            android:textSize="19sp"
+            android:layout_centerHorizontal="true"
+            android:enabled="false"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:background="@android:color/transparent"/>
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="330dp"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/side_p"
+            android:textSize="19sp"
+            android:layout_centerHorizontal="true"
+            android:enabled="false"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:background="@android:color/transparent"/>
+
+        <EditText
+            android:id="@+id/pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="380dp"
+            android:fontFamily="@font/poppins"
+            android:textStyle="bold"
+            android:textColor="@color/side_p"
+            android:textSize="19sp"
+            android:layout_centerHorizontal="true"
+            android:enabled="false"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:background="@android:color/transparent" />
+
+        <ImageView
+            android:id="@+id/lockImg"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:src="@drawable/lock"
+            android:layout_toEndOf="@id/pwd"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="385dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout2">
+
+        <TextView
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/main_p"
+            android:text="@string/edit"
+            android:layout_marginTop="70dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginStart="100dp"/>
+
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/main_p"
+            android:text="@string/save"
+            android:layout_marginTop="70dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="100dp"/>
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

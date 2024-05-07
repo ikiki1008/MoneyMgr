@@ -13,7 +13,8 @@
     <string name="theme_color">Theme&#160;color</string>
     <string name="user_list">User&#160;list</string>
     <string name="lang">Language</string>
-    <string name="sign_out">Delete&#160;my&#160;account</string>
+    <string name="sign_out">Sign&#160;out</string>
+    <string name="delete">Delete&#160;my&#160;account</string>
 
     <string name="income">Income</string>
     <string name="expense">Expense</string>
@@ -71,6 +72,7 @@
 
     <string name="save">SAVE</string>
     <string name="real_cancel">CANCEL</string>
+    <string name="edit">EDIT</string>
     <string name="cancel">ERASE</string>
     <string name="cal_price">price</string>
 
@@ -98,6 +100,7 @@
     <string name="register_title">SIGN&#160;UP</string>
     <string name="register_email">Email</string>
     <string name="register_nickname">Name</string>
+    <string name="register_pwd">Pass</string>
     <string name="login_title">LOG&#160;IN</string>
     <string name="logout_title">LOG&#160;OUT</string>
     <string name="register_desc">Create&#160;new&#160;account</string>

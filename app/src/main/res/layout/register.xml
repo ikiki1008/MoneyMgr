@@ -76,10 +76,52 @@
             android:background="@drawable/etc_back"/>
 
         <TextView
+            android:id="@+id/pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="299dp"
+            android:text="@string/register_pwd"
+            android:textColor="@color/side_p"
+            android:textSize="20sp"
+            android:fontFamily="@font/poppins"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/set_pwd"
+            android:layout_width="250dp"
+            android:layout_height="35dp"
+            android:textSize="15sp"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/dirty_white"
+            android:layout_marginTop="295dp"
+            android:layout_marginStart="80dp"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:background="@drawable/etc_back"/>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_login_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="345dp"
+            android:layout_marginStart="25dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Oh, you have google account? try this"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/side_p"
+            android:textSize="13sp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="350dp" />
+
+        <TextView
             android:id="@+id/signBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="320dp"
+            android:layout_marginTop="410dp"
             android:layout_gravity="left"
             android:layout_marginStart="50dp"
             android:text="@string/sign_in"
@@ -91,30 +133,13 @@
             android:id="@+id/cancelBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="320dp"
+            android:layout_marginTop="410dp"
             android:layout_gravity="right"
             android:layout_marginEnd="50dp"
             android:text="@string/real_cancel"
             android:textColor="@color/side_p"
             android:fontFamily="@font/poppins"
             android:textSize="20sp" />
-
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/google_login_btn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="380dp"
-            android:layout_marginStart="25dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Oh, you have google account? try this"
-            android:fontFamily="@font/poppins"
-            android:textColor="@color/side_p"
-            android:textSize="13sp"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="385dp" />
 
     </FrameLayout>
 
@@ -123,7 +148,7 @@
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="@+id/first_section"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="290dp">
+        android:layout_marginTop="420dp">
 
         <ImageView
             android:id="@+id/moneyImg"

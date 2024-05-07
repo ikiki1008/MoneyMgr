@@ -59,6 +59,7 @@ public class RegisterFragment extends Fragment {
     private TextView mSave = null;
     private EditText mEmail = null;
     private EditText mName = null;
+    private EditText mPass = null;
     private ImageView mMoneyImg = null;
     private FirebaseAuth mAuth;
     private SignInButton mGoogleRegister = null;
@@ -81,12 +82,12 @@ public class RegisterFragment extends Fragment {
         Log.d(TAG, " LoginFragment onCreateView: ");
         View view = inflater.inflate(R.layout.register, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
         mGoogleRegister = view.findViewById(R.id.google_login_btn);
         mSave = view.findViewById(R.id.signBtn);
         mCancel = view.findViewById(R.id.cancelBtn);
         mEmail = view.findViewById(R.id.set_email);
         mName = view.findViewById(R.id.set_name);
+        mPass = view.findViewById(R.id.set_pwd);
         mMoneyImg = view.findViewById(R.id.moneyImg);
         GlideDrawableImageViewTarget gif = new GlideDrawableImageViewTarget(mMoneyImg); //gif setting
         Glide.with(mContext).load(R.drawable.money_stack).into(gif);
@@ -96,14 +97,18 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String email = mEmail.getText().toString();
-                String pwd = mName.getText().toString();
+                String name = mName.getText().toString();
+                String pwd = mPass.getText().toString();
 
                 if (email.isEmpty()) {
                     Log.d(TAG, " ##### you cannot login without typing yout id on textbox ");
                     startShake(mEmail);
                 }
-                else if (pwd.isEmpty()) {
+                else if (name.isEmpty()) {
                    startShake(mName);
+                }
+                else if (pwd.isEmpty()) {
+                    startShake(mPass);
                 }
                 else {
                     checkDoubleComps();
@@ -147,33 +152,27 @@ public class RegisterFragment extends Fragment {
                 .whereEqualTo("email", email)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (!task.getResult().isEmpty()) {
-                            Log.d(TAG, "Email already exists.");
-                            startShake(mEmail);
-                        } else {
-                            db.collection("user") //check if theres same nickname after check email
-                                    .whereEqualTo("name", name)
-                                    .get()
-                                    .addOnCompleteListener(task1 -> {
-                                        if (task1.isSuccessful()) {
-                                            if (!task1.getResult().isEmpty()) {
-                                                Log.d(TAG, "Name already exists.");
-                                                startShake(mName);
-                                            } else {
-                                                addNewData(); //save up to db if theres no same email / name
-                                            }
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task1.getException());
-                                        }
-                                    });
-                        }
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        Log.d(TAG, "checkDoubleComps: 요소가 하나라도 중복되는게 있습니다...");
+                        startShake(mEmail);
+                    }
+                    else {
+                        Log.d(TAG, "checkDoubleComps 중복되는 이메일이 없다..");
+                        db.collection("user")
+                                .whereEqualTo("name", name)
+                                .get()
+                                .addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful() && !task1.getResult().isEmpty()) {
+                                        startShake(mName);
+                                        Log.d(TAG, "checkDoubleComps: 이름이 중복된다");
+                                    } else {
+                                        Log.d(TAG, "checkDoubleComps: 최종적으로 등록할 수 있음.");
+                                        addNewData();
+                                    }
+                                });
                     }
                 });
     }
-
 
     private void addNewData() {
         Log.d(TAG, " ##### put new data resource into the db");
@@ -182,15 +181,57 @@ public class RegisterFragment extends Fragment {
         Map<String, Object> user = new HashMap<>();
         user.put("email", mEmail.getText().toString());
         user.put("name", mName.getText().toString());
+        user.put("password", mPass.getText().toString());
+//
+//        db.collection("users").document("user")
+//                .add(user)
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        registerFirebaseAuth(mEmail.getText().toString(), mName.getText().toString()); //auth 등록하기
+//                        Log.d(TAG, "addNewData: 등록완료 이제 넘어가자");
+//                    }
+//                })
+//                .addOnFailureListener(e -> Log.d(TAG, "Failed to add new data"));
 
         db.collection("user")
                 .add(user)
-                .addOnSuccessListener(documentReference -> Log.d(TAG, "Documents added with ID : " + documentReference.getId()))
-                .addOnFailureListener(e -> Log.d(TAG, "Failed to add new data"));
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "addNewData: 데이터를 추가하였음");
+                        registerFirebaseAuth(mEmail.getText().toString(), mName.getText().toString());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "addNewData: failed to add new data....");
+                });
 
-        Log.d(TAG, "addNewData: 디비에 저장도 했고 이제 메인 액티비티로 드가자~");
-        Intent intent = new Intent(mContext, UserMainActivity.class);
-        startActivity(intent);
+    }
+
+    private void registerFirebaseAuth (String email, String name) {
+        Log.d(TAG, "registerFirebaseAuth: ");
+
+        mAuth.createUserWithEmailAndPassword(email, name)
+                .addOnCompleteListener((Activity) mContext, task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "registerFirebaseAuth: 로그인 등록 완료");
+                        loginWAuth(email, name);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "registerFirebaseAuth: 왜 실패했지... " + e);
+                });
+    }
+
+    private void loginWAuth (String email, String name) {
+        Log.d(TAG, "loginWAuth: ");
+        mAuth.signInWithEmailAndPassword(email, name)
+                .addOnCompleteListener((Activity) mContext, task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "loginWAuth: 가입 완료 후 로그인 성공");
+                        Intent intent = new Intent(mContext, UserMainActivity.class);
+                        startActivity(intent);
+                    }
+                });
     }
 
     private void googleSignInit() {
@@ -237,13 +278,6 @@ public class RegisterFragment extends Fragment {
                 });
     }
 
-
-    private void googleSignIn() {
-        Log.d(TAG, "googleSignIn: ");
-        Intent intent = mGoogleSignInClient.getSignInIntent();
-        activityResultLauncher.launch(intent);
-    }
-
     private void configSignIn() {
         Log.d(TAG, "configSignIn: ");
         GoogleSignInOptions gsi = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -251,6 +285,12 @@ public class RegisterFragment extends Fragment {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(mContext, gsi);
+    }
+
+    private void googleSignIn() {
+        Log.d(TAG, "googleSignIn: ");
+        Intent intent = mGoogleSignInClient.getSignInIntent();
+        activityResultLauncher.launch(intent);
     }
 
 }

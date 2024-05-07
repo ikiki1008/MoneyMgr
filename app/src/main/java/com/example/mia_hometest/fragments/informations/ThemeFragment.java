@@ -33,15 +33,15 @@ public class ThemeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, " ThemeFragment onCreateView: ");
-        View view = inflater.inflate(R.layout.user_info, container, false);
-        mGoback = view.findViewById(R.id.back);
-        mGoback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: 뒤로가기 눌렀다...");
-                ((UserMainActivity) getActivity()).goBack();
-            }
-        });
+        View view = inflater.inflate(R.layout.category, container, false);
+//        mGoback = view.findViewById(R.id.back);
+//        mGoback.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "onClick: 뒤로가기 눌렀다...");
+//                ((UserMainActivity) getActivity()).goBack();
+//            }
+//        });
         return view;
     }
 
