@@ -1,0 +1,90 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:fontFamily="@font/poppins"
+            android:text="@string/lang"
+            android:textColor="@color/main_p"
+            android:textSize="20sp" />
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/layout"
+        android:background="@drawable/lang_box">
+
+        <TextView
+            android:id="@+id/btn_eng"
+            android:layout_width="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content"
+            android:text="@string/lang_eng"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/dirty_white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingTop="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="30dp"/>
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/menu_bar"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp" />
+
+        <TextView
+            android:id="@+id/btn_ko"
+            android:layout_width="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="@string/lang_ko"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/dirty_white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingLeft="20dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="10dp"/>
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="40dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/menu_bar"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp" />
+        
+        
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

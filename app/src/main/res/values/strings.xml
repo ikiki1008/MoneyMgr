@@ -106,6 +106,9 @@
     <string name="register_desc">Create&#160;new&#160;account</string>
     <string name="sign_in">SIGN&#160;IN</string>
 
+    <string name="lang_eng">English</string>
+    <string name="lang_ko">한국어</string>
+
     <string name="my_client_id">AIzaSyDoYs-5i_n4y53XYfEDwoiG4eYWh9HNH6w</string>
 
 </resources>

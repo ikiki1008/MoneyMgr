@@ -1,0 +1,114 @@
+<resources>
+    <string name="app_name">mia_hometest</string>
+
+    <string name="main_title">최근&#160;활동</string>
+    <string name="trans_title">Transactions</string>
+    <string name="sec_title">최근&#160;거래내역</string>
+    <string name="chart_title">거래내역&#160;차트</string>
+    <string name="main_screen_small_title">오늘의&#160;내역</string>
+    <string name="today_trans">오늘의&#160;활동</string>
+    <string name="setting">설정</string>
+
+    <string name="user_info">나의&#160;계정</string>
+    <string name="theme_color">테마&#160;컬러</string>
+    <string name="user_list">유저&#160;목록</string>
+    <string name="lang">언어</string>
+    <string name="sign_out">로그아웃</string>
+    <string name="delete">계정&#160;삭제</string>
+
+    <string name="income">수입</string>
+    <string name="expense">지출</string>
+    <string name="all">전체</string>
+
+    <string name="btn_month">월</string>
+    <string name="btn_week">주</string>
+
+    <string name="week_title">Jan DD, YYYY</string>
+    <string name="month_title">Jan DD - Nov DD, YYYY</string>
+
+    <string name="left_week">00</string>
+    <string name="right_week">24</string>
+    <string name="left_month">Nov&#160;DD</string>
+
+    <string name="name">이름</string>
+    <string name="desc">송금</string>
+    <string name="price">-$432.9</string>
+    <string name="date">3.30AM</string>
+
+    <!-- 선택 리스트뷰 버튼 -->
+    <string-array name="list_dialog">
+        <item>연별</item>
+        <item>월별</item>
+        <item>주별</item>
+        <item>하루</item>
+    </string-array>
+
+    <string-array name="outcome_dialog_title">
+        <item>금액</item>
+        <item>카테고리</item>
+        <item>자산</item>
+        <item>메모</item>
+    </string-array>
+
+    <string-array name="income_dialog_title">
+        <item>금액</item>
+        <item>자산</item>
+        <item>메모</item>
+    </string-array>
+
+    <string name="list_year">연별</string>
+    <string name="list_month">월별</string>
+    <string name="list_week">주별</string>
+    <string name="list_day">하루</string>
+
+    <string name="budeng">&lt;</string>
+    <string name="budeng2">&gt;</string>
+
+    <string name="dialog_date">날짜</string>
+    <string name="dialog_amm">금액</string>
+    <string name="dialog_cat">카테고리</string>
+    <string name="dialog_acc">자산</string>
+    <string name="dialog_note">메모</string>
+
+    <string name="save">저장</string>
+    <string name="real_cancel">취소</string>
+    <string name="edit">수정</string>
+    <string name="cancel">지우기</string>
+    <string name="cal_price">금액</string>
+
+    <string name="cash">현금</string>
+    <string name="bank">통장</string>
+    <string name="credit">신용카드</string>
+
+    <string name="food">음식</string>
+    <string name="rent">집세</string>
+    <string name="phone">모바일</string>
+    <string name="trans">대중교통</string>
+    <string name="card">카드</string>
+    <string name="loan">대출</string>
+    <string name="social">여가생활</string>
+    <string name="hospital">병원</string>
+    <string name="hobby">취미생활</string>
+    <string name="sports">운동</string>
+    <string name="ott">OTT</string>
+    <string name="edu">교육</string>
+    <string name="household">생활용품</string>
+    <string name="etc">기타</string>
+
+    <string name="note_desc">메모</string>
+
+    <string name="register_title">SIGN&#160;UP</string>
+    <string name="register_email">Email</string>
+    <string name="register_nickname">Name</string>
+    <string name="register_pwd">Pass</string>
+    <string name="login_title">LOG&#160;IN</string>
+    <string name="logout_title">LOG&#160;OUT</string>
+    <string name="register_desc">Create&#160;new&#160;account</string>
+    <string name="sign_in">SIGN&#160;IN</string>
+
+    <string name="lang_eng">English</string>
+    <string name="lang_ko">한국어</string>
+
+    <string name="my_client_id">AIzaSyDoYs-5i_n4y53XYfEDwoiG4eYWh9HNH6w</string>
+
+</resources>
