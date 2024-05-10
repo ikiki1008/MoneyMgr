@@ -23,7 +23,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fontFamily="@font/poppins"
                 android:text="@string/dialog_note"
                 android:textColor="@color/main_p"
                 android:textSize="20sp"
@@ -43,7 +42,6 @@
                 android:textColorHint="@color/light_black"
                 android:textColor="@color/light_black"
                 android:textSize="15sp"
-                android:fontFamily="@font/poppins"
                 android:maxLength="300"
                 android:ellipsize="end"
                 android:gravity="top"/>
@@ -54,7 +52,6 @@
                 android:layout_height="35dp"
                 android:text="@string/save"
                 android:textColor="@color/dirty_white"
-                android:fontFamily="@font/poppins"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/save_btn"
@@ -67,7 +64,6 @@
                 android:layout_height="35dp"
                 android:text="@string/cancel"
                 android:textColor="@color/dirty_white"
-                android:fontFamily="@font/poppins"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:background="@drawable/save_btn"

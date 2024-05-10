@@ -32,8 +32,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginStart="75dp"
                 android:textSize="16sp"
-                android:textColor="@color/white"
-                android:fontFamily="@font/poppins" />
+                android:textColor="@color/white" />
 
 
             <TextView
@@ -43,8 +42,7 @@
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
                 android:textSize="14sp"
-                android:textColor="@color/main_p"
-                android:fontFamily="@font/poppins"/>
+                android:textColor="@color/main_p" />
 
             <TextView
                 android:id="@+id/date"

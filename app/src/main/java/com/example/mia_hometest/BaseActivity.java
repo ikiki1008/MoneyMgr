@@ -3,6 +3,7 @@ package com.example.mia_hometest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -11,6 +12,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Locale;
 
 public class BaseActivity extends FragmentActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
@@ -29,6 +32,13 @@ public class BaseActivity extends FragmentActivity {
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+
+//        String language = Locale.getDefault().getLanguage();
+//        if (language.equals("ko")) {
+//            Log.d(TAG, "onCreate: 현재 설정 언어가 한국어라면 폰트를 바꾸기");
+//            Typeface typeface = Typeface.createFromAsset(getAssets(), "gowondodam_regular.ttf");
+//
+//        }
 
         if (user != null) {
             Log.d(TAG, "onCreate: 이미 로그인한 유저입니다. " + user.getEmail());

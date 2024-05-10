@@ -23,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:fontFamily="@font/poppins"
             android:text="@string/lang"
             android:textColor="@color/main_p"
             android:textSize="20sp" />
@@ -44,7 +43,6 @@
             android:layout_alignParentLeft="true"
             android:layout_height="wrap_content"
             android:text="@string/lang_eng"
-            android:fontFamily="@font/poppins"
             android:textColor="@color/dirty_white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -67,7 +65,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:text="@string/lang_ko"
-            android:fontFamily="@font/poppins"
             android:textColor="@color/dirty_white"
             android:textSize="16sp"
             android:textStyle="bold"

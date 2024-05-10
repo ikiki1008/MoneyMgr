@@ -31,7 +31,6 @@
                     android:textAppearance="?android:textAppearanceMedium"
                     android:textSize="14dp"
                     android:textColor="@android:color/white"
-                    android:fontFamily="@font/poppins"
                     android:layout_marginStart="45dp" />
 
                 <TextView
@@ -41,7 +40,6 @@
                     android:textAppearance="?android:textAppearanceMedium"
                     android:textSize="14dp"
                     android:textColor="@android:color/white"
-                    android:fontFamily="@font/poppins"
                     android:layout_marginStart="45dp"
                     android:layout_marginTop="20dp"/>
 
@@ -62,7 +60,6 @@
                     android:text="@string/income"
                     android:textSize="18sp"
                     android:textAlignment="center"
-                    android:fontFamily="@font/poppins"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="50dp"
@@ -76,7 +73,6 @@
                     android:text="@string/expense"
                     android:textSize="18sp"
                     android:textAlignment="center"
-                    android:fontFamily="@font/poppins"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
                     android:layout_marginStart="50dp"
@@ -109,7 +105,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/dialog_date"
-                    android:fontFamily="@font/poppins"
                     android:textSize="14sp"
                     android:textColor="@color/dirty_white" />
 
@@ -119,8 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="105dp"
                     android:textColor="@color/dirty_white"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/poppins" />
+                    android:textSize="14sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
@@ -147,7 +141,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/save"
                     android:textColor="@color/dirty_white"
-                    android:fontFamily="@font/poppins"
                     android:textStyle="bold"
                     android:gravity="center"
                     android:background="@drawable/save_btn"
@@ -160,7 +153,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/real_cancel"
                     android:textColor="@color/dirty_white"
-                    android:fontFamily="@font/poppins"
                     android:textStyle="bold"
                     android:gravity="center"
                     android:background="@drawable/save_btn"

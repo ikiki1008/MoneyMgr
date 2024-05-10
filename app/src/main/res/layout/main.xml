@@ -32,7 +32,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="28dp"
                     android:layout_marginTop="66dp"
-                    android:fontFamily="@font/poppins"
                     android:text="@string/trans_title"
                     android:textColor="@color/main_p"
                     android:textSize="24sp" />

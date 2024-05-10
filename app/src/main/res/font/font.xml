@@ -5,4 +5,24 @@
         android:fontWeight="600"
         android:font="@font/poppins" />
 
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        android:font="@font/ibm_bold" />
+
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        android:font="@font/ibm_regular" />
+
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        android:font="@font/ibm_thin" />
+
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        android:font="@font/gowondodam_regular" />
+
 </font-family>
