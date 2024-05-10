@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.mia_hometest.fragments.informations.UserInfoFragment;
 import com.example.mia_hometest.fragments.main.CardScreenFragment;
 import com.example.mia_hometest.fragments.main.ChartScreenFragment;
 import com.example.mia_hometest.fragments.main.InfoScreenFragment;
@@ -25,8 +26,9 @@ public class UserMainActivity extends FragmentActivity {
     private MainScreenFragment mMainFragment = null;
     private InfoScreenFragment mInfoFragment = null;
     private ChartScreenFragment mChartFragment = null;
+    private UserInfoFragment mUserInfoFragment = null;
 
-    private ImageView[] mImage = new ImageView[4];
+    private ImageView[] mImage = new ImageView[5];
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -54,6 +56,7 @@ public class UserMainActivity extends FragmentActivity {
         mImage[1] = findViewById(R.id.expenseScreen);
         mImage[2] = findViewById(R.id.chartScreen);
         mImage[3] = findViewById(R.id.infoScreen);
+        mImage[4] = findViewById(R.id.user);
     }
 
     private void onCLick() {
@@ -63,7 +66,6 @@ public class UserMainActivity extends FragmentActivity {
                 launchFragment(mMainFragment);
             }
         });
-
 
         mImage[1].setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +87,13 @@ public class UserMainActivity extends FragmentActivity {
                 launchFragment(mInfoFragment);
             }
         });
+
+        mImage[4].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchFragment(mUserInfoFragment);
+            }
+        });
     }
 
     private void initFragments() {
@@ -92,6 +101,7 @@ public class UserMainActivity extends FragmentActivity {
         mChartFragment = new ChartScreenFragment(mContext);
         mInfoFragment = new InfoScreenFragment(mContext);
         mCardFragment = new CardScreenFragment(mContext);
+        mUserInfoFragment = new UserInfoFragment(mContext);
     }
 
     public void launchFragment(Fragment fragment) {

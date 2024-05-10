@@ -211,12 +211,15 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
             case R.id.icon:
                 break;
             case R.id.lockImg:
+                Log.d(TAG, "onClick: 이미지 클릭했다");
                 if (mEditTexts.get(2).getTransformationMethod() == PasswordTransformationMethod.getInstance()) {
                     mEditTexts.get(2).setTransformationMethod(null);
                     mLock.setImageResource(R.drawable.unlocked);
+                    Log.d(TAG, "onClick: 이미지 잠금 해제");
                 } else {
                     mEditTexts.get(2).setTransformationMethod(PasswordTransformationMethod.getInstance());
                     mLock.setImageResource(R.drawable.lock);
+                    Log.d(TAG, "onClick: 이미지 잠금 모드");
                 }
                 break;
             case R.id.edit:

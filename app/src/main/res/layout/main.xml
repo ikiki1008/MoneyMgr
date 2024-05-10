@@ -14,49 +14,43 @@
         app:layout_constraintBottom_toTopOf="@id/bottomView"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/first_linear"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent">
 
-            <FrameLayout
-                android:id="@+id/first_sec"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/main_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="66dp"
+                android:text="@string/trans_title"
+                android:textColor="@color/main_p"
+                android:layout_alignParentLeft="true"
+                android:textSize="24sp" />
 
-                <TextView
-                    android:id="@+id/main_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginTop="66dp"
-                    android:text="@string/trans_title"
-                    android:textColor="@color/main_p"
-                    android:textSize="24sp" />
-
-                <ImageView
-                    android:id="@+id/user"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="66dp"
-                    android:layout_marginEnd="33dp"
-                    android:src="@drawable/user" />
-
-            </FrameLayout>
+            <ImageView
+                android:id="@+id/user"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="66dp"
+                android:layout_marginEnd="28dp"
+                android:src="@drawable/user" />
 
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_below="@id/main_title"
+                android:layout_marginTop="25dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginEnd="28dp" />
 
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </androidx.core.widget.NestedScrollView>
 
