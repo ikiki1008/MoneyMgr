@@ -1,8 +1,12 @@
 package com.example.mia_hometest.fragments.informations;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
@@ -34,13 +38,19 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class UserInfoFragment extends Fragment implements View.OnClickListener{
     private final String TAG = UserInfoFragment.class.getSimpleName();
+    private static final int REQUEST_IMAGE_PICK = 1001;
     private Context mContext = null;
     private ImageView mGoback = null;
     private ImageView mIcon = null;
@@ -197,6 +207,65 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
         });
     }
 
+    private void chooseProfilePic() {
+        Log.d(TAG, "setProfilePic: get profile picture from gallaery");
+        Intent intentPic = new Intent(Intent.ACTION_PICK);
+        intentPic.setType("image/*");
+        startActivityForResult(intentPic, REQUEST_IMAGE_PICK);
+    }
+
+    private void updateProfilePic(String image) {
+        Log.d(TAG, "updateProfilePic: ");
+        //set picture url on user profile in firebase
+        FirebaseUser user = mAuth.getCurrentUser();
+        UserProfileChangeRequest update = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(Uri.parse(image))
+                .build();
+
+        if (user != null) { // null check
+            user.updateProfile(update)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "성공적으로 프사가 업댓됨");
+                        } else {
+                            Log.d(TAG, "task failed...");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.d(TAG, "프로필 사진 업댓하는데 실패함.... " + e);
+                    });
+        } else {
+            Log.d(TAG, "OMG! user is null ");
+        }
+    }
+
+    @Override
+    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: ");
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK) {
+            Log.d(TAG, "onActivityResult: 됐나???");
+            if (data != null && data.getData() != null) {
+                Log.d(TAG, "이미지를 들고왔다");
+                Uri uri = data.getData();
+                mIcon.setImageURI(uri); //set profile pic on imageView
+
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageReference = storage.getReference().child("profile_images/" + mAuth.getCurrentUser().getUid() + ".jpg");
+                storageReference.putFile(uri)
+                        .addOnSuccessListener(taskSnapshot -> { //update picture on storage
+                            storageReference.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                                Log.d(TAG, "이미지를 스토리지에 옮기는데 성공");
+                                String image = uri1.toString();
+                                updateProfilePic(image);
+                            });
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(mContext, "이미지를 스토리지에 옮기는데 실패", Toast.LENGTH_SHORT).show();
+                        });
+            }
+        }
+    }
 
     @Override
     public void onClick(View view) {
@@ -209,6 +278,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                 }
                 break;
             case R.id.icon:
+                chooseProfilePic();
                 break;
             case R.id.lockImg:
                 Log.d(TAG, "onClick: 이미지 클릭했다");
