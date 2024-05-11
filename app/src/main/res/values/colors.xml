@@ -23,4 +23,22 @@
 
     <color name="income">#FF8B82</color>
     <color name="outcome">#7D91FF</color>
+
+    <color name="red">#FA8072</color>
+    <color name="red_side">#FCB2AA</color>
+
+    <color name="orange">#FF9872</color>
+    <color name="orange_side">#FFC1AA</color>
+
+    <color name="yellow">#FFDB8C</color>
+    <color name="yellow_side">#FFE9BA</color>
+
+    <color name="green">#32D6AD</color>
+    <color name="green_side">#98EAD6</color>
+
+    <color name="blue">#7289DA</color>
+    <color name="blue_side">#B8C4EC</color>
+
+    <color name="gray">#9E9FA1</color>
+    <color name="gray_side">#CECFD0</color>
 </resources>
