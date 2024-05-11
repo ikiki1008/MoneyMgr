@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.mia_hometest.BaseActivity;
 import com.example.mia_hometest.UserMainActivity;
 import com.example.mia_hometest.R;
@@ -35,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -120,14 +122,34 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                         }
                     }
                 });
+        getPfp(); //set pfp
 
         return view;
     }
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, " UserInfoFragment 끌게요");
         super.onDestroy();
+    }
+
+    private void getPfp() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+        storageReference.child("profile_images/" + mAuth.getCurrentUser().getUid() + ".jpg").getDownloadUrl().addOnSuccessListener(
+                new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Glide.with(mContext)
+                                .load(uri)
+                                .into(mIcon);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        mIcon.setImageResource(R.drawable.user);
+                    }
+                });
     }
 
     private void startShake(EditText editText) {
@@ -208,7 +230,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
     }
 
     private void chooseProfilePic() {
-        Log.d(TAG, "setProfilePic: get profile picture from gallaery");
+        Log.d(TAG, "setProfilePic: get profile picture from gallery");
         Intent intentPic = new Intent(Intent.ACTION_PICK);
         intentPic.setType("image/*");
         startActivityForResult(intentPic, REQUEST_IMAGE_PICK);
@@ -230,12 +252,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                         } else {
                             Log.d(TAG, "task failed...");
                         }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.d(TAG, "프로필 사진 업댓하는데 실패함.... " + e);
                     });
-        } else {
-            Log.d(TAG, "OMG! user is null ");
         }
     }
 
