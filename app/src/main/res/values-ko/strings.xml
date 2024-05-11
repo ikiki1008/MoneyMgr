@@ -56,6 +56,16 @@
         <item>메모</item>
     </string-array>
 
+    <string-array name="theme_color_title">
+        <item>빨강</item>
+        <item>주황</item>
+        <item>노랑</item>
+        <item>초록</item>
+        <item>파랑</item>
+        <item>보라</item>
+        <item>회백</item>
+    </string-array>
+
     <string name="list_year">연별</string>
     <string name="list_month">월별</string>
     <string name="list_week">주별</string>

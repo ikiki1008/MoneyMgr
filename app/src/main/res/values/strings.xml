@@ -56,6 +56,16 @@
         <item>Note</item>
     </string-array>
 
+    <string-array name="theme_color_title">
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Violet</item>
+        <item>Grey</item>
+    </string-array>
+
     <string name="list_year">Annually</string>
     <string name="list_month">Monthly</string>
     <string name="list_week">Weekly</string>
