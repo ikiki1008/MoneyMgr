@@ -2,6 +2,9 @@ package com.example.mia_hometest.fragments.informations;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +31,11 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
     private ThemeListAdapter mAdapter;
     private List<ThemeItem> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
+    private Intent mIntent;
+    private final String red = "com.android.action.red";
+    private final String orange = "com.android.action.orange";
+    private final String violet = "com.android.action.violet";
+
 
     public ThemeFragment (Context context) {
         mContext = context;
@@ -72,27 +80,36 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
     public void onThemeClick(int position) {
         switch (position) {
             case 0:
-                Log.d(TAG, "onThemeClick: red");
+                sendIntent("red");
                 break;
             case 1:
-                Log.d(TAG, "onThemeClick: orange");
+                sendIntent("orange");
                 break;
             case 2:
-                Log.d(TAG, "onThemeClick: yellow");
+                sendIntent("yellow");
                 break;
             case 3:
+                sendIntent("green");
                 break;
             case 4:
+                sendIntent("blue");
                 break;
             case 5:
+                sendIntent("violet");
                 break;
             case 6:
-                break;
-            case 7:
+                sendIntent("gray");
                 break;
             default:
                 break;
         }
+    }
+
+    private void sendIntent(String color) {
+        Log.d(TAG, "sendIntent: whats color ..... " + color);
+        mIntent = new Intent(mContext, UserMainActivity.class);
+        mIntent.putExtra("color", color);
+        startActivity(mIntent);
     }
 
     private void setThemeItems() {
@@ -103,7 +120,7 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
                 R.color.yellow,
                 R.color.green,
                 R.color.blue,
-                R.color.main_p,
+                R.color.violet,
                 R.color.gray
         };
 

@@ -42,7 +42,7 @@
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
                 android:textSize="14sp"
-                android:textColor="@color/main_p" />
+                android:textColor="?android:attr/textColor" />
 
             <TextView
                 android:id="@+id/date"
@@ -53,7 +53,7 @@
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
                 android:textSize="14sp"
-                android:textColor="@color/side_p" />
+                android:textColor="?android:attr/textColorSecondary" />
 
         </RelativeLayout>
 

@@ -2,6 +2,56 @@
 <resources>
     <style name="MiaAppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 기본 폰트 설정 -->
+        <item name="android:textColor">@color/main_p</item>
+        <item name="android:textColorSecondary">@color/side_p</item>
         <item name="android:fontFamily">@font/poppins</item>
     </style>
+
+    <style name="MiaAppThemeRed" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textColorSecondary">@color/red_side</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+    <style name="MiaAppThemeOrange" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">@color/orange</item>
+        <item name="android:textColorSecondary">@color/orange_side</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+    <style name="MiaAppThemeYellow" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">@color/yellow</item>
+        <item name="android:textColorSecondary">@color/yellow_side</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+    <style name="MiaAppThemeGreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">@color/green</item>
+        <item name="android:textColorSecondary">@color/green_side</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+    <style name="MiaAppThemeBlue" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textColorSecondary">@color/blue_side</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+    <style name="MiaAppThemeGray" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColorSecondary">@color/gray_side</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+    <style name="MainText" >
+        <item name="android:textColor">@color/main_p</item>
+        <item name="android:textColorSecondary">@color/side_p</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+    <style name="SideText">
+        <item name="android:textColor">@color/side_p</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
 </resources>

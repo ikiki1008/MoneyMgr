@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/main_screen_small_title"
-            android:textColor="@color/main_p"
+            android:textColor="?android:attr/textColor"
             android:textSize="18sp" />
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/today_trans"
-            android:textColor="@color/main_p"
+            android:textColor="?android:attr/textColor"
             android:textSize="18sp" />
 
         <!-- you can edit the last part of charts layout to use whether Line or Pie, or etc -->

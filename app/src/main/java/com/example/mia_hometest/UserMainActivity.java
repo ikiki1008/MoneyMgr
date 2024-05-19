@@ -4,8 +4,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,8 +31,8 @@ public class UserMainActivity extends FragmentActivity {
     private InfoScreenFragment mInfoFragment = null;
     private ChartScreenFragment mChartFragment = null;
     private UserInfoFragment mUserInfoFragment = null;
-
     private ImageView[] mImage = new ImageView[5];
+    private Intent mIntent = new Intent();
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -36,6 +40,30 @@ public class UserMainActivity extends FragmentActivity {
         Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
         mContext = this;
+        mIntent = getIntent();
+
+        String themeColor = mIntent.getStringExtra("color");
+        if (themeColor != null) {
+            if (themeColor.equals("red")) {
+                mContext.setTheme(R.style.MiaAppThemeRed);
+            } else if (themeColor.equals("orange")) {
+                mContext.setTheme(R.style.MiaAppThemeOrange);
+            } else if (themeColor.equals("yellow")) {
+                mContext.setTheme(R.style.MiaAppThemeYellow);
+            } else if (themeColor.equals("green")) {
+                mContext.setTheme(R.style.MiaAppThemeGreen);
+            } else if (themeColor.equals("blue")) {
+                mContext.setTheme(R.style.MiaAppThemeBlue);
+            } else if (themeColor.equals("gray")) {
+                mContext.setTheme(R.style.MiaAppThemeGray);
+            } else {
+                mContext.setTheme(R.style.MiaAppTheme);
+            }
+        } else {
+            Log.d(TAG, "onCreate: 아직은 인텐트 안받음");
+            mContext.setTheme(R.style.MiaAppTheme);
+        }
+
         setContentView(R.layout.main);
         initViews();
 
@@ -46,7 +74,6 @@ public class UserMainActivity extends FragmentActivity {
         //첫화면 loading
         initFragments();
         launchFragment(mMainFragment);
-
         //이 후
         onCLick();
     }

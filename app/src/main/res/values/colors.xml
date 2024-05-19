@@ -24,8 +24,8 @@
     <color name="income">#FF8B82</color>
     <color name="outcome">#7D91FF</color>
 
-    <color name="red">#FA8072</color>
-    <color name="red_side">#FCB2AA</color>
+    <color name="red">#F97869</color>
+    <color name="red_side">#FBAEA5</color>
 
     <color name="orange">#FF9872</color>
     <color name="orange_side">#FFC1AA</color>
@@ -38,6 +38,9 @@
 
     <color name="blue">#7289DA</color>
     <color name="blue_side">#B8C4EC</color>
+
+    <color name="violet">#965BFF</color>
+    <color name="vio_side">#BE9AFF</color>
 
     <color name="gray">#9E9FA1</color>
     <color name="gray_side">#CECFD0</color>
