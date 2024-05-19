@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/setting"
-            android:textColor="@color/main_p"
+            android:textColor="?android:attr/textColor"
             android:textSize="18sp" />
 
     </FrameLayout>
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/user_info"/>
 
         <TextView
@@ -45,7 +45,7 @@
             android:layout_marginTop="45dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/theme_color"/>
 
         <TextView
@@ -55,7 +55,7 @@
             android:layout_marginTop="90dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/user_list"/>
 
         <TextView
@@ -65,7 +65,7 @@
             android:layout_marginTop="135dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/lang"/>
 
         <TextView
@@ -75,7 +75,7 @@
             android:layout_marginTop="180dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/sign_out"/>
 
         <TextView
@@ -85,7 +85,7 @@
             android:layout_marginTop="225dp"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColorSecondary"
             android:text="@string/delete"/>
 
     </FrameLayout>

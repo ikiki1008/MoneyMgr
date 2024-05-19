@@ -23,7 +23,7 @@
             android:textSize="35sp"
             android:fontFamily="@font/poppins"
             android:textStyle="bold"
-            android:textColor="@color/main_p" />
+            style="@style/MainText"/>
 
         <TextView
             android:id="@+id/email"
@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="205dp"
             android:text="@string/register_email"
-            android:textColor="@color/side_p"
+            style="@style/SideText"
             android:textSize="20sp"
             android:fontFamily="@font/poppins"
             android:textAlignment="center" />
@@ -56,7 +56,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="252dp"
             android:text="@string/register_nickname"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="20sp"
             android:fontFamily="@font/poppins"
             android:textAlignment="center" />
@@ -81,7 +81,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="299dp"
             android:text="@string/register_pwd"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="20sp"
             android:fontFamily="@font/poppins"
             android:textAlignment="center" />
@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:text="Oh, you have google account? try this"
             android:fontFamily="@font/poppins"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="13sp"
             android:layout_marginStart="60dp"
             android:layout_marginTop="350dp" />
@@ -125,7 +125,7 @@
             android:layout_gravity="left"
             android:layout_marginStart="50dp"
             android:text="@string/sign_in"
-            android:textColor="@color/main_p"
+            android:textColor="?android:attr/textColor"
             android:fontFamily="@font/poppins"
             android:textSize="20sp" />
 
@@ -137,7 +137,7 @@
             android:layout_gravity="right"
             android:layout_marginEnd="50dp"
             android:text="@string/real_cancel"
-            android:textColor="@color/side_p"
+            android:textColor="?android:attr/textColor"
             android:fontFamily="@font/poppins"
             android:textSize="20sp" />
 

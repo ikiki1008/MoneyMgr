@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/lang"
-            android:textColor="@color/main_p"
+            android:textColor="?android:attr/textColor"
             android:textSize="20sp" />
 
     </FrameLayout>

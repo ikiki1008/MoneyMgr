@@ -28,7 +28,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="66dp"
                 android:text="@string/trans_title"
-                android:textColor="@color/main_p"
+                android:textColor="?android:attr/textColor"
                 android:layout_alignParentLeft="true"
                 android:textSize="24sp" />
 

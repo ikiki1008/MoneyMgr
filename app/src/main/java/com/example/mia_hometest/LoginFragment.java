@@ -129,7 +129,7 @@ public class LoginFragment extends Fragment {
                 ((BaseActivity) getActivity()).launchFragment(mRegisFragment);
                 mEmail.setText("");
                 mPwd.setText("");
-            }
+            }      
         });
 
         return view;
