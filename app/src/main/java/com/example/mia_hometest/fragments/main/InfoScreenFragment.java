@@ -1,6 +1,8 @@
 package com.example.mia_hometest.fragments.main;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +41,8 @@ public class InfoScreenFragment extends Fragment implements View.OnClickListener
     private UserListFragment mUserList = null;
     private LanguageFragment mLang = null;
     private DeleteUserFragment mDelete = null;
+    private AlertDialog.Builder mBuilder;
+    private AlertDialog mAlertDialog;
 
     public InfoScreenFragment (Context context) {
         mContext = context;
@@ -79,6 +83,27 @@ public class InfoScreenFragment extends Fragment implements View.OnClickListener
         ((UserMainActivity) getActivity()).launchFragment(fragment);
     }
 
+    private void showCheckDialog() {
+        mBuilder = new AlertDialog.Builder(mContext);
+        mBuilder.setTitle("Are you sure you want to delete account?");
+        mBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteUser();
+            }
+        });
+        mBuilder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (mAlertDialog != null) {
+                    mAlertDialog.cancel();
+                }
+            }
+        });
+        mAlertDialog = mBuilder.create();
+        mAlertDialog.show();
+    }
+
     private void deleteUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -91,7 +116,10 @@ public class InfoScreenFragment extends Fragment implements View.OnClickListener
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     document.getReference().delete();
-                                    Log.d(TAG, "onSuccess: 사용자 정보를 완전히 삭제하였습니다.");
+                                    Log.d(TAG, "onSuccess: 사용자 정보를 완전히 삭제하였습니다."); //구글로 가입한 유저 auth 도 삭제해야함
+                                    Intent intent = new Intent(mContext, UserMainActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
                                 }
                             }
                         }
@@ -136,7 +164,8 @@ public class InfoScreenFragment extends Fragment implements View.OnClickListener
             Toast.makeText(mContext, "logout Succeed", Toast.LENGTH_SHORT).show();
 
         } else if (view.getId() == R.id.delete) {
-            deleteUser();
+            //정말로 삭제하겠냐는 다이얼로그 표시
+            showCheckDialog();
         } else {
             Log.d(TAG, "onClick: do nothing....");
         }
