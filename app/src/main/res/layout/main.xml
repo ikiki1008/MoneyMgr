@@ -72,35 +72,35 @@
 
             <ImageView
                 android:id="@+id/mainScreen"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginTop="20dp"
                 android:layout_columnWeight="1"
                 android:src="@drawable/home" />
 
             <ImageView
                 android:id="@+id/expenseScreen"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="22dp"
                 android:layout_columnWeight="1"
-                android:src="@drawable/card" />
+                android:src="@drawable/credit_card" />
 
             <ImageView
                 android:id="@+id/chartScreen"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="22dp"
                 android:layout_columnWeight="1"
-                android:src="@drawable/graph" />
+                android:src="@drawable/chart" />
 
             <ImageView
                 android:id="@+id/infoScreen"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="22dp"
                 android:layout_columnWeight="1"
-                android:src="@drawable/info" />
+                android:src="@drawable/manufacturing" />
         </GridLayout>
 
 <!--        <ImageView-->
