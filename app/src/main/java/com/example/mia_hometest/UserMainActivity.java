@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class UserMainActivity extends FragmentActivity {
     private UserInfoFragment mUserInfoFragment = null;
     private ImageView[] mImage = new ImageView[5];
     private Intent mIntent = new Intent();
+    private SharedPreferences mPreference;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -41,27 +43,19 @@ public class UserMainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         mIntent = getIntent();
-
+        mPreference = getSharedPreferences("theme", MODE_PRIVATE);
+        String userColor = mPreference.getString("color", null);
         String themeColor = mIntent.getStringExtra("color");
+
         if (themeColor != null) {
-            if (themeColor.equals("red")) {
-                mContext.setTheme(R.style.MiaAppThemeRed);
-            } else if (themeColor.equals("orange")) {
-                mContext.setTheme(R.style.MiaAppThemeOrange);
-            } else if (themeColor.equals("yellow")) {
-                mContext.setTheme(R.style.MiaAppThemeYellow);
-            } else if (themeColor.equals("green")) {
-                mContext.setTheme(R.style.MiaAppThemeGreen);
-            } else if (themeColor.equals("blue")) {
-                mContext.setTheme(R.style.MiaAppThemeBlue);
-            } else if (themeColor.equals("gray")) {
-                mContext.setTheme(R.style.MiaAppThemeGray);
+            setTheme(themeColor);
+            savePreference(themeColor);
+        } else {
+            if (userColor != null) {
+                setTheme(userColor);
             } else {
                 mContext.setTheme(R.style.MiaAppTheme);
             }
-        } else {
-            Log.d(TAG, "onCreate: 아직은 인텐트 안받음");
-            mContext.setTheme(R.style.MiaAppTheme);
         }
 
         setContentView(R.layout.main);
@@ -76,6 +70,32 @@ public class UserMainActivity extends FragmentActivity {
         launchFragment(mMainFragment);
         //이 후
         onCLick();
+    }
+    
+    private void setTheme(String themeColor) {
+        Log.d(TAG, "setTheme: ");
+        if (themeColor.equals("red")) {
+            mContext.setTheme(R.style.MiaAppThemeRed);
+        } else if (themeColor.equals("orange")) {
+            mContext.setTheme(R.style.MiaAppThemeOrange);
+        } else if (themeColor.equals("yellow")) {
+            mContext.setTheme(R.style.MiaAppThemeYellow);
+        } else if (themeColor.equals("green")) {
+            mContext.setTheme(R.style.MiaAppThemeGreen);
+        } else if (themeColor.equals("blue")) {
+            mContext.setTheme(R.style.MiaAppThemeBlue);
+        } else if (themeColor.equals("gray")) {
+            mContext.setTheme(R.style.MiaAppThemeGray);
+        } else {
+            mContext.setTheme(R.style.MiaAppTheme);
+        }
+    }
+
+    private void savePreference(String color) {
+        Log.d(TAG, "savePreference: ");
+        SharedPreferences.Editor editor = mPreference.edit();
+        editor.putString("color", color);
+        editor.apply();
     }
 
     private void initViews() {
