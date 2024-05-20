@@ -17,7 +17,7 @@
             android:id="@+id/back"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/back" />
+            android:src="@drawable/arrow_back" />
 
         <TextView
             android:layout_width="match_parent"
