@@ -27,7 +27,7 @@
 
             <TextView
                 android:id="@+id/title"
-                android:layout_width="49dp"
+                android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginStart="75dp"
@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/price"
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
@@ -46,7 +46,7 @@
 
             <TextView
                 android:id="@+id/date"
-                android:layout_width="54dp"
+                android:layout_width="wrap_content"
                 android:layout_height="21dp"
                 android:layout_below="@id/price"
                 android:layout_marginTop="6dp"

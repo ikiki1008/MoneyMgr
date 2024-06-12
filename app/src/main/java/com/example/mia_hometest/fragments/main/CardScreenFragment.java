@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mia_hometest.R;
 import com.example.mia_hometest.common.ListItem;
 import com.example.mia_hometest.common.CardListAdapter;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,6 +44,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private AlertDialog.Builder mBuilder;
     private RecyclerView mRecyclerView;
     private CardListAdapter mAdapter;
+    private FirebaseFirestore mStore;
 
     @Override
     public void onAttach(Context context) {
@@ -55,6 +58,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         Log.d(TAG, " CardScreenFragment onCreateView: ");
         View view = inflater.inflate(R.layout.expense_all_screen, container, false);
 
+        mStore = FirebaseFirestore.getInstance();
         mAll = view.findViewById(R.id.all);
         mExpense = view.findViewById(R.id.expense);
         mIncome = view.findViewById(R.id.income);
@@ -74,9 +78,29 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mListTitle.setText(R.string.list_week);
         int themeColor = getThemeColor(android.R.attr.textColor);
         mAll.setTextColor(themeColor);
-        getData("AllItems.json");
 
+        fetchData("all");
         return view;
+    }
+
+    public void fetchData(String type) {
+        mStore.collection("user").get().addOnCompleteListener(task -> {
+            List<ListItem> listItems = new ArrayList<>();
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                    String cate = documentSnapshot.getString("category");
+                    String price = documentSnapshot.getString("price");
+                    String date = documentSnapshot.getString("date");
+                    listItems.add(new ListItem(cate, price, date));
+                }
+            } else {
+                String cate = "null";
+                String price = "0000";
+                String date = "0000.00.00";
+                listItems.add(new ListItem(cate, price, date));
+            }
+            mAdapter.setItems(listItems);
+        });
     }
 
     @Override
@@ -168,21 +192,21 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         switch (view.getId()) {
             case R.id.all:
                 Log.d(TAG, "onClick: alllllllllll");
-                getData("AllItems.json");
+                fetchData("all");
                 mAll.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
                 break;
             case R.id.expense:
                 Log.d(TAG, "onClick: expense");
-                getData("Expenses.json");
+                fetchData("all");
                 mExpense.setTextColor(themeColor);
                 mAll.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
                 break;
             case R.id.income:
                 Log.d(TAG, "onClick: income");
-                getData("Incomes.json");
+                fetchData("all");
                 mIncome.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mAll.setTextColor(secondColor);
