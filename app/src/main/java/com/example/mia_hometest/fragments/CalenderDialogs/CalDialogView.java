@@ -116,6 +116,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
     }
 
     private void setItems() {
+        mItemList.clear();
         String[] titles = getResources().getStringArray(R.array.outcome_dialog_title);
         String[] descs = new String[titles.length];
 
