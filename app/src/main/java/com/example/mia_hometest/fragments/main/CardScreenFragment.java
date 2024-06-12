@@ -72,7 +72,8 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mBtn.setOnClickListener(this);
 
         mListTitle.setText(R.string.list_week);
-        mAll.setTextColor(mContext.getColor(R.color.side_p));
+        int themeColor = getThemeColor(android.R.attr.textColor);
+        mAll.setTextColor(themeColor);
         getData("AllItems.json");
 
         return view;
@@ -122,6 +123,15 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    private int getThemeColor(int attr) {
+        TypedValue typedValue = new TypedValue();
+        if (mContext.getTheme().resolveAttribute(attr, typedValue, true)) {
+            return typedValue.data;
+        } else {
+            throw new IllegalArgumentException("Attribute not found in theme");
+        }
+    }
+
     private void showList() {
         mlist = getResources().getStringArray(R.array.list_dialog);
         mBuilder = new AlertDialog.Builder(mContext);
@@ -152,27 +162,30 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
+        int themeColor = getThemeColor(android.R.attr.textColor);
+        int secondColor = getThemeColor(android.R.attr.textColorSecondary);
+
         switch (view.getId()) {
             case R.id.all:
                 Log.d(TAG, "onClick: alllllllllll");
                 getData("AllItems.json");
-                mAll.setTextColor(mContext.getColor(R.color.side_p));
-                mExpense.setTextColor(mContext.getColor(R.color.dirty_white));
-                mIncome.setTextColor(mContext.getColor(R.color.dirty_white));
+                mAll.setTextColor(themeColor);
+                mExpense.setTextColor(secondColor);
+                mIncome.setTextColor(secondColor);
                 break;
             case R.id.expense:
                 Log.d(TAG, "onClick: expense");
                 getData("Expenses.json");
-                mExpense.setTextColor(mContext.getColor(R.color.side_p));
-                mAll.setTextColor(mContext.getColor(R.color.dirty_white));
-                mIncome.setTextColor(mContext.getColor(R.color.dirty_white));
+                mExpense.setTextColor(themeColor);
+                mAll.setTextColor(secondColor);
+                mIncome.setTextColor(secondColor);
                 break;
             case R.id.income:
                 Log.d(TAG, "onClick: income");
                 getData("Incomes.json");
-                mIncome.setTextColor(mContext.getColor(R.color.side_p));
-                mAll.setTextColor(mContext.getColor(R.color.dirty_white));
-                mExpense.setTextColor(mContext.getColor(R.color.dirty_white));
+                mIncome.setTextColor(themeColor);
+                mExpense.setTextColor(secondColor);
+                mAll.setTextColor(secondColor);
                 break;
             case R.id.listBtn:
                 Log.d(TAG, "onClick: 리스트 버튼 클릭했음");
