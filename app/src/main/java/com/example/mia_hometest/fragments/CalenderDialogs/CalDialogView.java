@@ -19,12 +19,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mia_hometest.R;
 import com.example.mia_hometest.common.DialogItem;
 import com.example.mia_hometest.common.DialogListAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CalDialogView extends DialogFragment implements View.OnClickListener, CalCulListener, DialogListAdapter.OnItemClickListener {
     private final String TAG = CalDialogView.class.getSimpleName();
@@ -135,12 +140,59 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         return new DateFormatSymbols().getShortWeekdays()[dayOfWeek];
     }
 
+    private void saveToFirebase(String date, String amount, String category, String account, String note) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("date", Integer.parseInt(date));
+            data.put("amount", Integer.parseInt(amount));
+            data.put("category", category);
+            data.put("account", account);
+            if (note != null) {
+                data.put("note", note);
+            }
+
+            db.collection("users").document(userId).collection("transactions")
+                    .add(data)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+        } else {
+            Log.w(TAG, "User is not signed in");
+        }
+    }
+
     @SuppressLint({"NonConstantResourceId", "NotifyDataSetChanged"})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.editBtn:
                 Log.d(TAG, "onClick: 버튼 클릭클릭클릭");
+                //amount, cate, acc 가 널이 아니면 저장 후 다이얼로그 뷰를 dismiss 처리한다
+                if (mItemList.get(1).isVisible()) {
+                    // expense
+                    if (mItemList.get(0).getDesc() != null && mItemList.get(1).getDesc() != null
+                            && mItemList.get(2).getDesc() != null && mItemList.get(3).getDesc() != null) {
+
+                        saveToFirebase(mItemList.get(0).getDesc(), mItemList.get(1).getDesc(),
+                                mItemList.get(2).getDesc(), mItemList.get(3).getDesc(),
+                                mItemList.size() > 4 ? mItemList.get(4).getDesc() : null);
+                    }
+                } else {
+                    // income
+                    if (mItemList.get(0).getDesc() != null && mItemList.get(1).getDesc() != null
+                            && mItemList.get(3).getDesc() != null) {
+
+                        saveToFirebase(mItemList.get(0).getDesc(), mItemList.get(1).getDesc(),
+                                null, mItemList.get(2).getDesc(), mItemList.get(3).getDesc());
+                    }
+                }
+
+                if (getDialog() != null && getDialog().isShowing()) {
+                    dismiss();
+                }
                 break;
             case R.id.cancelBtn:
                 if (getDialog() != null && getDialog().isShowing()) {
