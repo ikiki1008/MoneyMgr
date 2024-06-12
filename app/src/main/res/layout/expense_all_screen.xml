@@ -35,7 +35,7 @@
                 android:layout_gravity="right"
                 android:layout_marginEnd="30dp"
                 android:text="@string/list_day"
-                android:textColor="@color/dirty_white"
+                android:textColor="?android:attr/textColor"
                 android:textSize="15sp" />
 
             <ImageView
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/all"
-                android:textColor="@color/dirty_white"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="16sp"
                 android:layout_marginEnd="40dp"
                 android:layout_alignParentLeft="true"/>
@@ -71,7 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/expense"
-                android:textColor="@color/dirty_white"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="16sp"
                 android:layout_marginEnd="40dp"
                 android:layout_toRightOf="@id/all"/>
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/income"
-                android:textColor="@color/dirty_white"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="16sp"
                 android:layout_toRightOf="@id/expense"/>
 

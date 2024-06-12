@@ -35,7 +35,7 @@
                 android:layout_gravity="right"
                 android:layout_marginEnd="30dp"
                 android:text="@string/list_day"
-                android:textColor="@color/dirty_white"
+                android:textColor="?android:attr/textColor"
                 android:textSize="15sp" />
 
             <ImageView
