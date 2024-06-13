@@ -49,6 +49,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
     private TextView mDay;
     private TextView mLine1;
     private List<DialogItem> mItemList = new ArrayList<>();
+    private boolean mIncome = false;
 
     public CalDialogView (Context context) {
         mContext = context;
@@ -140,8 +141,8 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         return new DateFormatSymbols().getShortWeekdays()[dayOfWeek];
     }
 
-    private void saveToFirebase(String date, String amount, String category, String account, String note) {
-        Log.d(TAG, "saveToFirebase: ");
+    private void saveExpense(String date, String amount, String category, String account, String note) {
+        Log.d(TAG, "saveExpense: ");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             Log.d(TAG, "saveToFirebase: 유저가 널이 아니라면...");
@@ -157,7 +158,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                 data.put("note", note);
             }
 
-            db.collection("user").document(userId).collection("money")
+            db.collection("user").document(userId).collection("outcome")
                     .add(data)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
@@ -167,26 +168,62 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         }
     }
 
+    private void saveIncome(String date, String amount, String account, String note) {
+        Log.d(TAG, "saveIncome: ");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("date", date);
+            data.put("amount", amount);
+            data.put("account", account);
+            if (note != null) {
+                data.put("note", note);
+            }
+            db.collection("user").document(userId).collection("income")
+                    .add(data)
+                    .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            Log.d(TAG, "saveToFirebase: 여기까지 성공했나?");
+        } else {
+            Log.d(TAG, "saveIncome: user is not signed in ");
+        }
+    }
+
     @SuppressLint({"NonConstantResourceId", "NotifyDataSetChanged"})
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.editBtn:
                 Log.d(TAG, "onClick: 버튼 클릭클릭클릭");
-                if (mItemList.get(0) != null && mItemList.get(1) != null
-                        && mItemList.get(2) != null) {
-                    Log.d(TAG, "onClick: 여기까지 들어오니??");
+                if (!mIncome) {
+                    Log.d(TAG, "onClick: expense screen");
+                    if (mItemList.get(0) != null && mItemList.get(1) != null
+                            && mItemList.get(2) != null) {
+                        // 콘솔에 출력하여 저장하려는 데이터 확인
+                        Log.d(TAG, "onClick: Saving data: "
+                                + mItemList.get(0).getDesc() + ", "
+                                + mItemList.get(1).getDesc() + ", "
+                                + mItemList.get(2).getDesc() + ", "
+                                + (mItemList.size() > 3 ? mItemList.get(3).getDesc() : "null"));
 
-                    // 콘솔에 출력하여 저장하려는 데이터 확인
-                    Log.d(TAG, "onClick: Saving data: "
-                            + mItemList.get(0).getDesc() + ", "
-                            + mItemList.get(1).getDesc() + ", "
-                            + mItemList.get(2).getDesc() + ", "
-                            + (mItemList.size() > 3 ? mItemList.get(3).getDesc() : "null"));
+                        saveExpense(mLine1.getText().toString(), mItemList.get(0).getDesc(),
+                                mItemList.get(1).getDesc(), mItemList.get(2).getDesc(),
+                                mItemList.size() > 3 ? mItemList.get(3).getDesc() : null);
+                    }
+                } else {
+                    Log.d(TAG, "onClick: income screen");
+                    if (mItemList.get(0) != null && mItemList.get(2) != null) {
+                        Log.d(TAG, "onClick: Saving data: "
+                                + mItemList.get(0).getDesc() + ", "
+                                + mItemList.get(1).getDesc() + ", "
+                                + (mItemList.size() > 2 ? mItemList.get(2).getDesc() : "null"));
 
-                    saveToFirebase(mLine1.getText().toString(), mItemList.get(0).getDesc(),
-                            mItemList.get(1).getDesc(), mItemList.get(2).getDesc(),
-                            mItemList.size() > 3 ? mItemList.get(3).getDesc() : null);
+                        saveIncome(mLine1.getText().toString(), mItemList.get(0).getDesc(),
+                                mItemList.get(1).getDesc(), mItemList.size() > 2 ? mItemList.get(2).getDesc() : null);
+                    }
                 }
                 if (getDialog() != null && getDialog().isShowing()) {
                     dismiss();
@@ -199,6 +236,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                 break;
             case R.id.income:
                 Log.d(TAG, "onClick: incomeeeeeeeeee");
+                mIncome = true;
                 mLeftCheck.setImageResource(R.drawable.check);
                 mRightCheck.setImageResource(0);
                 mItemList.remove(1);
@@ -206,6 +244,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                 break;
             case R.id.outcome:
                 Log.d(TAG, "onClick:  outcomeeeeeeeeeeeeeee");
+                mIncome = false;
                 mRightCheck.setImageResource(R.drawable.check);
                 mLeftCheck.setImageResource(0);
 
@@ -229,33 +268,51 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                 mAdapter.notifyItemChanged(0);
                 break;
             case "category" :
-                String cate = intent.getStringExtra("value");
-                if (cate.equals(" ") || cate.isEmpty()) {
-                    Log.d(TAG, "onClicked: 1");
-                    mItemList.get(1).setDesc(null);
-                } else {
-                    Log.d(TAG, "onClicked: 2");
-                    mItemList.get(1).setDesc(cate);
-                }
-                mAdapter.notifyItemChanged(1);
+                    String cate = intent.getStringExtra("value");
+                    if (cate.equals(" ") || cate.isEmpty()) {
+                        Log.d(TAG, "onClicked: 1");
+                        mItemList.get(1).setDesc(null);
+                    } else {
+                        Log.d(TAG, "onClicked: 2");
+                        mItemList.get(1).setDesc(cate);
+                    }
+                    mAdapter.notifyItemChanged(1);
                 break;
             case "account" :
                 String acc = intent.getStringExtra("value");
-                if (acc.equals(" ") || acc.isEmpty()) {
-                    mItemList.get(2).setDesc(null);
+                if (mIncome) {
+                    if (acc.equals(" ") || acc.isEmpty()) {
+                        mItemList.get(1).setDesc(null);
+                    } else {
+                        mItemList.get(1).setDesc(acc);
+                    }
+                    mAdapter.notifyItemChanged(1);
                 } else {
-                    mItemList.get(2).setDesc(acc);
+                    if (acc.equals(" ") || acc.isEmpty()) {
+                        mItemList.get(2).setDesc(null);
+                    } else {
+                        mItemList.get(2).setDesc(acc);
+                    }
+                    mAdapter.notifyItemChanged(2);
                 }
-                mAdapter.notifyItemChanged(2);
                 break;
             case "note" :
                 String note = intent.getStringExtra("value");
-                if (note.equals(" ") || note.isEmpty()) {
-                    mItemList.get(3).setDesc(null);
+                if (mIncome) {
+                    if (note.equals(" ") || note.isEmpty()) {
+                        mItemList.get(2).setDesc(null);
+                    } else {
+                        mItemList.get(2).setDesc(note);
+                    }
+                    mAdapter.notifyItemChanged(2);
                 } else {
-                    mItemList.get(3).setDesc(note);
+                    if (note.equals(" ") || note.isEmpty()) {
+                        mItemList.get(3).setDesc(null);
+                    } else {
+                        mItemList.get(3).setDesc(note);
+                    }
+                    mAdapter.notifyItemChanged(3);
                 }
-                mAdapter.notifyItemChanged(3);
             default:
                 break;
         }
@@ -263,25 +320,45 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
 
     @Override
     public void onItemClick(int position) {
-        switch (position) {
-            case 0 :
-                mCalDialog = new CalculatorDialogView(mContext, this);
-                mCalDialog.show(getChildFragmentManager(), "child_fragment");
-                break;
-            case 1 :
-                mCategory = new CateDialogView(mContext, this);
-                mCategory.show(getChildFragmentManager(), "child_category");
-                break;
-            case 2:
-                mAccount = new AccountDialogView(mContext, this);
-                mAccount.show(getChildFragmentManager(), "child_acc");
-                break;
-            case 3:
-                mNote = new NoteDialogView(mContext, this);
-                mNote.show(getChildFragmentManager(), "child_note");
-                break;
-            default:
-                break;
+        if (mIncome) {
+            Log.d(TAG, "onItemClick: income");
+            switch (position) {
+                case 0 :
+                    mCalDialog = new CalculatorDialogView(mContext, this);
+                    mCalDialog.show(getChildFragmentManager(), "child_fragment");
+                    break;
+                case 1 :
+                    mAccount = new AccountDialogView(mContext, this);
+                    mAccount.show(getChildFragmentManager(), "child_acc");
+                    break;
+                case 2:
+                    mNote = new NoteDialogView(mContext, this);
+                    mNote.show(getChildFragmentManager(), "child_note");
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (position) {
+                case 0 :
+                    mCalDialog = new CalculatorDialogView(mContext, this);
+                    mCalDialog.show(getChildFragmentManager(), "child_fragment");
+                    break;
+                case 1 :
+                    mCategory = new CateDialogView(mContext, this);
+                    mCategory.show(getChildFragmentManager(), "child_category");
+                    break;
+                case 2:
+                    mAccount = new AccountDialogView(mContext, this);
+                    mAccount.show(getChildFragmentManager(), "child_acc");
+                    break;
+                case 3:
+                    mNote = new NoteDialogView(mContext, this);
+                    mNote.show(getChildFragmentManager(), "child_note");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
