@@ -99,6 +99,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                     String cate = "Income";
                                     String amount = documentSnapshot.getString("amount");
                                     String date = documentSnapshot.getString("date");
+                                    amount = "+" + amount;
                                     listItems.add(new ListItem(cate, amount, date));
                                     mAdapter.setItems(listItems);
                                 }
@@ -111,6 +112,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                     String cate = documentSnapshot.getString("category");
                                     String amount = documentSnapshot.getString("amount");
                                     String date = documentSnapshot.getString("date");
+                                    amount = "-" + amount;
                                     listItems.add(new ListItem(cate, amount, date));
                                     mAdapter.setItems(listItems);
                                 }
@@ -127,6 +129,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                 String cate = "Income";
                                 String amount = documentSnapshot.getString("amount");
                                 String date = documentSnapshot.getString("date");
+                                amount = "+" + amount;
                                 listItems.add(new ListItem(cate, amount, date));
                             }
                         }
@@ -142,6 +145,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                 String cate = documentSnapshot.getString("category");
                                 String amount = documentSnapshot.getString("amount");
                                 String date = documentSnapshot.getString("date");
+                                amount = "-" + amount;
                                 listItems.add(new ListItem(cate, amount, date));
                             }
                         }
