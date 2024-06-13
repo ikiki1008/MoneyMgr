@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mia_hometest.R;
 import com.example.mia_hometest.common.ListItem;
 import com.example.mia_hometest.common.CardListAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -84,23 +86,29 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     }
 
     public void fetchData(String type) {
-        mStore.collection("user").get().addOnCompleteListener(task -> {
-            List<ListItem> listItems = new ArrayList<>();
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                    String cate = documentSnapshot.getString("category");
-                    String price = documentSnapshot.getString("price");
-                    String date = documentSnapshot.getString("date");
-                    listItems.add(new ListItem(cate, price, date));
-                }
-            } else {
-                String cate = "null";
-                String price = "0000";
-                String date = "0000.00.00";
-                listItems.add(new ListItem(cate, price, date));
-            }
-            mAdapter.setItems(listItems);
-        });
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            mStore.collection("user").document(userId).collection("money")
+                    .get().addOnCompleteListener(task -> {
+                        List<ListItem> listItems = new ArrayList<>();
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "fetchData: 데이터 가져오기 성공");
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                String cate = documentSnapshot.getString("category");
+                                String amount = documentSnapshot.getString("amount");
+                                String date = documentSnapshot.getString("date");
+                                listItems.add(new ListItem(cate, amount, date));
+                            }
+                        } else {
+                            String cate = "null";
+                            String price = "0000";
+                            String date = "0000.00.00";
+                            listItems.add(new ListItem(cate, price, date));
+                        }
+                        mAdapter.setItems(listItems);
+                    });
+        }
     }
 
     @Override
