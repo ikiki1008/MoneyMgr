@@ -141,24 +141,27 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
     }
 
     private void saveToFirebase(String date, String amount, String category, String account, String note) {
+        Log.d(TAG, "saveToFirebase: ");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
+            Log.d(TAG, "saveToFirebase: 유저가 널이 아니라면...");
             String userId = user.getUid();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             Map<String, Object> data = new HashMap<>();
-            data.put("date", Integer.parseInt(date));
-            data.put("amount", Integer.parseInt(amount));
+            data.put("date", date);
+            data.put("amount", amount);
             data.put("category", category);
             data.put("account", account);
             if (note != null) {
                 data.put("note", note);
             }
 
-            db.collection("users").document(userId).collection("transactions")
+            db.collection("user").document(userId).collection("money")
                     .add(data)
                     .addOnSuccessListener(documentReference -> Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId()))
                     .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+            Log.d(TAG, "saveToFirebase: 여기까지 성공했나?");
         } else {
             Log.w(TAG, "User is not signed in");
         }
@@ -170,26 +173,21 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
         switch (view.getId()) {
             case R.id.editBtn:
                 Log.d(TAG, "onClick: 버튼 클릭클릭클릭");
-                //amount, cate, acc 가 널이 아니면 저장 후 다이얼로그 뷰를 dismiss 처리한다
-                if (mItemList.get(1).isVisible()) {
-                    // expense
-                    if (mItemList.get(0).getDesc() != null && mItemList.get(1).getDesc() != null
-                            && mItemList.get(2).getDesc() != null && mItemList.get(3).getDesc() != null) {
+                if (mItemList.get(0) != null && mItemList.get(1) != null
+                        && mItemList.get(2) != null) {
+                    Log.d(TAG, "onClick: 여기까지 들어오니??");
 
-                        saveToFirebase(mItemList.get(0).getDesc(), mItemList.get(1).getDesc(),
-                                mItemList.get(2).getDesc(), mItemList.get(3).getDesc(),
-                                mItemList.size() > 4 ? mItemList.get(4).getDesc() : null);
-                    }
-                } else {
-                    // income
-                    if (mItemList.get(0).getDesc() != null && mItemList.get(1).getDesc() != null
-                            && mItemList.get(3).getDesc() != null) {
+                    // 콘솔에 출력하여 저장하려는 데이터 확인
+                    Log.d(TAG, "onClick: Saving data: "
+                            + mItemList.get(0).getDesc() + ", "
+                            + mItemList.get(1).getDesc() + ", "
+                            + mItemList.get(2).getDesc() + ", "
+                            + (mItemList.size() > 3 ? mItemList.get(3).getDesc() : "null"));
 
-                        saveToFirebase(mItemList.get(0).getDesc(), mItemList.get(1).getDesc(),
-                                null, mItemList.get(2).getDesc(), mItemList.get(3).getDesc());
-                    }
+                    saveToFirebase(mLine1.getText().toString(), mItemList.get(0).getDesc(),
+                            mItemList.get(1).getDesc(), mItemList.get(2).getDesc(),
+                            mItemList.size() > 3 ? mItemList.get(3).getDesc() : null);
                 }
-
                 if (getDialog() != null && getDialog().isShowing()) {
                     dismiss();
                 }
