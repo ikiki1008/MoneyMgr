@@ -2,13 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="500dp"
     android:layout_height="wrap_content">
     <FrameLayout
         android:id="@+id/second_section"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginEnd="28dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,13 +33,11 @@
                 android:textSize="16sp"
                 android:textColor="@color/white" />
 
-
             <TextView
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:gravity="end"
+                android:layout_marginStart="255dp"
                 android:textSize="14sp"
                 android:textColor="?android:attr/textColor" />
 
@@ -50,12 +47,19 @@
                 android:layout_height="21dp"
                 android:layout_below="@id/price"
                 android:layout_marginTop="6dp"
-                android:layout_alignParentEnd="true"
-                android:gravity="end"
+                android:layout_marginStart="255dp"
                 android:textSize="14sp"
                 android:textColor="?android:attr/textColorSecondary" />
 
+            <ImageView
+                android:id="@+id/delete"
+                android:layout_width="51dp"
+                android:layout_height="51dp"
+                android:src="@drawable/remove"
+                android:layout_marginStart="360dp" />
+
         </RelativeLayout>
+
 
     </FrameLayout>
 

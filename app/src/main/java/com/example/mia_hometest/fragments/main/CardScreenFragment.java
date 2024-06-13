@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class CardScreenFragment extends Fragment implements View.OnClickListener{
+public class CardScreenFragment extends Fragment implements View.OnClickListener, CardListAdapter.OnSwipeListener{
     private final String TAG = CardScreenFragment.class.getSimpleName();
     private Context mContext = null;
     private TextView mAll = null;
@@ -49,6 +50,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private RecyclerView mRecyclerView;
     private CardListAdapter mAdapter;
     private FirebaseFirestore mStore;
+    private boolean mLeftSwipe = false;
 
     @Override
     public void onAttach(Context context) {
@@ -70,6 +72,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mListTitle = view.findViewById(R.id.listText);
 
         mAdapter = new CardListAdapter(mContext);
+        mAdapter.setSwipeListener(this);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
@@ -253,4 +256,16 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 break;
         }
     }
+
+    @Override
+    public void onSwipeLeft(int position) {
+        Log.d(TAG, "onSwipeLeft: 왼쪽으로 스와이핑 했습니다. ");
+    }
+
+    @Override
+    public void onSwipeRight(int position) {
+        Log.d(TAG, "onSwipeRight: 오른쪽으로 스와이핑 했습니다");
+    }
+
+
 }
