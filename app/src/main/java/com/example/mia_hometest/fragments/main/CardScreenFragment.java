@@ -32,6 +32,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class CardScreenFragment extends Fragment implements View.OnClickListener{
@@ -85,6 +87,16 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, " CardScreenFragment 끌게요");
+        super.onDestroy();
+    }
+
+    public CardScreenFragment (Context context) {
+        mContext = context;
+    }
+
     public void fetchData(String type) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -92,6 +104,8 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
             if (user != null) {
                 String userId = user.getUid();
                 List<ListItem> listItems = new ArrayList<>();
+
+                // Fetch income data
                 mStore.collection("user").document(userId).collection("income")
                         .get().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -101,21 +115,27 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                     String date = documentSnapshot.getString("date");
                                     amount = "+" + amount;
                                     listItems.add(new ListItem(cate, amount, date));
-                                    mAdapter.setItems(listItems);
                                 }
-                            }
-                        });
-                mStore.collection("user").document(userId).collection("outcome")
-                        .get().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    String cate = documentSnapshot.getString("category");
-                                    String amount = documentSnapshot.getString("amount");
-                                    String date = documentSnapshot.getString("date");
-                                    amount = "-" + amount;
-                                    listItems.add(new ListItem(cate, amount, date));
-                                    mAdapter.setItems(listItems);
-                                }
+
+                                // After fetching all income data, fetch outcome data
+                                mStore.collection("user").document(userId).collection("outcome")
+                                        .get().addOnCompleteListener(outcomeTask -> {
+                                            if (outcomeTask.isSuccessful()) {
+                                                for (QueryDocumentSnapshot documentSnapshot : outcomeTask.getResult()) {
+                                                    String cate = documentSnapshot.getString("category");
+                                                    String amount = documentSnapshot.getString("amount");
+                                                    String date = documentSnapshot.getString("date");
+                                                    amount = "-" + amount;
+                                                    listItems.add(new ListItem(cate, amount, date));
+                                                }
+
+                                                // Sort listItems by date in descending order
+                                                Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
+
+                                                // Set items to adapter
+                                                mAdapter.setItems(listItems);
+                                            }
+                                        });
                             }
                         });
             }
@@ -133,6 +153,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                 listItems.add(new ListItem(cate, amount, date));
                             }
                         }
+                        Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
                         mAdapter.setItems(listItems);
                     });
         } else {
@@ -149,19 +170,14 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                 listItems.add(new ListItem(cate, amount, date));
                             }
                         }
+                        Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
                         mAdapter.setItems(listItems);
                     });
         }
     }
 
-    @Override
-    public void onDestroy() {
-        Log.d(TAG, " CardScreenFragment 끌게요");
-        super.onDestroy();
-    }
-
-    public CardScreenFragment (Context context) {
-        mContext = context;
+    private int compare (String date1, String date2) {
+        return date2.compareTo(date1);
     }
 
     private int getThemeColor(int attr) {

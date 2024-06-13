@@ -197,11 +197,10 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.editBtn:
-                Log.d(TAG, "onClick: 버튼 클릭클릭클릭");
                 if (!mIncome) {
                     Log.d(TAG, "onClick: expense screen");
-                    if (mItemList.get(0) != null && mItemList.get(1) != null
-                            && mItemList.get(2) != null) {
+                    if (mItemList.get(0).getDesc() != null && mItemList.get(1).getDesc() != null
+                            && mItemList.get(2).getDesc() != null) {
                         // 콘솔에 출력하여 저장하려는 데이터 확인
                         Log.d(TAG, "onClick: Saving data: "
                                 + mItemList.get(0).getDesc() + ", "
@@ -215,7 +214,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                     }
                 } else {
                     Log.d(TAG, "onClick: income screen");
-                    if (mItemList.get(0) != null && mItemList.get(2) != null) {
+                    if (mItemList.get(0).getDesc() != null && mItemList.get(1).getDesc() != null) {
                         Log.d(TAG, "onClick: Saving data: "
                                 + mItemList.get(0).getDesc() + ", "
                                 + mItemList.get(1).getDesc() + ", "
