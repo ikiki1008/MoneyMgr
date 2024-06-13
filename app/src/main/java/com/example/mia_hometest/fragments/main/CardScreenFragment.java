@@ -87,24 +87,63 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
 
     public void fetchData(String type) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
+
+        if (type == "all") {
+            if (user != null) {
+                String userId = user.getUid();
+                List<ListItem> listItems = new ArrayList<>();
+                mStore.collection("user").document(userId).collection("income")
+                        .get().addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                    String cate = "Income";
+                                    String amount = documentSnapshot.getString("amount");
+                                    String date = documentSnapshot.getString("date");
+                                    listItems.add(new ListItem(cate, amount, date));
+                                    mAdapter.setItems(listItems);
+                                }
+                            }
+                        });
+                mStore.collection("user").document(userId).collection("outcome")
+                        .get().addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                    String cate = documentSnapshot.getString("category");
+                                    String amount = documentSnapshot.getString("amount");
+                                    String date = documentSnapshot.getString("date");
+                                    listItems.add(new ListItem(cate, amount, date));
+                                    mAdapter.setItems(listItems);
+                                }
+                            }
+                        });
+            }
+        } else if (type == "income") {
             String userId = user.getUid();
-            mStore.collection("user").document(userId).collection("money")
+            mStore.collection("user").document(userId).collection("income")
                     .get().addOnCompleteListener(task -> {
                         List<ListItem> listItems = new ArrayList<>();
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "fetchData: 데이터 가져오기 성공");
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                String cate = "Income";
+                                String amount = documentSnapshot.getString("amount");
+                                String date = documentSnapshot.getString("date");
+                                listItems.add(new ListItem(cate, amount, date));
+                            }
+                        }
+                        mAdapter.setItems(listItems);
+                    });
+        } else {
+            String userId = user.getUid();
+            mStore.collection("user").document(userId).collection("outcome")
+                    .get().addOnCompleteListener(task -> {
+                        List<ListItem> listItems = new ArrayList<>();
+                        if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 String cate = documentSnapshot.getString("category");
                                 String amount = documentSnapshot.getString("amount");
                                 String date = documentSnapshot.getString("date");
                                 listItems.add(new ListItem(cate, amount, date));
                             }
-                        } else {
-                            String cate = "null";
-                            String price = "0000";
-                            String date = "0000.00.00";
-                            listItems.add(new ListItem(cate, price, date));
                         }
                         mAdapter.setItems(listItems);
                     });
@@ -119,40 +158,6 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
 
     public CardScreenFragment (Context context) {
         mContext = context;
-    }
-
-    public void getData(String fileName) {
-        try {
-            InputStream inputStream = mContext.getAssets().open(fileName);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-
-            JSONObject jsonObject = new JSONObject(stringBuilder.toString());
-            JSONArray jsonArray = jsonObject.getJSONArray("All_items");
-
-            List<ListItem> listItems = new ArrayList<>();
-            for (int i=0; i<jsonArray.length(); i++) {
-                JSONObject item = jsonArray.getJSONObject(i);
-                String title = item.getString("title");
-//                String desc = item.getString("desc");
-                String price = item.getString("price");
-                String date = item.getString("date");
-
-                listItems.add(new ListItem(title, price, date));
-            }
-
-            mAdapter.setItems(listItems);
-            inputStream.close();
-            reader.close();
-
-        } catch (Exception e) {
-            Log.d(TAG, "getData false..... : " + e);
-        }
     }
 
     private int getThemeColor(int attr) {
@@ -199,7 +204,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
 
         switch (view.getId()) {
             case R.id.all:
-                Log.d(TAG, "onClick: alllllllllll");
+                Log.d(TAG, "onClick: all");
                 fetchData("all");
                 mAll.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
@@ -207,14 +212,14 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.expense:
                 Log.d(TAG, "onClick: expense");
-                fetchData("all");
+                fetchData("outcome");
                 mExpense.setTextColor(themeColor);
                 mAll.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
                 break;
             case R.id.income:
                 Log.d(TAG, "onClick: income");
-                fetchData("all");
+                fetchData("income");
                 mIncome.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mAll.setTextColor(secondColor);
