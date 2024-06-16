@@ -1,8 +1,11 @@
 package com.example.mia_hometest.fragments.main;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -21,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mia_hometest.R;
 import com.example.mia_hometest.common.ListItem;
 import com.example.mia_hometest.common.CardListAdapter;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -50,7 +54,6 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private RecyclerView mRecyclerView;
     private CardListAdapter mAdapter;
     private FirebaseFirestore mStore;
-    private boolean mLeftSwipe = false;
 
     @Override
     public void onAttach(Context context) {
@@ -72,7 +75,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mListTitle = view.findViewById(R.id.listText);
 
         mAdapter = new CardListAdapter(mContext);
-        mAdapter.setSwipeListener(this);
+        mAdapter.setSwipeListener(this, false);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
@@ -85,7 +88,6 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mListTitle.setText(R.string.list_week);
         int themeColor = getThemeColor(android.R.attr.textColor);
         mAll.setTextColor(themeColor);
-
         fetchData("all");
         return view;
     }
@@ -103,7 +105,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     public void fetchData(String type) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (type == "all") {
+        if (type.equals("all")) {
             if (user != null) {
                 String userId = user.getUid();
                 List<ListItem> listItems = new ArrayList<>();
@@ -116,8 +118,9 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                     String cate = "Income";
                                     String amount = documentSnapshot.getString("amount");
                                     String date = documentSnapshot.getString("date");
+                                    String id = documentSnapshot.getId();
                                     amount = "+" + amount;
-                                    listItems.add(new ListItem(cate, amount, date));
+                                    listItems.add(new ListItem(id, cate, amount, date));
                                 }
 
                                 // After fetching all income data, fetch outcome data
@@ -128,8 +131,9 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                                     String cate = documentSnapshot.getString("category");
                                                     String amount = documentSnapshot.getString("amount");
                                                     String date = documentSnapshot.getString("date");
+                                                    String id = documentSnapshot.getId();
                                                     amount = "-" + amount;
-                                                    listItems.add(new ListItem(cate, amount, date));
+                                                    listItems.add(new ListItem(id, cate, amount, date));
                                                 }
 
                                                 // Sort listItems by date in descending order
@@ -142,7 +146,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                             }
                         });
             }
-        } else if (type == "income") {
+        } else if (type.equals("income")) {
             String userId = user.getUid();
             mStore.collection("user").document(userId).collection("income")
                     .get().addOnCompleteListener(task -> {
@@ -152,8 +156,9 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                 String cate = "Income";
                                 String amount = documentSnapshot.getString("amount");
                                 String date = documentSnapshot.getString("date");
+                                String id = documentSnapshot.getId();
                                 amount = "+" + amount;
-                                listItems.add(new ListItem(cate, amount, date));
+                                listItems.add(new ListItem(id, cate, amount, date));
                             }
                         }
                         Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
@@ -169,8 +174,9 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                 String cate = documentSnapshot.getString("category");
                                 String amount = documentSnapshot.getString("amount");
                                 String date = documentSnapshot.getString("date");
+                                String id = documentSnapshot.getId();
                                 amount = "-" + amount;
-                                listItems.add(new ListItem(cate, amount, date));
+                                listItems.add(new ListItem(id, cate, amount, date));
                             }
                         }
                         Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
@@ -258,8 +264,38 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onSwipeLeft(int position) {
-        Log.d(TAG, "onSwipeLeft: 왼쪽으로 스와이핑 했습니다. ");
+    public void onSwipeLeft(int position, boolean delete) {
+        Log.d(TAG, "onSwipeLeft: 왼쪽으로 스와이핑 했습니다.");
+        if (delete) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                String userId = user.getUid();
+                ListItem itemToDelete = mAdapter.getItems().get(position);
+
+                Task<Void> deleteIncomeTask = mStore.collection("user").document(userId).collection("income").document(itemToDelete.getId())
+                        .delete();
+
+                Task<Void> deleteOutcomeTask = mStore.collection("user").document(userId).collection("outcome").document(itemToDelete.getId())
+                        .delete();
+
+                // 먼저 income에서 삭제 시도
+                deleteIncomeTask.addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "DocumentSnapshot successfully deleted from income!");
+                    mAdapter.getItems().remove(position);
+                    mAdapter.notifyItemRemoved(position);
+                    mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
+                }).addOnFailureListener(e -> {
+                    // income에서 실패하면 outcome에서 삭제 시도
+                    Log.w(TAG, "Error deleting document from income, trying outcome", e);
+                    deleteOutcomeTask.addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted from outcome!");
+                        mAdapter.getItems().remove(position);
+                        mAdapter.notifyItemRemoved(position);
+                        mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
+                    }).addOnFailureListener(e2 -> Log.w(TAG, "Error deleting document from outcome", e2));
+                });
+            }
+        }
     }
 
     @Override

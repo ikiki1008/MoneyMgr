@@ -1,16 +1,19 @@
 package com.example.mia_hometest.common;
 
 public class ListItem {
+    String id;
     String title;
     String price;
     String date;
 
-    public ListItem (String title, String price, String date) {
+    public ListItem (String id, String title, String price, String date) {
+        this.id = id;
         this.title = title;
         this.price = price;
         this.date = date;
     }
 
+    public String getId() { return id; }
     public String getTitle() {
         return title;
     }

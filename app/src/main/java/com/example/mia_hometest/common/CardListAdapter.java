@@ -1,8 +1,11 @@
 package com.example.mia_hometest.common;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +23,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
+import com.example.mia_hometest.UserMainActivity;
+import com.example.mia_hometest.fragments.main.CardScreenFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +37,10 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final LayoutInflater mInflater;
     private static final int TILE_VIEW_TYPE = 1;
     private final GridSpanSizeLookup mSpanSizeLookup = new GridSpanSizeLookup();
+    private final String NEW_INTENT = "com.android.intent.NEW_INTENT";
     private List<ListItem> mTiles = new ArrayList<>();
     private OnSwipeListener mSwipe;
+    private boolean mCheckItemDelete;
 
     public CardListAdapter(Context context) {
         mContext = context;
@@ -47,12 +54,13 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return gridLayoutManager;
     }
 
-    public void setSwipeListener (OnSwipeListener listener) {
+    public void setSwipeListener (OnSwipeListener listener, boolean delete) {
         mSwipe = listener;
+        mCheckItemDelete = delete;
     }
 
     public interface OnSwipeListener {
-        void onSwipeLeft (int position);
+        void onSwipeLeft (int position, boolean delete);
         void onSwipeRight (int position);
     }
 
@@ -103,19 +111,16 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                         // 왼쪽으로 스와이프했을 때 처리
                         if (deltaX < 0 && Math.abs(deltaX) > MIN_DISTANCE) {
-                            // 오른쪽으로 60dp 이동 애니메이션 추가
-                            ObjectAnimator animator = ObjectAnimator.ofFloat(v, "translationX", 0, -convertDpToPixel(75, mContext));
+                            // 오른쪽으로 75dp 이동 애니메이션 추가
+                            ObjectAnimator animator = ObjectAnimator.ofFloat(v, "translationX", 0, -convertDpToPixel(60, mContext));
                             animator.setDuration(300);
                             animator.start();
                             swipeImage.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     Log.d(TAG, "onClick: 어댑터를 클릭했다 ");
-                                    int position = listViewHolder.getAdapterPosition();
-                                    if (position != RecyclerView.NO_POSITION) {
-                                        mTiles.remove(position);
-                                        notifyItemRemoved(position);
-                                        notifyItemRangeChanged(position, mTiles.size());
+                                    if (mSwipe != null) {
+                                        mSwipe.onSwipeLeft(position, true);
                                     }
                                 }
                             });
@@ -145,6 +150,13 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemCount() {
         return mTiles.size();
+    }
+
+    public boolean isItemDelete (boolean delete, int position) {
+        if (delete) {
+            return true;
+        }
+        return false;
     }
 
     public List<ListItem> getItems() {

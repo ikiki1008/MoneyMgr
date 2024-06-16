@@ -53,9 +53,9 @@
 
             <ImageView
                 android:id="@+id/delete"
-                android:layout_width="51dp"
+                android:layout_width="25dp"
                 android:layout_height="51dp"
-                android:src="@drawable/remove"
+                android:src="@drawable/trash_bin"
                 android:layout_marginStart="360dp" />
 
         </RelativeLayout>
