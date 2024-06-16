@@ -147,6 +147,7 @@ public class RegisterFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String email = mEmail.getText().toString();
         String name = mName.getText().toString();
+        String pwd = mPass.getText().toString();
 
         db.collection("user")
                 .whereEqualTo("email", email)
@@ -155,8 +156,7 @@ public class RegisterFragment extends Fragment {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
                         Log.d(TAG, "checkDoubleComps: 요소가 하나라도 중복되는게 있습니다...");
                         startShake(mEmail);
-                    }
-                    else {
+                    } else {
                         Log.d(TAG, "checkDoubleComps 중복되는 이메일이 없다..");
                         db.collection("user")
                                 .whereEqualTo("name", name)
@@ -167,44 +167,47 @@ public class RegisterFragment extends Fragment {
                                         Log.d(TAG, "checkDoubleComps: 이름이 중복된다");
                                     } else {
                                         Log.d(TAG, "checkDoubleComps: 최종적으로 등록할 수 있음.");
-                                        addNewData();
+                                        registerFirebaseAuth(email, name, pwd);
                                     }
                                 });
                     }
                 });
     }
 
-    private void addNewData() {
-        Log.d(TAG, " ##### put new data resource into the db");
+    private void addNewData(String userId, String email, String name, String password) {
+        Log.d(TAG, "##### put new data resource into the db");
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("email", mEmail.getText().toString());
-        user.put("name", mName.getText().toString());
-        user.put("password", mPass.getText().toString());
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("email", email);
+        userMap.put("name", name);
+        userMap.put("password", password);
 
-        db.collection("user")
-                .add(user)
+        db.collection("user").document(userId)
+                .set(userMap)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "addNewData: 데이터를 추가하였음");
-                        registerFirebaseAuth(mEmail.getText().toString(), mPass.getText().toString());
+                        loginWAuth(email, password);
+                    } else {
+                        Log.d(TAG, "addNewData: 데이터를 추가하지 못함", task.getException());
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.d(TAG, "addNewData: failed to add new data....");
+                    Log.d(TAG, "addNewData: failed to add new data", e);
                 });
-
     }
 
-    private void registerFirebaseAuth (String email, String pwd) {
+    private void registerFirebaseAuth(String email, String name, String pwd) {
         Log.d(TAG, "registerFirebaseAuth: ");
-
         mAuth.createUserWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener((Activity) mContext, task -> {
                     if (task.isSuccessful()) {
                         Log.d(TAG, "registerFirebaseAuth: 로그인 등록 완료");
-                        loginWAuth(email, pwd);
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            addNewData(user.getUid(), email, name, pwd);
+                        }
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -212,7 +215,7 @@ public class RegisterFragment extends Fragment {
                 });
     }
 
-    private void loginWAuth (String email, String pwd) {
+    private void loginWAuth(String email, String pwd) {
         Log.d(TAG, "loginWAuth: ");
         mAuth.signInWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener((Activity) mContext, task -> {
