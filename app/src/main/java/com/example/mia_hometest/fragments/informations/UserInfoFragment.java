@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -63,6 +65,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
     private FirebaseFirestore mDb;
     private ArrayList<EditText> mEditTexts = new ArrayList<>();
     private boolean mIsEditing = false;
+    private ActivityResultLauncher<Intent> mImageUpdate;
 
     public UserInfoFragment (Context context) {
         mContext = context;
@@ -124,12 +127,58 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                 });
         getPfp(); //set pfp
 
+        mImageUpdate = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getData() != null) {
+                            Uri uri = data.getData();
+                            mIcon.setImageURI(uri); // Set profile pic on ImageView
+
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageReference = storage.getReference().child("profile_images/" + mAuth.getCurrentUser().getUid() + ".jpg");
+                            storageReference.putFile(uri)
+                                    .addOnSuccessListener(taskSnapshot -> { // Update picture on storage
+                                        storageReference.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                                            Log.d(TAG, "이미지를 스토리지에 옮기는데 성공");
+                                            String image = uri1.toString();
+                                            updateProfilePic(image);
+                                        });
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(mContext, "이미지를 스토리지에 옮기는데 실패", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    }
+                }
+        );
         return view;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    public void imageResult(Uri uri) {
+        if (uri != null) {
+            mIcon.setImageURI(uri); // set profile pic on imageView
+
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference().child("profile_images/" + mAuth.getCurrentUser().getUid() + ".jpg");
+            storageReference.putFile(uri)
+                    .addOnSuccessListener(taskSnapshot -> { // update picture on storage
+                        storageReference.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                            Log.d(TAG, "이미지를 스토리지에 옮기는데 성공");
+                            String image = uri1.toString();
+                            updateProfilePic(image);
+                        });
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(mContext, "이미지를 스토리지에 옮기는데 실패", Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 
     private void getPfp() {
@@ -233,7 +282,10 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
         Log.d(TAG, "setProfilePic: get profile picture from gallery");
         Intent intentPic = new Intent(Intent.ACTION_PICK);
         intentPic.setType("image/*");
-        startActivityForResult(intentPic, REQUEST_IMAGE_PICK);
+        UserMainActivity activity = (UserMainActivity) getActivity();
+        if (activity != null) {
+            activity.getImageUpdate().launch(intentPic);
+        }
     }
 
     private void updateProfilePic(String image) {
@@ -253,34 +305,6 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                             Log.d(TAG, "task failed...");
                         }
                     });
-        }
-    }
-
-    @Override
-    public void onActivityResult (int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: ");
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK) {
-            Log.d(TAG, "onActivityResult: 됐나???");
-            if (data != null && data.getData() != null) {
-                Log.d(TAG, "이미지를 들고왔다");
-                Uri uri = data.getData();
-                mIcon.setImageURI(uri); //set profile pic on imageView
-
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageReference = storage.getReference().child("profile_images/" + mAuth.getCurrentUser().getUid() + ".jpg");
-                storageReference.putFile(uri)
-                        .addOnSuccessListener(taskSnapshot -> { //update picture on storage
-                            storageReference.getDownloadUrl().addOnSuccessListener(uri1 -> {
-                                Log.d(TAG, "이미지를 스토리지에 옮기는데 성공");
-                                String image = uri1.toString();
-                                updateProfilePic(image);
-                            });
-                        })
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(mContext, "이미지를 스토리지에 옮기는데 실패", Toast.LENGTH_SHORT).show();
-                        });
-            }
         }
     }
 

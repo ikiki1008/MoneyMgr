@@ -1,5 +1,7 @@
 package com.example.mia_hometest;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -9,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -35,6 +38,7 @@ public class UserMainActivity extends FragmentActivity {
     private ImageView[] mImage = new ImageView[5];
     private Intent mIntent = new Intent();
     private SharedPreferences mPreference;
+    private ActivityResultLauncher<Intent> mImageUpdate;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -65,13 +69,26 @@ public class UserMainActivity extends FragmentActivity {
         File dexOutputDir = codeCacheDir;
         dexOutputDir.setReadOnly();
 
+        mImageUpdate = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri uri = result.getData().getData();
+                        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                        if (fragment instanceof  UserInfoFragment) {
+                            Log.d(TAG, "onCreate: 111111");
+                            ((UserInfoFragment) fragment).imageResult(uri);
+                        }
+                    }
+                }
+        );
+
         //첫화면 loading
         initFragments();
         launchFragment(mMainFragment);
         //이 후
         onCLick();
     }
-    
+
     private void setTheme(String themeColor) {
         Log.d(TAG, "setTheme: ");
         if (themeColor.equals("red")) {
@@ -149,6 +166,11 @@ public class UserMainActivity extends FragmentActivity {
         mInfoFragment = new InfoScreenFragment(mContext);
         mCardFragment = new CardScreenFragment(mContext);
         mUserInfoFragment = new UserInfoFragment(mContext);
+    }
+
+    public ActivityResultLauncher<Intent> getImageUpdate() {
+        Log.d(TAG, "getImageUpdate: ");
+        return mImageUpdate;
     }
 
     public void launchFragment(Fragment fragment) {
