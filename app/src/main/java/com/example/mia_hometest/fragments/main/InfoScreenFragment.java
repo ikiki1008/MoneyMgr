@@ -107,42 +107,45 @@ public class InfoScreenFragment extends Fragment implements View.OnClickListener
     private void deleteUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            FirebaseFirestore.getInstance().collection("user")
-                    .whereEqualTo("email", user.getEmail())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            FirebaseFirestore.getInstance().collection("user").whereEqualTo("email", user.getEmail())
+                    .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
+                                Log.d(TAG, "onComplete: 사용자의 정보를 성공적으로 가져왔다면");
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    document.getReference().delete();
-                                    Log.d(TAG, "onSuccess: 사용자 정보를 완전히 삭제하였습니다."); //구글로 가입한 유저 auth 도 삭제해야함
-                                    Intent intent = new Intent(mContext, UserMainActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(intent);
+                                    document.getReference().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d(TAG, "onSuccess: 디비에서 사용자 정보를 완전히 삭제했다");
+                                            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Log.d(TAG, "onComplete: 사용자 인증 정보도 삭제 완료..");
+                                                        Intent intent = new Intent(mContext, BaseActivity.class);
+                                                        intent.putExtra("logoff", true);
+                                                        startActivity(intent);
+                                                        Toast.makeText(mContext, "Delete account Succeed", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d(TAG, "왜 실패했지??? === " + e);
+                                                }
+                                            });
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "디비에서 사용자 정보를 삭제하는것을 실패함 " + e);
+                                        }
+                                    });
                                 }
                             }
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "onFailure: 이건 또 뭐야 ???? "+ e);
-                        }
                     });
-            user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "onComplete: 사용자 인증 정보도 삭제 완료..");
-                        Intent intent = new Intent(mContext, BaseActivity.class);
-                        intent.putExtra("logoff", true);
-                        startActivity(intent);
-                        Toast.makeText(mContext, "Delete account Succeed", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Log.d(TAG, "onComplete: 사용자 인증 정보 삭제 실패함ㅠㅠㅠ");
-                    }
-                }
-            });
         }
     }
 

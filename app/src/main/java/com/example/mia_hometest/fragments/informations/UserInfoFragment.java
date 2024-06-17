@@ -131,6 +131,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
+                        Log.d(TAG, "onCreateView: 123123");
                         Intent data = result.getData();
                         if (data != null && data.getData() != null) {
                             Uri uri = data.getData();
@@ -229,7 +230,12 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                                                 @Override
                                                 public void onSuccess(Void unused) {
                                                     Log.d(TAG, "onSuccess: 업데이트 성공...");
-                                                    updateAuth(newName, newPwd);
+//                                                    updateAuth(newName, newPwd);
+                                                    mEditTexts.get(0).setText(newName);
+                                                    mEditTexts.get(2).setText(newPwd);
+                                                    mEditTexts.get(0).setEnabled(false);
+                                                    mEditTexts.get(2).setEnabled(false);
+                                                    mIsEditing = false;
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
@@ -260,17 +266,24 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 Log.d(TAG, "onComplete: 이제 모두 성공적으로 다 변경했다...");
-                                mEditTexts.get(0).setText(newName);
-                                mEditTexts.get(2).setText(newPwd);
-                                mEditTexts.get(0).setEnabled(false);
-                                mEditTexts.get(2).setEnabled(false);
-                                mIsEditing = false;
+                                updateDb();
+//                                mEditTexts.get(0).setText(newName);
+//                                mEditTexts.get(2).setText(newPwd);
+//                                mEditTexts.get(0).setEnabled(false);
+//                                mEditTexts.get(2).setEnabled(false);
+//                                mIsEditing = false;
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.d(TAG, "onFailure: 이건 왜 실패했을까용용 " + e);
+//                            mEditTexts.get(0).setText(); // 여기서 업데이트 실패하면 이전 이름으로 다시 셋하도록 설정
+                            mEditTexts.get(0).setEnabled(false);
+                            mEditTexts.get(2).setEnabled(false);
+                            mIsEditing = false;
+                            startShake(mEditTexts.get(0));
+                            startShake(mEditTexts.get(2));
                         }
                     });
                 }
@@ -357,7 +370,10 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                     if (anyEmpty) {
                         Toast.makeText(mContext, "모든 정보를 입력하세요", Toast.LENGTH_SHORT).show();
                     } else {
-                        updateDb();
+                        String newName = mEditTexts.get(0).getText().toString();
+                        String newPwd = mEditTexts.get(2).getText().toString();
+
+                        updateAuth(newName, newPwd);
                     }
                 }
                 break;

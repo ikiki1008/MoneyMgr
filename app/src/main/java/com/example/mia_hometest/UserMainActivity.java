@@ -72,12 +72,15 @@ public class UserMainActivity extends FragmentActivity {
         mImageUpdate = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Log.d(TAG, "onCreate: 데이터를 성공적으로 가져 왔다면");
                         Uri uri = result.getData().getData();
                         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                         if (fragment instanceof  UserInfoFragment) {
-                            Log.d(TAG, "onCreate: 111111");
+                            Log.d(TAG, "onCreate: 프래그먼트에 전달");
                             ((UserInfoFragment) fragment).imageResult(uri);
                         }
+                    } else {
+                        Log.d(TAG, "onCreate: 실패했습니다.");
                     }
                 }
         );

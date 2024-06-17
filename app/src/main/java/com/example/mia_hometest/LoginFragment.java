@@ -225,6 +225,8 @@ public class LoginFragment extends Fragment {
 
                                     Intent intent = new Intent(mContext, UserMainActivity.class);
                                     startActivity(intent);
+                                } else {
+                                    Log.d(TAG, "checkGoogleName: 비밀번호가 없음");
                                 }
                             }
                         }

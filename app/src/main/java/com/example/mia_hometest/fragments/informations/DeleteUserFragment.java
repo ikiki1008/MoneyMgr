@@ -41,30 +41,6 @@ public class DeleteUserFragment extends Fragment {
         Log.d(TAG, " DeleteUserFragment onCreateView: ");
         View view = inflater.inflate(R.layout.category, container, false);
         mSharedPreference = mContext.getSharedPreferences("check_login", Context.MODE_PRIVATE);
-
-//        mGoback = view.findViewById(R.id.back);
-////        mLogout = view.findViewById(R.id.offline);
-//
-//        mGoback.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d(TAG, "onClick: 뒤로가기 눌렀다...");
-//                ((UserMainActivity) getActivity()).goBack();
-//            }
-//        });
-
-//        mLogout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d(TAG, "onClick: 로그아웃 하자....");
-//                SharedPreferences.Editor editor = mSharedPreference.edit();
-//                editor.putBoolean("login", false);
-//                editor.apply();
-//                Intent intent = new Intent(mContext, BaseActivity.class);
-//                startActivity(intent);
-//                Log.d(TAG, "onClick: 됏나??");
-//            }
-//        });
         return view;
     }
 
