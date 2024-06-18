@@ -1,5 +1,7 @@
 package com.example.mia_hometest;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -46,6 +48,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -56,7 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoginFragment extends Fragment implements ThemeListAdapter.OnThemeClickListener{
+public class LoginFragment extends Fragment{
     private static final String TAG = LoginFragment.class.getSimpleName();
     private SharedPreferences mSharedPreference;
     private Context mContext = null;
@@ -70,10 +73,8 @@ public class LoginFragment extends Fragment implements ThemeListAdapter.OnThemeC
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private ActivityResultLauncher<Intent> activityResultLauncher;
-    private ThemeListAdapter<ThemeItem> mAdapter;
-    private List<ThemeItem> mItemList = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-
+    private ThemeListAdapter<UserNameItem> mAdapter;
+    private List<UserNameItem> mItemList = new ArrayList<>();
 
     public LoginFragment (Context context) {
         mContext = context;
@@ -93,52 +94,44 @@ public class LoginFragment extends Fragment implements ThemeListAdapter.OnThemeC
         View view = inflater.inflate(R.layout.login, container, false);
 
         mRegisFragment = new RegisterFragment(mContext);
-        mSharedPreference = mContext.getSharedPreferences("check_login", Context.MODE_PRIVATE);
-
-//        mLogin = view.findViewById(R.id.loginBtn);
+        mSharedPreference = mContext.getSharedPreferences("check_login", MODE_PRIVATE);
+        mLogin = view.findViewById(R.id.loginBtn);
         mRegister = view.findViewById(R.id.registerBtn);
-//        mEmail = view.findViewById(R.id.set_email);
-//        mPwd = view.findViewById(R.id.setPwd);
+        mEmail = view.findViewById(R.id.set_email);
+        mPwd = view.findViewById(R.id.setPwd);
         mPiggy = view.findViewById(R.id.piggy);
-//        mGoogleLoginBtn = view.findViewById(R.id.google_login_btn);
-
-        mAdapter = new ThemeListAdapter<>(mContext, this, "theme");
-        mRecyclerView = view.findViewById(R.id.recycler);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecyclerView.setAdapter(mAdapter);
+        mGoogleLoginBtn = view.findViewById(R.id.google_login_btn);
 
         GlideDrawableImageViewTarget gif = new GlideDrawableImageViewTarget(mPiggy); //gif setting
         Glide.with(mContext).load(R.drawable.piggy_money).into(gif);
-//        googleSignInit();
+        googleSignInit();
 
-        getAllUserList();
+        mGoogleLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                googleSignIn();
+            }
+        });
 
-//        mGoogleLoginBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                googleSignIn();
-//            }
-//        });
-//
-//        mLogin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String email = mEmail.getText().toString();
-//                String pwd = mPwd.getText().toString();
-//
-//                if (email.isEmpty()) {
-//                    startShake(mEmail);
-//                }
-//                else if (pwd.isEmpty()) {
-//                    Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
-//                    startShake(mPwd);
-//                }
-//                else {
-//                    Log.d(TAG, "onClick: 클릭했다 로그인하자");
-//                    emailSignIn();
-//                }
-//            }
-//        });
+        mLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = mEmail.getText().toString();
+                String pwd = mPwd.getText().toString();
+
+                if (email.isEmpty()) {
+                    startShake(mEmail);
+                }
+                else if (pwd.isEmpty()) {
+                    Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
+                    startShake(mPwd);
+                }
+                else {
+                    Log.d(TAG, "onClick: 클릭했다 로그인하자");
+                    emailSignIn();
+                }
+            }
+        });
 
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,31 +143,6 @@ public class LoginFragment extends Fragment implements ThemeListAdapter.OnThemeC
         });
 
         return view;
-    }
-
-    private void getAllUserList() {
-//        Log.d(TAG, "getAllUserList: ");
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        db.collection("user").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    Log.d(TAG, "디비에서 정보를 성공적으로 다 긁어왔다면");
-//                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                        String mUserName = document.getString("name");
-//                        if (mUserName != null) {
-//                            mItemList.add(new ThemeItem(mUserName, ));
-//                        }
-//                    }
-//                    mAdapter.setItems(mItemList);
-//                }
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.d(TAG, "디비 정보를 아예 가져오지 못했음 == " + e);
-//            }
-//        });
     }
 
     @Override
@@ -264,7 +232,6 @@ public class LoginFragment extends Fragment implements ThemeListAdapter.OnThemeC
                                 String pwd = doc.getString("password");
                                 if (pwd != null) {
                                     mPwd.setText(pwd);
-
                                     Intent intent = new Intent(mContext, UserMainActivity.class);
                                     startActivity(intent);
                                 } else {
@@ -296,10 +263,5 @@ public class LoginFragment extends Fragment implements ThemeListAdapter.OnThemeC
                         startShake(mPwd);
                     }
                 });
-    }
-
-    @Override
-    public void onThemeClick(int position) {
-
     }
 }

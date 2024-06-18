@@ -59,6 +59,8 @@ public class UserMainActivity extends FragmentActivity{
                     editor.putString("user_lang", value);
                     editor.apply();
                     Log.d(TAG, "saveLanguage: 일단 여기까지 됐는지 확인 == " + value);
+                    startActivity(new Intent(mContext, BaseActivity.class));
+                    finish();
                 }
             }
         }

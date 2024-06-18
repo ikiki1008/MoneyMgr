@@ -7,7 +7,6 @@ public class UserNameItem implements DisplayItem {
     }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-
     @Override
     public String getDisplayTitle() {
         return name;

@@ -1,8 +1,11 @@
 package com.example.mia_hometest.fragments.informations;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +47,8 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
     private List<UserNameItem> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private String mCurrentUser;
+    private SharedPreferences mPreference;
+    private String mBackground;
 
 
     public UserListFragment (Context context) {
@@ -62,7 +67,7 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
         Log.d(TAG, " UserListFragment onCreateView: ");
         View view = inflater.inflate(R.layout.user_list_screen, container, false);
         mGoback = view.findViewById(R.id.back);
-        mAdapter = new ThemeListAdapter<>(mContext, this,"userList");
+        mAdapter = new ThemeListAdapter<>(mContext, this);
         mRecyclerView = view.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);

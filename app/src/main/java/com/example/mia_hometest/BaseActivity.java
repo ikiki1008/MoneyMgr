@@ -34,14 +34,14 @@ public class BaseActivity extends FragmentActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         launchFragment(mLogin);
 
-//        if (user != null) {
-//            Log.d(TAG, "onCreate: 이미 로그인한 유저입니다. " + user.getEmail());
-//            startActivity(new Intent(mContext, UserMainActivity.class));
-//            finish();
-//        } else {
-//            Log.d(TAG, "onCreate: 로그인 하지 않은 유저입니다. ");
-//            launchFragment(mLogin);
-//        }
+        if (user != null) {
+            Log.d(TAG, "onCreate: 이미 로그인한 유저입니다. " + user.getEmail());
+            startActivity(new Intent(mContext, UserMainActivity.class));
+            finish();
+        } else {
+            Log.d(TAG, "onCreate: 로그인 하지 않은 유저입니다. ");
+            launchFragment(mLogin);
+        }
     }
 
     private void init() {

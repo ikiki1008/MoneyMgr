@@ -3,14 +3,17 @@ package com.example.mia_hometest.common;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,7 +37,7 @@ public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapte
     private static final String PREF_SELECTED_ITEM = "selected_item";
 
     // 생성자
-    public ThemeListAdapter(Context context, OnThemeClickListener listener, String type) {
+    public ThemeListAdapter(Context context, OnThemeClickListener listener) {
         mContext = context;
         mColumnCount = 1;
         mListener = listener;
@@ -79,6 +82,8 @@ public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapte
                 viewHolder.mBar.setVisibility(View.VISIBLE);
                 viewHolder.mCheck.setVisibility(View.GONE);
             }
+        } else {
+            viewHolder.mBar.setVisibility(View.GONE);
         }
     }
 

@@ -26,43 +26,96 @@
                     style="@style/MainText"
                     android:textAlignment="center" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="205dp"
+                    android:text="@string/register_email"
+                    style="@style/SideText"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/set_email"
+                    android:layout_width="250dp"
+                    android:layout_height="35dp"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/dirty_white"
+                    android:layout_marginTop="205dp"
+                    android:layout_marginStart="80dp"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:background="@drawable/etc_back"/>
+
+                <TextView
+                    android:id="@+id/pwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="252dp"
+                    android:text="@string/register_pwd"
+                    style="@style/SideText"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/poppins"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/setPwd"
+                    android:layout_width="250dp"
+                    android:layout_height="35dp"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/dirty_white"
+                    android:layout_marginTop="250dp"
+                    android:layout_marginStart="80dp"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:background="@drawable/etc_back"/>
+
+                <TextView
+                    android:id="@+id/loginBtn"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="180dp"
-                    android:nestedScrollingEnabled="false"
-                    android:overScrollMode="never"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/layout" />
+                    android:layout_marginTop="320dp"
+                    android:layout_gravity="left"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/login_title"
+                    style="@style/MainText"
+                    android:fontFamily="@font/poppins"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/registerBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="450dp"
+                    android:layout_marginTop="320dp"
+                    android:layout_gravity="right"
                     android:layout_marginEnd="20dp"
                     android:text="@string/register_desc"
                     style="@style/SideText"
                     android:fontFamily="@font/poppins"
-                    android:textSize="15sp" />
+                    android:textSize="20sp" />
 
-<!--                <com.google.android.gms.common.SignInButton-->
-<!--                    android:id="@+id/google_login_btn"-->
-<!--                    android:layout_width="30dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:layout_marginTop="380dp"-->
-<!--                    android:layout_marginStart="25dp"/>-->
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/google_login_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="380dp"
+                    android:layout_marginStart="25dp"/>
 
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Oh, you have google account? try this"-->
-<!--                    android:fontFamily="@font/poppins"-->
-<!--                    style="@style/SideText"-->
-<!--                    android:textSize="13sp"-->
-<!--                    android:layout_marginStart="60dp"-->
-<!--                    android:layout_marginTop="385dp" />-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Oh, you have google account? try this"
+                    android:fontFamily="@font/poppins"
+                    style="@style/SideText"
+                    android:textSize="13sp"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="385dp" />
 
 
         </FrameLayout>
