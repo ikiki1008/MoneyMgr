@@ -62,7 +62,7 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
         Log.d(TAG, " UserListFragment onCreateView: ");
         View view = inflater.inflate(R.layout.user_list_screen, container, false);
         mGoback = view.findViewById(R.id.back);
-        mAdapter = new ThemeListAdapter<>(mContext, this);
+        mAdapter = new ThemeListAdapter<>(mContext, this,"userList");
         mRecyclerView = view.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);

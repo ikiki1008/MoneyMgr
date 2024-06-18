@@ -32,22 +32,16 @@ public class BaseActivity extends FragmentActivity {
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        launchFragment(mLogin);
 
-//        String language = Locale.getDefault().getLanguage();
-//        if (language.equals("ko")) {
-//            Log.d(TAG, "onCreate: 현재 설정 언어가 한국어라면 폰트를 바꾸기");
-//            Typeface typeface = Typeface.createFromAsset(getAssets(), "gowondodam_regular.ttf");
-//
+//        if (user != null) {
+//            Log.d(TAG, "onCreate: 이미 로그인한 유저입니다. " + user.getEmail());
+//            startActivity(new Intent(mContext, UserMainActivity.class));
+//            finish();
+//        } else {
+//            Log.d(TAG, "onCreate: 로그인 하지 않은 유저입니다. ");
+//            launchFragment(mLogin);
 //        }
-
-        if (user != null) {
-            Log.d(TAG, "onCreate: 이미 로그인한 유저입니다. " + user.getEmail());
-            startActivity(new Intent(mContext, UserMainActivity.class));
-            finish();
-        } else {
-            Log.d(TAG, "onCreate: 로그인 하지 않은 유저입니다. ");
-            launchFragment(mLogin);
-        }
     }
 
     private void init() {

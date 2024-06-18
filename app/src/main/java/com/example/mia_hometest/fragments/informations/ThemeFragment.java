@@ -53,7 +53,7 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
         View view = inflater.inflate(R.layout.theme, container, false);
 
         mGoback = view.findViewById(R.id.back);
-        mAdapter = new ThemeListAdapter<>(mContext, this);
+        mAdapter = new ThemeListAdapter<>(mContext, this, "theme");
         mRecyclerView = view.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);

@@ -20,8 +20,8 @@ import com.example.mia_hometest.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = ThemeListAdapter.class.getSimpleName();
+public class LoginUserListAdapter<T extends DisplayItem> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = LoginUserListAdapter.class.getSimpleName();
     private final Context mContext;
     private final int mColumnCount;
     private final LayoutInflater mInflater;
@@ -34,7 +34,7 @@ public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapte
     private static final String PREF_SELECTED_ITEM = "selected_item";
 
     // 생성자
-    public ThemeListAdapter(Context context, OnThemeClickListener listener, String type) {
+    public LoginUserListAdapter(Context context, OnThemeClickListener listener) {
         mContext = context;
         mColumnCount = 1;
         mListener = listener;

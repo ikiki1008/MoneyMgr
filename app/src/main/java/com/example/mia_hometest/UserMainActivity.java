@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -11,22 +12,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.anychart.core.Base;
+import com.example.mia_hometest.fragments.informations.LanguageFragment;
 import com.example.mia_hometest.fragments.informations.UserInfoFragment;
 import com.example.mia_hometest.fragments.main.CardScreenFragment;
 import com.example.mia_hometest.fragments.main.ChartScreenFragment;
 import com.example.mia_hometest.fragments.main.InfoScreenFragment;
 import com.example.mia_hometest.fragments.main.MainScreenFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
+import java.util.Locale;
 
-public class UserMainActivity extends FragmentActivity {
+public class UserMainActivity extends FragmentActivity{
     
     private static final String TAG = UserMainActivity.class.getSimpleName();
     private Context mContext;
@@ -38,18 +45,46 @@ public class UserMainActivity extends FragmentActivity {
     private ImageView[] mImage = new ImageView[5];
     private Intent mIntent = new Intent();
     private SharedPreferences mPreference;
+    private SharedPreferences mLanguagePreferene;
     private ActivityResultLauncher<Intent> mImageUpdate;
+    private final String CHANGE_LANGUAGE = "com.android.CHANGE_LANGUAGE";
+    private final BroadcastReceiver mLanguageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(CHANGE_LANGUAGE)) {
+                String value = intent.getStringExtra("language");
+                if (value != null) {
+                    SharedPreferences.Editor editor = mLanguagePreferene.edit();
+                    editor.putString("user_lang", value);
+                    editor.apply();
+                    Log.d(TAG, "saveLanguage: 일단 여기까지 됐는지 확인 == " + value);
+                }
+            }
+        }
+    };
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: ");
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate: ");
         mContext = this;
         mIntent = getIntent();
         mPreference = getSharedPreferences("theme", MODE_PRIVATE);
         String userColor = mPreference.getString("color", null);
         String themeColor = mIntent.getStringExtra("color");
+        mLanguagePreferene = getSharedPreferences("language", MODE_PRIVATE);
+        String previousLang = mLanguagePreferene.getString("user_lang", null);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mLanguageReceiver, new IntentFilter(CHANGE_LANGUAGE));
+
+        if (previousLang != null) {
+            Log.d(TAG, "onCreate: set language as saved");
+            setLanguage(previousLang);
+        } else {
+            Log.d(TAG, "onCreate: shaedPreference 에 아무것도 없다..");
+            setLanguage("en");
+        }
 
         if (themeColor != null) {
             setTheme(themeColor);
@@ -90,6 +125,44 @@ public class UserMainActivity extends FragmentActivity {
         launchFragment(mMainFragment);
         //이 후
         onCLick();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        String previousLang = mLanguagePreferene.getString("user_lang", null);
+        if (previousLang != null) {
+            Log.d(TAG, "onCreate: set language as saved");
+            setLanguage(previousLang);
+        } else {
+            Log.d(TAG, "onCreate: shaedPreference 에 아무것도 없다..");
+            setLanguage("en");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mLanguageReceiver);
+    }
+
+    private void setLanguage(String lang) {
+        Log.d(TAG, "setLanguage: Setting language to " + lang);
+        if (lang.equals("en")) {
+            Log.d(TAG, "changeLanguage: 영어로 바꾸기");
+            Locale eng = Locale.US;
+            Configuration configuration = new Configuration();
+            configuration.locale = eng;
+            getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+        } else if (lang.equals("ko")) {
+            Log.d(TAG, "changeLanguage: 한국어로 바꾸기");
+            Locale kor = Locale.KOREA;
+            Configuration configuration = new Configuration();
+            configuration.locale = kor;
+            getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+        }
     }
 
     private void setTheme(String themeColor) {

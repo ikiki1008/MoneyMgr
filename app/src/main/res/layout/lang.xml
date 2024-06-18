@@ -51,11 +51,13 @@
             android:paddingRight="30dp"/>
 
         <ImageView
+            android:id="@+id/bar1"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/menu_bar"
             android:paddingTop="10dp"
+            android:visibility="visible"
             android:paddingRight="20dp" />
 
         <TextView
@@ -73,13 +75,38 @@
             android:paddingBottom="10dp"/>
 
         <ImageView
+            android:id="@+id/bar2"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginTop="40dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/menu_bar"
             android:paddingTop="10dp"
+            android:visibility="visible"
             android:paddingRight="20dp" />
+
+        <ImageView
+            android:id="@+id/check"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/check"
+            android:paddingTop="15dp"
+            android:visibility="gone"
+            android:paddingRight="20dp"
+            android:paddingBottom="5dp"/>
+
+        <ImageView
+            android:id="@+id/check2"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/check"
+            android:paddingTop="15dp"
+            android:visibility="gone"
+            android:layout_marginTop="40dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="5dp"/>
         
         
     </RelativeLayout>

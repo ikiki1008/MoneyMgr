@@ -23,9 +23,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.example.mia_hometest.common.ThemeItem;
+import com.example.mia_hometest.common.ThemeListAdapter;
+import com.example.mia_hometest.common.UserNameItem;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -46,10 +51,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements ThemeListAdapter.OnThemeClickListener{
     private static final String TAG = LoginFragment.class.getSimpleName();
     private SharedPreferences mSharedPreference;
     private Context mContext = null;
@@ -63,6 +70,9 @@ public class LoginFragment extends Fragment {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private ActivityResultLauncher<Intent> activityResultLauncher;
+    private ThemeListAdapter<ThemeItem> mAdapter;
+    private List<ThemeItem> mItemList = new ArrayList<>();
+    private RecyclerView mRecyclerView;
 
 
     public LoginFragment (Context context) {
@@ -85,43 +95,50 @@ public class LoginFragment extends Fragment {
         mRegisFragment = new RegisterFragment(mContext);
         mSharedPreference = mContext.getSharedPreferences("check_login", Context.MODE_PRIVATE);
 
-        mLogin = view.findViewById(R.id.loginBtn);
+//        mLogin = view.findViewById(R.id.loginBtn);
         mRegister = view.findViewById(R.id.registerBtn);
-        mEmail = view.findViewById(R.id.set_email);
-        mPwd = view.findViewById(R.id.setPwd);
+//        mEmail = view.findViewById(R.id.set_email);
+//        mPwd = view.findViewById(R.id.setPwd);
         mPiggy = view.findViewById(R.id.piggy);
-        mGoogleLoginBtn = view.findViewById(R.id.google_login_btn);
+//        mGoogleLoginBtn = view.findViewById(R.id.google_login_btn);
+
+        mAdapter = new ThemeListAdapter<>(mContext, this, "theme");
+        mRecyclerView = view.findViewById(R.id.recycler);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setAdapter(mAdapter);
 
         GlideDrawableImageViewTarget gif = new GlideDrawableImageViewTarget(mPiggy); //gif setting
         Glide.with(mContext).load(R.drawable.piggy_money).into(gif);
-        googleSignInit();
+//        googleSignInit();
 
-        mGoogleLoginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                googleSignIn();
-            }
-        });
+        getAllUserList();
 
-        mLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = mEmail.getText().toString();
-                String pwd = mPwd.getText().toString();
-
-                if (email.isEmpty()) {
-                    startShake(mEmail);
-                }
-                else if (pwd.isEmpty()) {
-                    Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
-                    startShake(mPwd);
-                }
-                else {
-                    Log.d(TAG, "onClick: 클릭했다 로그인하자");
-                    emailSignIn();
-                }
-            }
-        });
+//        mGoogleLoginBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                googleSignIn();
+//            }
+//        });
+//
+//        mLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String email = mEmail.getText().toString();
+//                String pwd = mPwd.getText().toString();
+//
+//                if (email.isEmpty()) {
+//                    startShake(mEmail);
+//                }
+//                else if (pwd.isEmpty()) {
+//                    Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
+//                    startShake(mPwd);
+//                }
+//                else {
+//                    Log.d(TAG, "onClick: 클릭했다 로그인하자");
+//                    emailSignIn();
+//                }
+//            }
+//        });
 
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +150,31 @@ public class LoginFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void getAllUserList() {
+//        Log.d(TAG, "getAllUserList: ");
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        db.collection("user").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    Log.d(TAG, "디비에서 정보를 성공적으로 다 긁어왔다면");
+//                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        String mUserName = document.getString("name");
+//                        if (mUserName != null) {
+//                            mItemList.add(new ThemeItem(mUserName, ));
+//                        }
+//                    }
+//                    mAdapter.setItems(mItemList);
+//                }
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d(TAG, "디비 정보를 아예 가져오지 못했음 == " + e);
+//            }
+//        });
     }
 
     @Override
@@ -254,5 +296,10 @@ public class LoginFragment extends Fragment {
                         startShake(mPwd);
                     }
                 });
+    }
+
+    @Override
+    public void onThemeClick(int position) {
+
     }
 }
