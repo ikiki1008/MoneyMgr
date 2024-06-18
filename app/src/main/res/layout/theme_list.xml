@@ -25,11 +25,24 @@
             android:paddingBottom="10dp" />
 
         <ImageView
+            android:id="@+id/status_bar"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/menu_bar"
             android:paddingTop="15dp"
+            android:paddingRight="20dp"
+            android:visibility="visible"
+            android:paddingBottom="5dp"/>
+
+        <ImageView
+            android:id="@+id/check"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/check"
+            android:paddingTop="15dp"
+            android:visibility="gone"
             android:paddingRight="20dp"
             android:paddingBottom="5dp"/>
 

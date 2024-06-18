@@ -28,14 +28,13 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
     private final String TAG = ThemeFragment.class.getSimpleName();
     private Context mContext = null;
     private ImageView mGoback = null;
-    private ThemeListAdapter mAdapter;
+    private ThemeListAdapter<ThemeItem> mAdapter;
     private List<ThemeItem> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private Intent mIntent;
-    private final String red = "com.android.action.red";
-    private final String orange = "com.android.action.orange";
-    private final String violet = "com.android.action.violet";
-
+//    private final String red = "com.android.action.red";
+//    private final String orange = "com.android.action.orange";
+//    private final String violet = "com.android.action.violet";
 
     public ThemeFragment (Context context) {
         mContext = context;
@@ -54,7 +53,7 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
         View view = inflater.inflate(R.layout.theme, container, false);
 
         mGoback = view.findViewById(R.id.back);
-        mAdapter = new ThemeListAdapter(mContext, this);
+        mAdapter = new ThemeListAdapter<>(mContext, this);
         mRecyclerView = view.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
