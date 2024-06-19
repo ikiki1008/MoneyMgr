@@ -95,8 +95,6 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
     public void onThemeClick(int position) {
         //바꾸려는 유저의 항목
         UserNameItem userSelect = mItemList.get(position);
-        mAdapter.setSelectedItem(position);
-
         if (!mCurrentUser.isEmpty() && userSelect.getName().equals(mCurrentUser)) {
             Log.d(TAG, "onThemeClick: 현재 로그인한 사용자와 바꾸려는 사용자가 같다면 메소드가 실행되지 않는다");
 
@@ -119,6 +117,7 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
                     QueryDocumentSnapshot document = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
                     mCurrentUser = document.getString("name");
                     Log.d(TAG, "현재 로그인한 유저의 이름: " + mCurrentUser);
+                    sendUserPosition();
                 }
             }
         });
@@ -147,6 +146,17 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
                 Log.d(TAG, "디비 정보를 아예 가져오지 못했음 == " + e);
             }
         });
+    }
+
+    private void sendUserPosition () {
+        if (mCurrentUser != null && !mCurrentUser.isEmpty()) {
+            for (int i = 0; i < mItemList.size(); i++) {
+                if (mCurrentUser.equals(mItemList.get(i).getName())) {
+                    mAdapter.setSelectedItem(i);
+                    break;
+                }
+            }
+        }
     }
 
     private void switchUser(String name) {
