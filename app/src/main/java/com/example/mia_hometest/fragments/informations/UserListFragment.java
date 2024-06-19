@@ -95,9 +95,11 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
     public void onThemeClick(int position) {
         //바꾸려는 유저의 항목
         UserNameItem userSelect = mItemList.get(position);
+        mAdapter.setSelectedItem(position);
 
-        if (mCurrentUser != null && userSelect.getName().equals(mCurrentUser)) {
+        if (!mCurrentUser.isEmpty() && userSelect.getName().equals(mCurrentUser)) {
             Log.d(TAG, "onThemeClick: 현재 로그인한 사용자와 바꾸려는 사용자가 같다면 메소드가 실행되지 않는다");
+
             Toast.makeText(mContext, "Cannot switch user because current user and selected user are same", Toast.LENGTH_SHORT).show();
         } else {
             switchUser(userSelect.getName());

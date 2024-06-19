@@ -35,6 +35,7 @@ public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapte
     private int mSelectedItem = RecyclerView.NO_POSITION; // 선택된 아이템의 위치를 저장하는 변수
     private SharedPreferences mPrefs;
     private static final String PREF_SELECTED_ITEM = "selected_item";
+    private String mCurrentState;
 
     // 생성자
     public ThemeListAdapter(Context context, OnThemeClickListener listener) {
@@ -84,6 +85,11 @@ public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapte
             }
         } else {
             viewHolder.mBar.setVisibility(View.GONE);
+            if (position == mSelectedItem) {
+                viewHolder.mCheck.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.mCheck.setVisibility(View.GONE);
+            }
         }
     }
 
