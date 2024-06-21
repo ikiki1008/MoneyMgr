@@ -35,7 +35,7 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
     private List<ThemeItem> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private Intent mIntent;
-    private SharedPreferences mPreference;
+    private SharedPreferences mColoredPreference;
 
     public ThemeFragment (Context context) {
         mContext = context;
@@ -58,8 +58,19 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
         mRecyclerView = view.findViewById(R.id.recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
+        mColoredPreference = mContext.getSharedPreferences("theme", MODE_PRIVATE);
+        String userColor = mColoredPreference.getString("color", null);
 
-        getCurrentTheme();
+        int position = -1;
+        if (userColor != null) {
+            position = getCurrentTheme(userColor);
+            mAdapter.setSelectedItem(position);
+        } else {
+            position = 5;
+            mAdapter.setSelectedItem(position);
+
+        }
+
         mGoback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,12 +117,26 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
         }
     }
 
-    private void getCurrentTheme() {
-        mPreference = mContext.getSharedPreferences("theme", MODE_PRIVATE);
-        String userColor = mPreference.getString("color", null);
-        if (userColor != null) {
-
+    private int getCurrentTheme(String color) {
+        switch (color) {
+            case "red":
+                return 0;
+            case "orange":
+                return 1;
+            case "yellow":
+                return 2;
+            case "green":
+                return 3;
+            case "blue":
+                return 4;
+            case "violet":
+                return 5;
+            case "gray":
+                return 6;
+            default:
+                break;
         }
+        return -1;
     }
 
     private void sendIntent(String color) {

@@ -35,10 +35,8 @@ public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapte
     private List<T> mItems = new ArrayList<>();
     private OnThemeClickListener mListener;
     private int mSelectedItem = RecyclerView.NO_POSITION; // 선택된 아이템의 위치를 저장하는 변수
-    private int mCurrentItem = RecyclerView.NO_POSITION;
     private SharedPreferences mPrefs;
     private static final String PREF_SELECTED_ITEM = "selected_item";
-    private SharedPreferences mColorPreference;
 
     // 생성자
     public ThemeListAdapter(Context context, OnThemeClickListener listener) {
@@ -62,8 +60,6 @@ public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapte
         ThemeViewHolder viewHolder = (ThemeViewHolder) holder;
         String title = item.getDisplayTitle();
         viewHolder.mTitle.setText(title);
-        mColorPreference = mContext.getSharedPreferences("theme", MODE_PRIVATE);
-        String userColor = mColorPreference.getString("color", null);
 
         // item이 ThemeItem 타입인 경우 배경색 설정
         if (item instanceof ThemeItem) {
@@ -79,12 +75,12 @@ public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapte
                 Log.d(TAG, "onBindViewHolder: no.....");
             }
 
-            // 선택된 아이템인 경우 상태 변경
             if (position == mSelectedItem) {
-                viewHolder.mBar.setVisibility(View.GONE);
                 viewHolder.mCheck.setVisibility(View.VISIBLE);
+                viewHolder.mBar.setVisibility(View.GONE);
             } else {
                 viewHolder.mCheck.setVisibility(View.GONE);
+                viewHolder.mBar.setVisibility(View.VISIBLE);
             }
         } else {
             if (position == mSelectedItem) {
@@ -94,27 +90,6 @@ public class ThemeListAdapter<T extends DisplayItem> extends RecyclerView.Adapte
                 viewHolder.mCheck.setVisibility(View.GONE);
                 viewHolder.mBar.setVisibility(View.VISIBLE);
             }
-        }
-    }
-
-    private int getColorPosition(String color) {
-        switch (color) {
-            case "red":
-                return 0;
-            case "orange":
-                return 1;
-            case "yellow":
-                return 2;
-            case "green":
-                return 3;
-            case "blue":
-                return 4;
-            case "violet":
-                return 5;
-            case "gray":
-                return 6;
-            default:
-                return -1;
         }
     }
 

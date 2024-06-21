@@ -47,9 +47,6 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
     private List<UserNameItem> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private String mCurrentUser;
-    private SharedPreferences mPreference;
-    private String mBackground;
-
 
     public UserListFragment (Context context) {
         mContext = context;
@@ -117,7 +114,8 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
                     QueryDocumentSnapshot document = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
                     mCurrentUser = document.getString("name");
                     Log.d(TAG, "현재 로그인한 유저의 이름: " + mCurrentUser);
-                    sendUserPosition();
+                    int position = getUserPosition(mCurrentUser);
+                    mAdapter.setSelectedItem(position);
                 }
             }
         });
@@ -148,15 +146,15 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
         });
     }
 
-    private void sendUserPosition () {
-        if (mCurrentUser != null && !mCurrentUser.isEmpty()) {
-            for (int i = 0; i < mItemList.size(); i++) {
-                if (mCurrentUser.equals(mItemList.get(i).getName())) {
-                    mAdapter.setSelectedItem(i);
-                    break;
-                }
+    private int getUserPosition (String userName) {
+        int position = -1;
+        for (int i=0; i<mItemList.size(); i++) {
+            //mItemlist 안에서 for문을 돌리며 일치한 이름을 찾고 Index값을 반환
+            if (mItemList.get(i).getName().equals(userName)) {
+                position = i;
             }
         }
+        return position;
     }
 
     private void switchUser(String name) {
