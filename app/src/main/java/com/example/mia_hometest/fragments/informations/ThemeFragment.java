@@ -1,8 +1,11 @@
 package com.example.mia_hometest.fragments.informations;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -32,9 +35,7 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
     private List<ThemeItem> mItemList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private Intent mIntent;
-//    private final String red = "com.android.action.red";
-//    private final String orange = "com.android.action.orange";
-//    private final String violet = "com.android.action.violet";
+    private SharedPreferences mPreference;
 
     public ThemeFragment (Context context) {
         mContext = context;
@@ -58,6 +59,7 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
 
+        getCurrentTheme();
         mGoback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,6 +103,14 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
                 break;
             default:
                 break;
+        }
+    }
+
+    private void getCurrentTheme() {
+        mPreference = mContext.getSharedPreferences("theme", MODE_PRIVATE);
+        String userColor = mPreference.getString("color", null);
+        if (userColor != null) {
+
         }
     }
 
