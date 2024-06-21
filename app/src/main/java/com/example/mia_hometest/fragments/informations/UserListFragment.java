@@ -129,6 +129,7 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "디비에서 정보를 성공적으로 다 긁어왔다면");
+                    mItemList.clear();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         String mUserName = document.getString("name");
                         if (mUserName != null) {
@@ -152,6 +153,7 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
             //mItemlist 안에서 for문을 돌리며 일치한 이름을 찾고 Index값을 반환
             if (mItemList.get(i).getName().equals(userName)) {
                 position = i;
+                break;
             }
         }
         return position;

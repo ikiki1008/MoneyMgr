@@ -70,7 +70,6 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
             mAdapter.setSelectedItem(position);
 
         }
-
         mGoback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,8 +77,8 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
                 ((UserMainActivity) getActivity()).goBack();
             }
         });
-        setThemeItems();
 
+        setThemeItems();
         return view;
     }
 
@@ -147,6 +146,7 @@ public class ThemeFragment extends Fragment implements ThemeListAdapter.OnThemeC
     }
 
     private void setThemeItems() {
+        mItemList.clear();
         String[] titles = getResources().getStringArray(R.array.theme_color_title);
         int[] colors = {
                 R.color.red,
