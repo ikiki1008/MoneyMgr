@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,8 +70,8 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
 
-        getCurrentUserName();
         getAllUserList();
+        getCurrentUserName();
 
         mGoback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +95,6 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
         UserNameItem userSelect = mItemList.get(position);
         if (!mCurrentUser.isEmpty() && userSelect.getName().equals(mCurrentUser)) {
             Log.d(TAG, "onThemeClick: 현재 로그인한 사용자와 바꾸려는 사용자가 같다면 메소드가 실행되지 않는다");
-
             Toast.makeText(mContext, "Cannot switch user because current user and selected user are same", Toast.LENGTH_SHORT).show();
         } else {
             switchUser(userSelect.getName());
@@ -153,7 +153,7 @@ public class UserListFragment extends Fragment implements ThemeListAdapter.OnThe
             //mItemlist 안에서 for문을 돌리며 일치한 이름을 찾고 Index값을 반환
             if (mItemList.get(i).getName().equals(userName)) {
                 position = i;
-                break;
+                return position;
             }
         }
         return position;
