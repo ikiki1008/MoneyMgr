@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.anychart.core.Base;
 import com.example.mia_hometest.fragments.informations.LanguageFragment;
 import com.example.mia_hometest.fragments.informations.UserInfoFragment;
+import com.example.mia_hometest.fragments.informations.UserListFragment;
 import com.example.mia_hometest.fragments.main.CardScreenFragment;
 import com.example.mia_hometest.fragments.main.ChartScreenFragment;
 import com.example.mia_hometest.fragments.main.InfoScreenFragment;
@@ -233,7 +234,12 @@ public class UserMainActivity extends FragmentActivity{
         mImage[4].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchFragment(mUserInfoFragment);
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (fragment instanceof UserInfoFragment) {
+                    Log.d(TAG, "onClick: 현재 유저 인포 화면이기 때문에 갈수 없음");
+                } else {
+                    launchFragment(mUserInfoFragment);
+                }
             }
         });
     }
