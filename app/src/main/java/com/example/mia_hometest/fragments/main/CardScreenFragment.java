@@ -22,8 +22,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
+import com.example.mia_hometest.UserMainActivity;
 import com.example.mia_hometest.common.ListItem;
 import com.example.mia_hometest.common.CardListAdapter;
+import com.example.mia_hometest.common.SpecificListItem;
+import com.example.mia_hometest.fragments.card.CardScreenInfoFragment;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,7 +44,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class CardScreenFragment extends Fragment implements View.OnClickListener, CardListAdapter.OnSwipeListener{
+public class CardScreenFragment extends Fragment implements View.OnClickListener, CardListAdapter.OnSwipeListener {
     private final String TAG = CardScreenFragment.class.getSimpleName();
     private Context mContext = null;
     private TextView mAll = null;
@@ -54,6 +57,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private RecyclerView mRecyclerView;
     private CardListAdapter mAdapter;
     private FirebaseFirestore mStore;
+    private CardScreenInfoFragment mCardScreenInfoFragment = null;
 
     @Override
     public void onAttach(Context context) {
@@ -75,7 +79,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mListTitle = view.findViewById(R.id.listText);
 
         mAdapter = new CardListAdapter(mContext);
-        mAdapter.setSwipeListener(this, false);
+        mAdapter.setSwipeListener(this);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
@@ -264,37 +268,18 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onSwipeLeft(int position, boolean delete) {
+    public void onSwipeLeft(int position) {
         Log.d(TAG, "onSwipeLeft: 왼쪽으로 스와이핑 했습니다.");
-        if (delete) {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if (user != null) {
-                String userId = user.getUid();
-                ListItem itemToDelete = mAdapter.getItems().get(position);
 
-                Task<Void> deleteIncomeTask = mStore.collection("user").document(userId).collection("income").document(itemToDelete.getId())
-                        .delete();
-
-                Task<Void> deleteOutcomeTask = mStore.collection("user").document(userId).collection("outcome").document(itemToDelete.getId())
-                        .delete();
-
-                // 먼저 income에서 삭제 시도
-                deleteIncomeTask.addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "DocumentSnapshot successfully deleted from income!");
-                    mAdapter.getItems().remove(position);
-                    mAdapter.notifyItemRemoved(position);
-                    mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
-                }).addOnFailureListener(e -> {
-                    // income에서 실패하면 outcome에서 삭제 시도
-                    Log.w(TAG, "Error deleting document from income, trying outcome", e);
-                    deleteOutcomeTask.addOnSuccessListener(aVoid -> {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted from outcome!");
-                        mAdapter.getItems().remove(position);
-                        mAdapter.notifyItemRemoved(position);
-                        mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
-                    }).addOnFailureListener(e2 -> Log.w(TAG, "Error deleting document from outcome", e2));
-                });
-            }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            ListItem item = mAdapter.getItems().get(position);
+            String itemId = item.getId();
+            Log.d(TAG, "onItemClick: 아이템 아이디는? " + item.getId());
+            mCardScreenInfoFragment = new CardScreenInfoFragment(mContext, itemId);
+            ((UserMainActivity) getActivity()).launchFragment(mCardScreenInfoFragment);
+            Log.d(TAG, "onItemClick: 마지막");
         }
     }
 
@@ -303,5 +288,32 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         Log.d(TAG, "onSwipeRight: 오른쪽으로 스와이핑 했습니다");
     }
 
-
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//            if (user != null) {
+//            String userId = user.getUid();
+//            ListItem itemToDelete = mAdapter.getItems().get(position);
+//
+//            Task<Void> deleteIncomeTask = mStore.collection("user").document(userId).collection("income").document(itemToDelete.getId())
+//                    .delete();
+//
+//            Task<Void> deleteOutcomeTask = mStore.collection("user").document(userId).collection("outcome").document(itemToDelete.getId())
+//                    .delete();
+//
+//            // 먼저 income에서 삭제 시도
+//            deleteIncomeTask.addOnSuccessListener(aVoid -> {
+//                Log.d(TAG, "DocumentSnapshot successfully deleted from income!");
+//                mAdapter.getItems().remove(position);
+//                mAdapter.notifyItemRemoved(position);
+//                mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
+//            }).addOnFailureListener(e -> {
+//                // income에서 실패하면 outcome에서 삭제 시도
+//                Log.w(TAG, "Error deleting document from income, trying outcome", e);
+//                deleteOutcomeTask.addOnSuccessListener(aVoid -> {
+//                    Log.d(TAG, "DocumentSnapshot successfully deleted from outcome!");
+//                    mAdapter.getItems().remove(position);
+//                    mAdapter.notifyItemRemoved(position);
+//                    mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
+//                }).addOnFailureListener(e2 -> Log.w(TAG, "Error deleting document from outcome", e2));
+//            });
+//        }
 }

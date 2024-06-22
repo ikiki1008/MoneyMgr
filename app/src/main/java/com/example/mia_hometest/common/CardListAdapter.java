@@ -1,19 +1,15 @@
 package com.example.mia_hometest.common;
 
-import static androidx.core.content.ContextCompat.startActivity;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,8 +19,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
-import com.example.mia_hometest.UserMainActivity;
-import com.example.mia_hometest.fragments.main.CardScreenFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +33,7 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final GridSpanSizeLookup mSpanSizeLookup = new GridSpanSizeLookup();
     private final String NEW_INTENT = "com.android.intent.NEW_INTENT";
     private List<ListItem> mTiles = new ArrayList<>();
-    private OnSwipeListener mSwipe;
-    private boolean mCheckItemDelete;
+    private OnSwipeListener mSwipe;;
 
     public CardListAdapter(Context context) {
         mContext = context;
@@ -54,24 +47,23 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return gridLayoutManager;
     }
 
-    public void setSwipeListener (OnSwipeListener listener, boolean delete) {
+    public void setSwipeListener (OnSwipeListener listener) {
         mSwipe = listener;
-        mCheckItemDelete = delete;
     }
 
     public interface OnSwipeListener {
-        void onSwipeLeft (int position, boolean delete);
+        void onSwipeLeft (int position);
         void onSwipeRight (int position);
     }
-
-    public interface Tile {
-        @Nullable
-        Drawable getIcon();
-        String getTitle();
-        String getDesc();
-        String getPrice();
-        String getDate();
-    }
+//
+//    public interface Tile {
+//        @Nullable
+//        Drawable getIcon();
+//        String getTitle();
+//        String getDesc();
+//        String getPrice();
+//        String getDate();
+//    }
 
     @NonNull
     @Override
@@ -94,33 +86,32 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         listViewHolder.mDate.setText(date);
 
         View view = listViewHolder.itemView;
-        ImageView swipeImage = listViewHolder.mDelete;
-
+        ImageView move = listViewHolder.mMove;
         listViewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
             private float startX;
             private static final int MIN_DISTANCE = 150;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         startX = event.getX();
                         break;
+
                     case MotionEvent.ACTION_UP:
                         float endX = event.getX();
                         float deltaX = endX - startX;
 
-                        // 왼쪽으로 스와이프했을 때 처리
                         if (deltaX < 0 && Math.abs(deltaX) > MIN_DISTANCE) {
-                            // 오른쪽으로 75dp 이동 애니메이션 추가
+                            // 왼쪽으로 스와이프했을 때 처리
                             ObjectAnimator animator = ObjectAnimator.ofFloat(v, "translationX", 0, -convertDpToPixel(60, mContext));
                             animator.setDuration(300);
                             animator.start();
-                            swipeImage.setOnClickListener(new View.OnClickListener() {
+                            move.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     Log.d(TAG, "onClick: 어댑터를 클릭했다 ");
                                     if (mSwipe != null) {
-                                        mSwipe.onSwipeLeft(position, true);
+                                        mSwipe.onSwipeLeft(position);
                                     }
                                 }
                             });
@@ -132,31 +123,20 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         }
                         break;
                 }
-                return true; // true 반환하여 이벤트를 소비하도록 설정
+//                view.performClick(); // 한 어댑터에 두 개 이상의 리스너가 있고, 어댑터를 사용하는 클래스에서 이를 모두 사용할 시 리스너가 소진되지 않도록 performClick()을 해줘야 한다
+                return true; // 이벤트 소비
             }
         });
+
     }
 
     private float convertDpToPixel(float dp, Context context) {
         return dp * context.getResources().getDisplayMetrics().density;
     }
 
-    private void setTextNotEmpty(TextView textView, String text) {
-        if (!TextUtils.isEmpty(text)) {
-            textView.setText(text);
-        }
-    }
-
     @Override
     public int getItemCount() {
         return mTiles.size();
-    }
-
-    public boolean isItemDelete (boolean delete, int position) {
-        if (delete) {
-            return true;
-        }
-        return false;
     }
 
     public List<ListItem> getItems() {
@@ -173,15 +153,15 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private final TextView mTitle;
         private final TextView mPrice;
         private final TextView mDate;
-        private final ImageView mDelete;
-
+        private final ImageView mMove;
         ListViewHolder(View itemView) {
             super(itemView);
 //            mIcon = itemView.findViewById(R.id.icon);
             mTitle = itemView.findViewById(R.id.title);
             mPrice = itemView.findViewById(R.id.price);
             mDate = itemView.findViewById(R.id.date);
-            mDelete = itemView.findViewById(R.id.delete);
+            mMove = itemView.findViewById(R.id.move);
+
         }
     }
 
