@@ -47,7 +47,7 @@ public class CateDialogView extends DialogFragment implements View.OnClickListen
                 R.id.food, R.id.rent, R.id.mobile, R.id.card,
                 R.id.hospital, R.id.social, R.id.hobby, R.id.ott,
                 R.id.household, R.id.trans, R.id.sports, R.id.loan,
-                R.id.etc, R.id.education, R.id.editBtn, R.id.cancelBtn
+                R.id.etc, R.id.education, R.id.editBtn, R.id.cancelBtn, R.id.shopping
         };
 
         for (int id : textview) {
@@ -75,6 +75,7 @@ public class CateDialogView extends DialogFragment implements View.OnClickListen
             case R.id.loan:
             case R.id.etc:
             case R.id.education:
+            case R.id.shopping:
                 String socialText = ((TextView) view).getText().toString();
                 Log.d(TAG, "onClick: 무엇을 클릭했나요?? " + socialText);
                 mIntent.putExtra("value", socialText);

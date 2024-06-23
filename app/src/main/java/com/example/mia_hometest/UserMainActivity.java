@@ -86,7 +86,7 @@ public class UserMainActivity extends FragmentActivity{
             setLanguage(previousLang);
         } else {
             Log.d(TAG, "onCreate: shaedPreference 에 아무것도 없다..");
-            setLanguage("en");
+            setLanguage("ko");
         }
 
         if (themeColor != null) {

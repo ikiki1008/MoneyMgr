@@ -157,9 +157,11 @@ public class InfoScreenFragment extends Fragment implements View.OnClickListener
             launchChildFragment(mTheme);
         } else if (view.getId() == R.id.userlist) {
             launchChildFragment(mUserList);
-        } else if (view.getId() == R.id.lang) {
-            launchChildFragment(mLang);
-        } else if (view.getId() == R.id.logoff) {
+        }
+//        else if (view.getId() == R.id.lang) {
+//            launchChildFragment(mLang);
+//        }
+        else if (view.getId() == R.id.logoff) {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(mContext, BaseActivity.class);
             intent.putExtra("logoff", true);

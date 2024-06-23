@@ -179,6 +179,8 @@ public class CardScreenInfoFragment extends Fragment {
             mImage.setImageResource(R.drawable.book);
         } else if (category.equals(getString(R.string.household))) {
             mImage.setImageResource(R.drawable.paperroll);
+        } else {
+            mImage.setImageResource(R.drawable.shopper);
         }
     }
 }

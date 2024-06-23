@@ -1,27 +1,152 @@
+<!--<resources>-->
+<!--    <string name="app_name">mia_hometest</string>-->
+
+<!--    <string name="main_title">Activity</string>-->
+<!--    <string name="trans_title">Transactions</string>-->
+<!--    <string name="sec_title">Recent&#160;Transactions</string>-->
+<!--    <string name="chart_title">Chart&#160;of&#160;Transactions</string>-->
+<!--    <string name="main_screen_small_title">Add&#160;new&#160;transaction</string>-->
+<!--    <string name="today_trans">Today\'s&#160;transaction</string>-->
+<!--    <string name="setting">Settings</string>-->
+
+<!--    <string name="user_info">My&#160;information</string>-->
+<!--    <string name="theme_color">Theme&#160;color</string>-->
+<!--    <string name="user_list">User&#160;list</string>-->
+<!--    <string name="lang">Language</string>-->
+<!--    <string name="sign_out">Sign&#160;out</string>-->
+<!--    <string name="delete">Delete&#160;my&#160;account</string>-->
+
+<!--    <string name="income">Income</string>-->
+<!--    <string name="expense">Expense</string>-->
+<!--    <string name="all">All</string>-->
+
+<!--    <string name="btn_month">Month</string>-->
+<!--    <string name="btn_week">Week</string>-->
+
+<!--    <string name="week_title">Jan DD, YYYY</string>-->
+<!--    <string name="month_title">Jan DD - Nov DD, YYYY</string>-->
+
+<!--    <string name="left_week">00</string>-->
+<!--    <string name="right_week">24</string>-->
+<!--    <string name="left_month">Nov&#160;DD</string>-->
+
+<!--    <string name="name">name</string>-->
+<!--    <string name="desc">Transfer</string>-->
+<!--    <string name="price">-$432.9</string>-->
+<!--    <string name="date">3.30AM</string>-->
+
+<!--    &lt;!&ndash; 선택 리스트뷰 버튼 &ndash;&gt;-->
+<!--    <string-array name="list_dialog">-->
+<!--        <item>Annually</item>-->
+<!--        <item>Monthly</item>-->
+<!--        <item>Weekly</item>-->
+<!--        <item>Daily</item>-->
+<!--    </string-array>-->
+
+<!--    <string-array name="outcome_dialog_title">-->
+<!--        <item>Amount</item>-->
+<!--        <item>Category</item>-->
+<!--        <item>Account</item>-->
+<!--        <item>Note</item>-->
+<!--    </string-array>-->
+
+<!--    <string-array name="income_dialog_title">-->
+<!--        <item>Amount</item>-->
+<!--        <item>Account</item>-->
+<!--        <item>Note</item>-->
+<!--    </string-array>-->
+
+<!--    <string-array name="theme_color_title">-->
+<!--        <item>Red</item>-->
+<!--        <item>Orange</item>-->
+<!--        <item>Yellow</item>-->
+<!--        <item>Green</item>-->
+<!--        <item>Blue</item>-->
+<!--        <item>Violet</item>-->
+<!--        <item>Grey</item>-->
+<!--    </string-array>-->
+
+<!--    <string name="list_year">Annually</string>-->
+<!--    <string name="list_month">Monthly</string>-->
+<!--    <string name="list_week">Weekly</string>-->
+<!--    <string name="list_day">Daily</string>-->
+
+<!--    <string name="budeng">&lt;</string>-->
+<!--    <string name="budeng2">&gt;</string>-->
+
+<!--    <string name="dialog_date">Date</string>-->
+<!--    <string name="dialog_amm">Amount</string>-->
+<!--    <string name="dialog_cat">Category</string>-->
+<!--    <string name="dialog_acc">Account</string>-->
+<!--    <string name="dialog_note">Note</string>-->
+
+<!--    <string name="save">SAVE</string>-->
+<!--    <string name="real_cancel">CANCEL</string>-->
+<!--    <string name="edit">EDIT</string>-->
+<!--    <string name="cancel">ERASE</string>-->
+<!--    <string name="cal_price">price</string>-->
+
+<!--    <string name="cash">Cash</string>-->
+<!--    <string name="bank">Bank&#160;account</string>-->
+<!--    <string name="credit">Credit&#160;card</string>-->
+
+<!--    <string name="food">Food</string>-->
+<!--    <string name="rent">House&#160;Rent</string>-->
+<!--    <string name="phone">Mobile</string>-->
+<!--    <string name="trans">Transports</string>-->
+<!--    <string name="card">Card</string>-->
+<!--    <string name="loan">Loan</string>-->
+<!--    <string name="social">Social&#160;life</string>-->
+<!--    <string name="hospital">Hospital</string>-->
+<!--    <string name="hobby">Hobby</string>-->
+<!--    <string name="sports">Sports</string>-->
+<!--    <string name="ott">OTT</string>-->
+<!--    <string name="edu">Education</string>-->
+<!--    <string name="household">House&#160;holds</string>-->
+<!--    <string name="etc">etc</string>-->
+
+<!--    <string name="note_desc">Description</string>-->
+
+<!--    <string name="register_title">SIGN&#160;UP</string>-->
+<!--    <string name="register_email">Email</string>-->
+<!--    <string name="register_nickname">Name</string>-->
+<!--    <string name="register_pwd">Pass</string>-->
+<!--    <string name="login_title">LOG&#160;IN</string>-->
+<!--    <string name="logout_title">LOG&#160;OUT</string>-->
+<!--    <string name="register_desc">Create&#160;new&#160;account</string>-->
+<!--    <string name="sign_in">SIGN&#160;IN</string>-->
+
+<!--    <string name="lang_eng">English</string>-->
+<!--    <string name="lang_ko">한국어</string>-->
+
+<!--    <string name="my_client_id">AIzaSyDoYs-5i_n4y53XYfEDwoiG4eYWh9HNH6w</string>-->
+
+<!--</resources>-->
+
 <resources>
     <string name="app_name">mia_hometest</string>
 
-    <string name="main_title">Activity</string>
+    <string name="main_title">최근&#160;활동</string>
     <string name="trans_title">Transactions</string>
-    <string name="sec_title">Recent&#160;Transactions</string>
-    <string name="chart_title">Chart&#160;of&#160;Transactions</string>
-    <string name="main_screen_small_title">Add&#160;new&#160;transaction</string>
-    <string name="today_trans">Today\'s&#160;transaction</string>
-    <string name="setting">Settings</string>
+    <string name="sec_title">최근&#160;거래내역</string>
+    <string name="chart_title">거래내역&#160;차트</string>
+    <string name="main_screen_small_title">오늘의&#160;내역</string>
+    <string name="today_trans">오늘의&#160;활동</string>
+    <string name="setting">설정</string>
 
-    <string name="user_info">My&#160;information</string>
-    <string name="theme_color">Theme&#160;color</string>
-    <string name="user_list">User&#160;list</string>
-    <string name="lang">Language</string>
-    <string name="sign_out">Sign&#160;out</string>
-    <string name="delete">Delete&#160;my&#160;account</string>
+    <string name="user_info">나의&#160;계정</string>
+    <string name="theme_color">테마&#160;컬러</string>
+    <string name="user_list">유저&#160;목록</string>
+    <string name="lang">언어</string>
+    <string name="sign_out">로그아웃</string>
+    <string name="delete">계정&#160;삭제</string>
 
-    <string name="income">Income</string>
-    <string name="expense">Expense</string>
-    <string name="all">All</string>
+    <string name="income">수입</string>
+    <string name="expense">지출</string>
+    <string name="all">전체</string>
 
-    <string name="btn_month">Month</string>
-    <string name="btn_week">Week</string>
+    <string name="btn_month">월</string>
+    <string name="btn_week">주</string>
 
     <string name="week_title">Jan DD, YYYY</string>
     <string name="month_title">Jan DD - Nov DD, YYYY</string>
@@ -30,82 +155,83 @@
     <string name="right_week">24</string>
     <string name="left_month">Nov&#160;DD</string>
 
-    <string name="name">name</string>
-    <string name="desc">Transfer</string>
+    <string name="name">이름</string>
+    <string name="desc">송금</string>
     <string name="price">-$432.9</string>
     <string name="date">3.30AM</string>
 
     <!-- 선택 리스트뷰 버튼 -->
     <string-array name="list_dialog">
-        <item>Annually</item>
-        <item>Monthly</item>
-        <item>Weekly</item>
-        <item>Daily</item>
+        <item>연별</item>
+        <item>월별</item>
+        <item>주별</item>
+        <item>하루</item>
     </string-array>
 
     <string-array name="outcome_dialog_title">
-        <item>Amount</item>
-        <item>Category</item>
-        <item>Account</item>
-        <item>Note</item>
+        <item>금액</item>
+        <item>카테고리</item>
+        <item>자산</item>
+        <item>메모</item>
     </string-array>
 
     <string-array name="income_dialog_title">
-        <item>Amount</item>
-        <item>Account</item>
-        <item>Note</item>
+        <item>금액</item>
+        <item>자산</item>
+        <item>메모</item>
     </string-array>
 
     <string-array name="theme_color_title">
-        <item>Red</item>
-        <item>Orange</item>
-        <item>Yellow</item>
-        <item>Green</item>
-        <item>Blue</item>
-        <item>Violet</item>
-        <item>Grey</item>
+        <item>빨강</item>
+        <item>주황</item>
+        <item>노랑</item>
+        <item>초록</item>
+        <item>파랑</item>
+        <item>보라</item>
+        <item>회백</item>
     </string-array>
 
-    <string name="list_year">Annually</string>
-    <string name="list_month">Monthly</string>
-    <string name="list_week">Weekly</string>
-    <string name="list_day">Daily</string>
+    <string name="list_year">연별</string>
+    <string name="list_month">월별</string>
+    <string name="list_week">주별</string>
+    <string name="list_day">하루</string>
 
     <string name="budeng">&lt;</string>
     <string name="budeng2">&gt;</string>
 
-    <string name="dialog_date">Date</string>
-    <string name="dialog_amm">Amount</string>
-    <string name="dialog_cat">Category</string>
-    <string name="dialog_acc">Account</string>
-    <string name="dialog_note">Note</string>
+    <string name="dialog_date">날짜</string>
+    <string name="dialog_amm">금액</string>
+    <string name="dialog_cat">카테고리</string>
+    <string name="dialog_acc">자산</string>
+    <string name="dialog_note">메모</string>
 
-    <string name="save">SAVE</string>
-    <string name="real_cancel">CANCEL</string>
-    <string name="edit">EDIT</string>
-    <string name="cancel">ERASE</string>
-    <string name="cal_price">price</string>
+    <string name="save">저장</string>
+    <string name="real_cancel">취소</string>
+    <string name="edit">수정</string>
+    <string name="cancel">지우기</string>
+    <string name="cal_price">금액</string>
 
-    <string name="cash">Cash</string>
-    <string name="bank">Bank&#160;account</string>
-    <string name="credit">Credit&#160;card</string>
+    <string name="cash">현금</string>
+    <string name="bank">통장</string>
+    <string name="credit">신용카드</string>
 
-    <string name="food">Food</string>
-    <string name="rent">House&#160;Rent</string>
-    <string name="phone">Mobile</string>
-    <string name="trans">Transports</string>
-    <string name="card">Card</string>
-    <string name="loan">Loan</string>
-    <string name="social">Social&#160;life</string>
-    <string name="hospital">Hospital</string>
-    <string name="hobby">Hobby</string>
-    <string name="sports">Sports</string>
+    <string name="food">음식</string>
+    <string name="shopping">쇼핑</string>
+    <string name="rent">집세</string>
+    <string name="phone">모바일</string>
+    <string name="trans">대중교통</string>
+    <string name="card">카드</string>
+    <string name="loan">대출</string>
+    <string name="social">여가생활</string>
+    <string name="hospital">병원</string>
+    <string name="hobby">취미생활</string>
+    <string name="sports">운동</string>
     <string name="ott">OTT</string>
-    <string name="edu">Education</string>
-    <string name="household">House&#160;holds</string>
-    <string name="etc">etc</string>
+    <string name="edu">교육</string>
+    <string name="household">생활용품</string>
+    <string name="etc">기타</string>
 
-    <string name="note_desc">Description</string>
+    <string name="note_desc">메모</string>
 
     <string name="register_title">SIGN&#160;UP</string>
     <string name="register_email">Email</string>
