@@ -39,7 +39,6 @@
             android:layout_width="130dp"
             android:layout_height="130dp"
             android:layout_marginTop="30dp"
-            android:background="@drawable/donut"
             android:clipToOutline="true"
             android:scaleType="centerCrop"
             android:layout_centerHorizontal="true"/>
@@ -49,7 +48,7 @@
             android:layout_height="wrap_content"
             android:text="@string/dialog_date"
             android:textSize="20sp"
-            android:layout_marginTop="230dp"
+            android:layout_marginTop="200dp"
             android:textColor="?android:attr/textColor"/>
 
         <TextView
@@ -58,7 +57,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:layout_marginStart="120dp"
-            android:layout_marginTop="230dp"
+            android:layout_marginTop="200dp"
             android:textColor="?android:attr/textColorSecondary"/>
 
         <TextView
@@ -66,7 +65,7 @@
             android:layout_height="wrap_content"
             android:text="@string/dialog_amm"
             android:textSize="20sp"
-            android:layout_marginTop="270dp"
+            android:layout_marginTop="240dp"
             android:textColor="?android:attr/textColor"/>
 
         <TextView
@@ -75,7 +74,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:layout_marginStart="120dp"
-            android:layout_marginTop="270dp"
+            android:layout_marginTop="240dp"
             android:textColor="?android:attr/textColorSecondary"/>
 
         <TextView
@@ -84,7 +83,7 @@
             android:layout_height="wrap_content"
             android:text="@string/dialog_cat"
             android:textSize="20sp"
-            android:layout_marginTop="310dp"
+            android:layout_marginTop="280dp"
             android:textColor="?android:attr/textColor"/>
 
         <TextView
@@ -93,7 +92,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:layout_marginStart="120dp"
-            android:layout_marginTop="310dp"
+            android:layout_marginTop="280dp"
             android:textColor="?android:attr/textColorSecondary"/>
 
         <TextView
@@ -101,7 +100,7 @@
             android:layout_height="wrap_content"
             android:text="@string/dialog_acc"
             android:textSize="20sp"
-            android:layout_marginTop="350dp"
+            android:layout_marginTop="320dp"
             android:textColor="?android:attr/textColor"/>
 
         <TextView
@@ -110,7 +109,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:layout_marginStart="120dp"
-            android:layout_marginTop="350dp"
+            android:layout_marginTop="320dp"
             android:textColor="?android:attr/textColorSecondary"/>
 
         <TextView
@@ -118,16 +117,15 @@
             android:layout_height="wrap_content"
             android:text="@string/dialog_note"
             android:textSize="20sp"
-            android:layout_marginTop="390dp"
+            android:layout_marginTop="360dp"
             android:textColor="?android:attr/textColor"/>
 
         <EditText
             android:id="@+id/note"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:layout_marginTop="400dp"
-            android:layout_marginStart="100dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="370dp"
+            android:layout_marginStart="120dp"
             android:padding="10dp"
             android:background="@drawable/note_background"
             android:hint="@string/note_desc"

@@ -81,6 +81,7 @@ public class CardScreenInfoFragment extends Fragment {
             trans = args.getString("trans");
             date = args.getString("date");
             amount = args.getString("amount");
+            category = args.getString("category");
             account = args.getString("account");
             note = args.getString("note");
         }
@@ -109,13 +110,13 @@ public class CardScreenInfoFragment extends Fragment {
             mCateTitle.setVisibility(View.GONE);
             mTitle.setText(R.string.income);
             mTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.income)); //색상값이 제대로 처리되지 않아 ContextCompat.getColor() 를 사용
+            mImage.setImageResource(R.drawable.bunny);
         } else {
             Log.d(TAG, "onCreateView: 아웃컴 이라면");
-            mCate.setVisibility(View.VISIBLE);
-            mCateTitle.setVisibility(View.VISIBLE);
             mCate.setText(category);
             mTitle.setText(R.string.expense);
             mTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.outcome));
+            setImage(category);
         }
 
         mDate.setText(date);
@@ -127,7 +128,6 @@ public class CardScreenInfoFragment extends Fragment {
             Log.d(TAG, "onClick: 뒤로가기 눌렀다...");
             ((UserMainActivity) getActivity()).goBack();
         });
-
         return view;
     }
 
@@ -149,5 +149,36 @@ public class CardScreenInfoFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
+    }
+
+    private void setImage(String category) {
+        // mCate의 값, 즉 실제 문자열 값을 기준으로 이미지 설정
+        if (category.equals(getString(R.string.ott))) {
+            mImage.setImageResource(R.drawable.netflix);
+        } else if (category.equals(getString(R.string.social))) {
+            mImage.setImageResource(R.drawable.confetti);
+        } else if (category.equals(getString(R.string.food))) {
+            mImage.setImageResource(R.drawable.donut);
+        } else if (category.equals(getString(R.string.rent))) {
+            mImage.setImageResource(R.drawable.house);
+        } else if (category.equals(getString(R.string.phone))) {
+            mImage.setImageResource(R.drawable.app);
+        } else if (category.equals(getString(R.string.trans))) {
+            mImage.setImageResource(R.drawable.vehicles);
+        } else if (category.equals(getString(R.string.card))) {
+            mImage.setImageResource(R.drawable.card);
+        } else if (category.equals(getString(R.string.loan))) {
+            mImage.setImageResource(R.drawable.tax);
+        } else if (category.equals(getString(R.string.hospital))) {
+            mImage.setImageResource(R.drawable.hospital);
+        } else if (category.equals(getString(R.string.hobby))) {
+            mImage.setImageResource(R.drawable.artist);
+        } else if (category.equals(getString(R.string.sports))) {
+            mImage.setImageResource(R.drawable.physical);
+        } else if (category.equals(getString(R.string.edu))) {
+            mImage.setImageResource(R.drawable.book);
+        } else if (category.equals(getString(R.string.household))) {
+            mImage.setImageResource(R.drawable.paperroll);
+        }
     }
 }
