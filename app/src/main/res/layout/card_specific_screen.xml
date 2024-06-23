@@ -20,12 +20,11 @@
             android:src="@drawable/arrow_back" />
 
         <TextView
+            android:id="@+id/mainInfoTitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/user_info"
-            android:textColor="?android:attr/textColor"
-            android:textSize="20sp" />
+            android:textSize="22sp" />
 
     </FrameLayout>
 
@@ -39,7 +38,7 @@
             android:id="@+id/icon"
             android:layout_width="130dp"
             android:layout_height="130dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/donut"
             android:clipToOutline="true"
             android:scaleType="centerCrop"
@@ -48,9 +47,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date"
+            android:text="@string/dialog_date"
             android:textSize="20sp"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="230dp"
             android:textColor="?android:attr/textColor"/>
 
@@ -58,18 +56,16 @@
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/date"
             android:textSize="20sp"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="120dp"
             android:layout_marginTop="230dp"
             android:textColor="?android:attr/textColorSecondary"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="amount"
+            android:text="@string/dialog_amm"
             android:textSize="20sp"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="270dp"
             android:textColor="?android:attr/textColor"/>
 
@@ -77,18 +73,17 @@
             android:id="@+id/amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/date"
             android:textSize="20sp"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="120dp"
             android:layout_marginTop="270dp"
             android:textColor="?android:attr/textColorSecondary"/>
 
         <TextView
+            android:id="@+id/cateTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Category"
+            android:text="@string/dialog_cat"
             android:textSize="20sp"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="310dp"
             android:textColor="?android:attr/textColor"/>
 
@@ -96,18 +91,16 @@
             android:id="@+id/cate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/date"
             android:textSize="20sp"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="120dp"
             android:layout_marginTop="310dp"
             android:textColor="?android:attr/textColorSecondary"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Account"
+            android:text="@string/dialog_acc"
             android:textSize="20sp"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="350dp"
             android:textColor="?android:attr/textColor"/>
 
@@ -115,18 +108,16 @@
             android:id="@+id/acc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/date"
             android:textSize="20sp"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="120dp"
             android:layout_marginTop="350dp"
             android:textColor="?android:attr/textColorSecondary"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Note"
+            android:text="@string/dialog_note"
             android:textSize="20sp"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="390dp"
             android:textColor="?android:attr/textColor"/>
 
@@ -134,9 +125,9 @@
             android:id="@+id/note"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:layout_marginTop="390dp"
+            android:layout_marginTop="400dp"
             android:layout_marginStart="100dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="10dp"
             android:padding="10dp"
             android:background="@drawable/note_background"
             android:hint="@string/note_desc"

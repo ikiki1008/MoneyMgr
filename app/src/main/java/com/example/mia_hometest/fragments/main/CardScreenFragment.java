@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,9 +28,12 @@ import com.example.mia_hometest.common.ListItem;
 import com.example.mia_hometest.common.CardListAdapter;
 import com.example.mia_hometest.common.SpecificListItem;
 import com.example.mia_hometest.fragments.card.CardScreenInfoFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -53,6 +57,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private TextView mListTitle = null;
     private ImageView mBtn = null;
     private String[] mlist;
+    private String mDate;
+    private String mAmount;
+    private String mCate;
+    private String mAcc;
+    private String mNote;
+    private String mTrans;
     private AlertDialog.Builder mBuilder;
     private RecyclerView mRecyclerView;
     private CardListAdapter mAdapter;
@@ -119,12 +129,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                         .get().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    String cate = "Income";
-                                    String amount = documentSnapshot.getString("amount");
-                                    String date = documentSnapshot.getString("date");
+                                    mCate = "Income";
+                                    mAmount = documentSnapshot.getString("amount");
+                                    mDate = documentSnapshot.getString("date");
                                     String id = documentSnapshot.getId();
-                                    amount = "+" + amount;
-                                    listItems.add(new ListItem(id, cate, amount, date));
+                                    mAmount = "+" + mAmount;
+                                    listItems.add(new ListItem(id, mCate, mAmount, mDate));
                                 }
 
                                 // After fetching all income data, fetch outcome data
@@ -132,12 +142,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                         .get().addOnCompleteListener(outcomeTask -> {
                                             if (outcomeTask.isSuccessful()) {
                                                 for (QueryDocumentSnapshot documentSnapshot : outcomeTask.getResult()) {
-                                                    String cate = documentSnapshot.getString("category");
-                                                    String amount = documentSnapshot.getString("amount");
-                                                    String date = documentSnapshot.getString("date");
+                                                    mCate = documentSnapshot.getString("category");
+                                                    mAmount = documentSnapshot.getString("amount");
+                                                    mDate = documentSnapshot.getString("date");
                                                     String id = documentSnapshot.getId();
-                                                    amount = "-" + amount;
-                                                    listItems.add(new ListItem(id, cate, amount, date));
+                                                    mAmount = "-" + mAmount;
+                                                    listItems.add(new ListItem(id, mCate, mAmount, mDate));
                                                 }
 
                                                 // Sort listItems by date in descending order
@@ -276,10 +286,66 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
             String userId = user.getUid();
             ListItem item = mAdapter.getItems().get(position);
             String itemId = item.getId();
-            Log.d(TAG, "onItemClick: 아이템 아이디는? " + item.getId());
-            mCardScreenInfoFragment = new CardScreenInfoFragment(mContext, itemId);
-            ((UserMainActivity) getActivity()).launchFragment(mCardScreenInfoFragment);
-            Log.d(TAG, "onItemClick: 마지막");
+            Log.d(TAG, "onSwipeLeft: 아이템 아이디는? " + itemId);
+
+            mStore.collection("user").document(userId).collection("income").document(itemId).get()
+                    .addOnCompleteListener(task -> {
+                        Log.d(TAG, "onSwipeLeft: income onComplete");
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot.exists()) {
+                                mDate = documentSnapshot.getString("date");
+                                mAmount = documentSnapshot.getString("amount");
+                                mAcc = documentSnapshot.getString("account");
+                                mNote = documentSnapshot.getString("note");
+                                mTrans = mContext.getString(R.string.income);
+                                if (mNote == null) {
+                                    mNote = "No Description";
+                                }
+                                startSpecificFragment(mTrans);
+                            } else {
+                                Log.d(TAG, "onSwipeLeft: 인컴에 없음");
+                                mStore.collection("user").document(userId).collection("outcome").document(itemId).get()
+                                        .addOnCompleteListener(outcomeTask -> {
+                                            Log.d(TAG, "onSwipeLeft: outcome onComplete");
+                                            if (outcomeTask.isSuccessful()) {
+                                                Log.d(TAG, "onSwipeLeft: outcome success");
+                                                DocumentSnapshot documentSnapshot1 = outcomeTask.getResult();
+                                                if (documentSnapshot1.exists()) {
+                                                    mDate = documentSnapshot1.getString("date");
+                                                    mAmount = documentSnapshot1.getString("amount");
+                                                    mAcc = documentSnapshot1.getString("account");
+                                                    mCate = documentSnapshot1.getString("category");
+                                                    mNote = documentSnapshot1.getString("note");
+                                                    mTrans = mContext.getString(R.string.expense);
+                                                    if (mNote == null) {
+                                                        mNote = "No Description";
+                                                    }
+                                                    Log.d(TAG, "onSwipeLeft: 도큐먼트가 있다면 ... " + mDate + mAmount + mAcc + mCate + mNote + mTrans);
+                                                    startSpecificFragment(mTrans);
+                                                } else {
+                                                    Log.d(TAG, "onSwipeLeft: wtf111");
+                                                }
+                                            } else {
+                                                Log.d(TAG, "onSwipeLeft: wtf 22222");
+                                            }
+                                        });
+                            }
+                        }
+                    });
+        }
+    }
+
+    /*
+    * CardScreenInfoFragment 의 인스턴스를 두개로 나눈다. income 이냐 expense 냐에 따라 카테고리가 인자로 쓰일지 결정되는 부분이기 떄문이다.
+    * */
+    private void startSpecificFragment(String transactions) {
+        if (transactions.equals(mContext.getString(R.string.income))) {
+            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, mDate, mAmount, mAcc, mNote);
+            ((UserMainActivity) getActivity()).launchFragment(fragment);
+        } else if (transactions.equals(mContext.getString(R.string.expense))){
+            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, mDate, mAmount, mCate, mAcc, mNote);
+            ((UserMainActivity) getActivity()).launchFragment(fragment);
         }
     }
 
