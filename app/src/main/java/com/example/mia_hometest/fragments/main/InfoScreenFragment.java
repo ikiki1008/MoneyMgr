@@ -85,14 +85,14 @@ public class InfoScreenFragment extends Fragment implements View.OnClickListener
 
     private void showCheckDialog() {
         mBuilder = new AlertDialog.Builder(mContext);
-        mBuilder.setTitle("Are you sure you want to delete account?");
-        mBuilder.setPositiveButton("yes", new DialogInterface.OnClickListener() {
+        mBuilder.setTitle(mContext.getString(R.string.warn_delete_user));
+        mBuilder.setPositiveButton(mContext.getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 deleteUser();
             }
         });
-        mBuilder.setNegativeButton("no", new DialogInterface.OnClickListener() {
+        mBuilder.setNegativeButton(mContext.getString(R.string.answer_no), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (mAlertDialog != null) {

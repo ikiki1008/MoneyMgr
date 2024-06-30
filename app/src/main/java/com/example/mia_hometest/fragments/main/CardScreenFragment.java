@@ -50,7 +50,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class CardScreenFragment extends Fragment implements View.OnClickListener, CardListAdapter.OnSwipeListener {
+public class CardScreenFragment extends Fragment implements View.OnClickListener, CardListAdapter.OnSwipeListener, CardListAdapter.OnListClickListener {
     private final String TAG = CardScreenFragment.class.getSimpleName();
     private Context mContext = null;
     private TextView mAll = null;
@@ -71,6 +71,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private CardListAdapter mAdapter;
     private FirebaseFirestore mStore;
     private CardScreenInfoFragment mCardScreenInfoFragment = null;
+    private AlertDialog mAlertDialog;
 
     @Override
     public void onAttach(Context context) {
@@ -93,6 +94,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
 
         mAdapter = new CardListAdapter(mContext);
         mAdapter.setSwipeListener(this);
+        mAdapter.setListClickListener(this);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
@@ -283,6 +285,68 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         alertDialog.show();
     }
 
+    /*
+     * CardScreenInfoFragment 의 인스턴스를 두개로 나눈다. income 이냐 expense 냐에 따라 카테고리가 인자로 쓰일지 결정되는 부분이기 떄문이다.
+     * */
+    private void startSpecificFragment(String transactions) {
+        if (transactions.equals(mContext.getString(R.string.income))) {
+            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, mDate, mAmount, mAcc, mNote);
+            ((UserMainActivity) getActivity()).launchFragment(fragment);
+        } else if (transactions.equals(mContext.getString(R.string.expense))){
+            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, mDate, mAmount, mCate, mAcc, mNote);
+            ((UserMainActivity) getActivity()).launchFragment(fragment);
+        }
+    }
+
+    private void showWarning (int position) {
+        mBuilder = new AlertDialog.Builder(mContext);
+        mBuilder.setTitle(mContext.getString(R.string.warn_list));
+        mBuilder.setPositiveButton(mContext.getString(R.string.answer_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "onClick: 해당 정보 삭제합니다");
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    String userId = user.getUid();
+                    ListItem itemToDelete = mAdapter.getItems().get(position);
+
+                    Task<Void> deleteIncomeTask = mStore.collection("user").document(userId).collection("income").document(itemToDelete.getId())
+                            .delete();
+
+                    Task<Void> deleteOutcomeTask = mStore.collection("user").document(userId).collection("outcome").document(itemToDelete.getId())
+                            .delete();
+
+                    // 먼저 income에서 삭제 시도
+                    deleteIncomeTask.addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted from income!");
+                        mAdapter.getItems().remove(position);
+                        mAdapter.notifyItemRemoved(position);
+                        mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
+                    }).addOnFailureListener(e -> {
+                        // income에서 실패하면 outcome에서 삭제 시도
+                        Log.w(TAG, "Error deleting document from income, trying outcome", e);
+                        deleteOutcomeTask.addOnSuccessListener(aVoid -> {
+                            Log.d(TAG, "DocumentSnapshot successfully deleted from outcome!");
+                            mAdapter.getItems().remove(position);
+                            mAdapter.notifyItemRemoved(position);
+                            mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
+                        }).addOnFailureListener(e2 -> Log.w(TAG, "Error deleting document from outcome", e2));
+                    });
+                }
+            }
+        });
+        mBuilder.setNegativeButton(mContext.getString(R.string.answer_no), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (mAlertDialog != null) {
+                    mAlertDialog.cancel();
+                }
+            }
+        });
+        mAlertDialog = mBuilder.create();
+        mBuilder.show();
+    }
+
     @Override
     public void onClick(View view) {
         int themeColor = getThemeColor(android.R.attr.textColor);
@@ -323,7 +387,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     @Override
     public void onSwipeLeft(int position) {
         Log.d(TAG, "onSwipeLeft: 왼쪽으로 스와이핑 했습니다.");
+        showWarning(position);
+    }
 
+    @Override
+    public void onListClick(int position) {
+        Log.d(TAG, "onListClick: ");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String userId = user.getUid();
@@ -378,51 +447,4 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                     });
         }
     }
-
-    /*
-    * CardScreenInfoFragment 의 인스턴스를 두개로 나눈다. income 이냐 expense 냐에 따라 카테고리가 인자로 쓰일지 결정되는 부분이기 떄문이다.
-    * */
-    private void startSpecificFragment(String transactions) {
-        if (transactions.equals(mContext.getString(R.string.income))) {
-            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, mDate, mAmount, mAcc, mNote);
-            ((UserMainActivity) getActivity()).launchFragment(fragment);
-        } else if (transactions.equals(mContext.getString(R.string.expense))){
-            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, mDate, mAmount, mCate, mAcc, mNote);
-            ((UserMainActivity) getActivity()).launchFragment(fragment);
-        }
-    }
-
-    @Override
-    public void onSwipeRight(int position) {
-        Log.d(TAG, "onSwipeRight: 오른쪽으로 스와이핑 했습니다");
-    }
-
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//            if (user != null) {
-//            String userId = user.getUid();
-//            ListItem itemToDelete = mAdapter.getItems().get(position);
-//
-//            Task<Void> deleteIncomeTask = mStore.collection("user").document(userId).collection("income").document(itemToDelete.getId())
-//                    .delete();
-//
-//            Task<Void> deleteOutcomeTask = mStore.collection("user").document(userId).collection("outcome").document(itemToDelete.getId())
-//                    .delete();
-//
-//            // 먼저 income에서 삭제 시도
-//            deleteIncomeTask.addOnSuccessListener(aVoid -> {
-//                Log.d(TAG, "DocumentSnapshot successfully deleted from income!");
-//                mAdapter.getItems().remove(position);
-//                mAdapter.notifyItemRemoved(position);
-//                mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
-//            }).addOnFailureListener(e -> {
-//                // income에서 실패하면 outcome에서 삭제 시도
-//                Log.w(TAG, "Error deleting document from income, trying outcome", e);
-//                deleteOutcomeTask.addOnSuccessListener(aVoid -> {
-//                    Log.d(TAG, "DocumentSnapshot successfully deleted from outcome!");
-//                    mAdapter.getItems().remove(position);
-//                    mAdapter.notifyItemRemoved(position);
-//                    mAdapter.notifyItemRangeChanged(position, mAdapter.getItems().size());
-//                }).addOnFailureListener(e2 -> Log.w(TAG, "Error deleting document from outcome", e2));
-//            });
-//        }
 }

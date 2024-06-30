@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="28dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:clipChildren="false">
 
         <RelativeLayout
             android:id="@+id/second_rel"
@@ -19,18 +20,10 @@
             android:layout_marginBottom="20dp">
 
             <ImageView
-                android:id="@+id/delete"
-                android:layout_marginTop="13dp"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="-30dp"
-                android:src="@drawable/remove"/>
-
-
-            <ImageView
                 android:id="@+id/cardlist_icon"
                 android:layout_width="40dp"
                 android:layout_height="51dp"
+                android:layout_marginStart="12dp"
                 android:src="@drawable/placeholder"/>
 
             <TextView
@@ -61,10 +54,10 @@
                 android:textColor="?android:attr/textColorSecondary" />
 
             <ImageView
-                android:id="@+id/move"
-                android:layout_width="25dp"
+                android:id="@+id/delete_list"
+                android:layout_width="20dp"
                 android:layout_height="51dp"
-                android:src="@drawable/right"
+                android:src="@drawable/x"
                 android:layout_marginStart="360dp" />
 
         </RelativeLayout>

@@ -244,6 +244,10 @@
 
     <string name="lang_eng">English</string>
     <string name="lang_ko">한국어</string>
+    <string name="warn_list">해당 정보를 삭제 하시겠습니까?</string>
+    <string name="warn_delete_user">현재 유저를 삭제 하시겠습니까? 삭제할 경우 계정을 다시 살릴 수 없습니다</string>
+    <string name="answer_yes">네</string>
+    <string name="answer_no">아니오</string>
 
     <string name="my_client_id">AIzaSyDoYs-5i_n4y53XYfEDwoiG4eYWh9HNH6w</string>
 

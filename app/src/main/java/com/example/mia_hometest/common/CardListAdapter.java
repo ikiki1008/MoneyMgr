@@ -33,7 +33,8 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final GridSpanSizeLookup mSpanSizeLookup = new GridSpanSizeLookup();
     private final String NEW_INTENT = "com.android.intent.NEW_INTENT";
     private List<ListItem> mTiles = new ArrayList<>();
-    private OnSwipeListener mSwipe;;
+    private OnSwipeListener mSwipe;
+    private OnListClickListener mListClick;
 
     public CardListAdapter(Context context) {
         mContext = context;
@@ -51,19 +52,15 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mSwipe = listener;
     }
 
+    public void setListClickListener (OnListClickListener listener) { mListClick = listener; }
+
     public interface OnSwipeListener {
         void onSwipeLeft (int position);
-        void onSwipeRight (int position);
     }
-//
-//    public interface Tile {
-//        @Nullable
-//        Drawable getIcon();
-//        String getTitle();
-//        String getDesc();
-//        String getPrice();
-//        String getDate();
-//    }
+
+    public interface OnListClickListener {
+        void onListClick (int position);
+    }
 
     @NonNull
     @Override
@@ -88,8 +85,8 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         listViewHolder.mDate.setText(date);
 
         View view = listViewHolder.itemView;
-        ImageView move = listViewHolder.mMove;
-        listViewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
+        ImageView move = listViewHolder.mRemove;
+        view.setOnTouchListener(new View.OnTouchListener() {
             private float startX;
             private static final int MIN_DISTANCE = 150;
             @Override
@@ -122,14 +119,17 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             ObjectAnimator animator = ObjectAnimator.ofFloat(v, "translationX", v.getTranslationX(), 0);
                             animator.setDuration(300);
                             animator.start();
+                        } else {
+                            //그냥 클릭만 했을 때 처리
+                            if (mListClick != null) {
+                                mListClick.onListClick(position);
+                            }
                         }
                         break;
                 }
-//                view.performClick(); // 한 어댑터에 두 개 이상의 리스너가 있고, 어댑터를 사용하는 클래스에서 이를 모두 사용할 시 리스너가 소진되지 않도록 performClick()을 해줘야 한다
-                return true; // 이벤트 소비
+                return true;
             }
         });
-
     }
 
     private float convertDpToPixel(float dp, Context context) {
@@ -156,14 +156,14 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private final TextView mTitle;
         private final TextView mPrice;
         private final TextView mDate;
-        private final ImageView mMove;
+        private final ImageView mRemove;
         ListViewHolder(View itemView) {
             super(itemView);
             mIcon = itemView.findViewById(R.id.cardlist_icon);
             mTitle = itemView.findViewById(R.id.title);
             mPrice = itemView.findViewById(R.id.price);
             mDate = itemView.findViewById(R.id.date);
-            mMove = itemView.findViewById(R.id.move);
+            mRemove = itemView.findViewById(R.id.delete_list);
         }
     }
 
