@@ -28,7 +28,7 @@ public class NoteDialogView extends DialogFragment {
     private EditText mNote = null;
     private TextView mSave = null;
     private TextView mCancel = null;
-    private String mUserNote = null;
+    private String mUserNote;
 
     public NoteDialogView (Context context, CalCulListener listener) {
         mContext = context;
@@ -87,17 +87,17 @@ public class NoteDialogView extends DialogFragment {
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mUserNote.isEmpty()) {
+                if (mUserNote.isEmpty()) {
+                    Log.d(TAG, "onClick: user hasn't write anything .... 2222 ");
+                    dismiss();
+                } else {
                     Log.d(TAG, "onClick: 노트가 비어있지 않다면 다 지워버리기");
                     mNote.setText("");
                     mUserNote = "";
-
                     mIntent.putExtra("value", mUserNote);
                     mListener.onClicked(mIntent, mType);
-                } else {
-                    Log.d(TAG, "onClick: user hasn't write anything .... 2222 ");
+                    dismiss();
                 }
-                dismiss();
             }
         });
 

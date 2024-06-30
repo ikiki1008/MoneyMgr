@@ -28,8 +28,8 @@
 
 
             <ImageView
-                android:id="@+id/icon"
-                android:layout_width="51dp"
+                android:id="@+id/cardlist_icon"
+                android:layout_width="40dp"
                 android:layout_height="51dp"
                 android:src="@drawable/placeholder"/>
 

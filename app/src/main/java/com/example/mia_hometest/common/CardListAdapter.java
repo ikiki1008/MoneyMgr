@@ -80,7 +80,9 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         String title = tile.getTitle();
         String price = tile.getPrice();
         String date = tile.getDate();
+        Drawable image = tile.getImage();
 
+        listViewHolder.mIcon.setImageDrawable(image);
         listViewHolder.mTitle.setText(title);
         listViewHolder.mPrice.setText(price);
         listViewHolder.mDate.setText(date);
@@ -150,18 +152,18 @@ public class CardListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private class ListViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView mIcon;
         private final TextView mTitle;
         private final TextView mPrice;
         private final TextView mDate;
         private final ImageView mMove;
         ListViewHolder(View itemView) {
             super(itemView);
-//            mIcon = itemView.findViewById(R.id.icon);
+            mIcon = itemView.findViewById(R.id.cardlist_icon);
             mTitle = itemView.findViewById(R.id.title);
             mPrice = itemView.findViewById(R.id.price);
             mDate = itemView.findViewById(R.id.date);
             mMove = itemView.findViewById(R.id.move);
-
         }
     }
 

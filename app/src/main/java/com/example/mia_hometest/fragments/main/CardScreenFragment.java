@@ -1,11 +1,13 @@
 package com.example.mia_hometest.fragments.main;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -63,6 +65,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private String mAcc;
     private String mNote;
     private String mTrans;
+    private Drawable mImage;
     private AlertDialog.Builder mBuilder;
     private RecyclerView mRecyclerView;
     private CardListAdapter mAdapter;
@@ -116,6 +119,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mContext = context;
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void fetchData(String type) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -129,12 +133,13 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                         .get().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    mCate = "Income";
+                                    mImage = mContext.getDrawable(R.drawable.bunny);
+                                    mCate = mContext.getString(R.string.income);
                                     mAmount = documentSnapshot.getString("amount");
                                     mDate = documentSnapshot.getString("date");
                                     String id = documentSnapshot.getId();
                                     mAmount = "+" + mAmount;
-                                    listItems.add(new ListItem(id, mCate, mAmount, mDate));
+                                    listItems.add(new ListItem(mImage, id, mCate, mAmount, mDate));
                                 }
 
                                 // After fetching all income data, fetch outcome data
@@ -143,11 +148,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                             if (outcomeTask.isSuccessful()) {
                                                 for (QueryDocumentSnapshot documentSnapshot : outcomeTask.getResult()) {
                                                     mCate = documentSnapshot.getString("category");
+                                                    getImage(mCate);
                                                     mAmount = documentSnapshot.getString("amount");
                                                     mDate = documentSnapshot.getString("date");
                                                     String id = documentSnapshot.getId();
                                                     mAmount = "-" + mAmount;
-                                                    listItems.add(new ListItem(id, mCate, mAmount, mDate));
+                                                    listItems.add(new ListItem(mImage,id, mCate, mAmount, mDate));
                                                 }
 
                                                 // Sort listItems by date in descending order
@@ -167,12 +173,13 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                         List<ListItem> listItems = new ArrayList<>();
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                String cate = "Income";
+                                Drawable image = mContext.getDrawable(R.drawable.bunny);
+                                String cate = mContext.getString(R.string.income);
                                 String amount = documentSnapshot.getString("amount");
                                 String date = documentSnapshot.getString("date");
                                 String id = documentSnapshot.getId();
                                 amount = "+" + amount;
-                                listItems.add(new ListItem(id, cate, amount, date));
+                                listItems.add(new ListItem(image,id, cate, amount, date));
                             }
                         }
                         Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
@@ -186,11 +193,13 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 String cate = documentSnapshot.getString("category");
+                                getImage(cate);
+                                Drawable image = mImage;
                                 String amount = documentSnapshot.getString("amount");
                                 String date = documentSnapshot.getString("date");
                                 String id = documentSnapshot.getId();
                                 amount = "-" + amount;
-                                listItems.add(new ListItem(id, cate, amount, date));
+                                listItems.add(new ListItem(image, id, cate, amount, date));
                             }
                         }
                         Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
@@ -209,6 +218,40 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
             return typedValue.data;
         } else {
             throw new IllegalArgumentException("Attribute not found in theme");
+        }
+    }
+
+    private void getImage(String category) {
+        if (category.equals(mContext.getString(R.string.shopping))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.shopper);
+        } else if (category.equals(mContext.getString(R.string.hospital))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.hospital);
+        } else if (category.equals(mContext.getString(R.string.food))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.donut);
+        } else if (category.equals(mContext.getString(R.string.rent))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.house_fee);
+        } else if (category.equals(mContext.getString(R.string.phone))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.mobile_text);
+        } else if (category.equals(mContext.getString(R.string.card))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.shopping);
+        } else if (category.equals(mContext.getString(R.string.social))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.confetti);
+        } else if (category.equals(mContext.getString(R.string.hobby))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.artist);
+        } else if (category.equals(mContext.getString(R.string.ott))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.netflix);
+        } else if (category.equals(mContext.getString(R.string.household))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.paperroll);
+        } else if (category.equals(mContext.getString(R.string.trans))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.vehicles);
+        } else if (category.equals(mContext.getString(R.string.sports))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.physical);
+        } else if (category.equals(mContext.getString(R.string.loan))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.tax);
+        } else if (category.equals(mContext.getString(R.string.edu))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.book);
+        } else {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.options);
         }
     }
 
