@@ -92,13 +92,19 @@ public class CardScreenInfoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "CardScreenFragment onCreateView: ");
-        View view = inflater.inflate(R.layout.card_specific_screen, container, false);
+        View view;
+
+        if (trans.equals(getString(R.string.expense))) {
+            view = inflater.inflate(R.layout.card_specific_screen, container, false);
+            mCate = view.findViewById(R.id.cate);
+        } else {
+            view = inflater.inflate(R.layout.card_specific_screen_income, container, false);
+        }
 
         mGoback = view.findViewById(R.id.back);
         mTitle = view.findViewById(R.id.mainInfoTitle);
         mDate = view.findViewById(R.id.date);
         mAmount = view.findViewById(R.id.amount);
-        mCate = view.findViewById(R.id.cate);
         mNote = view.findViewById(R.id.note);
         mAcc = view.findViewById(R.id.acc);
         mImage = view.findViewById(R.id.icon);
@@ -106,8 +112,6 @@ public class CardScreenInfoFragment extends Fragment {
 
         if (trans.equals(getString(R.string.income))) {
             Log.d(TAG, "onCreateView: 인컴이라면");
-            mCate.setVisibility(View.GONE);
-            mCateTitle.setVisibility(View.GONE);
             mTitle.setText(R.string.income);
             mTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.income)); //색상값이 제대로 처리되지 않아 ContextCompat.getColor() 를 사용
             mImage.setImageResource(R.drawable.bunny);
