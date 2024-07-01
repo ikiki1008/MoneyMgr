@@ -41,7 +41,7 @@
                 android:background="@drawable/hobby_back"
                 android:paddingStart="7dp"
                 android:paddingEnd="7dp"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="50dp"/>
 
             <TextView
@@ -57,7 +57,7 @@
                 android:background="@drawable/mobile_back"
                 android:paddingStart="7dp"
                 android:paddingEnd="7dp"
-                android:layout_marginStart="140dp"
+                android:layout_marginStart="125dp"
                 android:layout_marginTop="50dp"/>
 
             <TextView
@@ -73,8 +73,8 @@
                 android:background="@drawable/trans_back"
                 android:paddingStart="7dp"
                 android:paddingEnd="7dp"
-                android:layout_marginTop="90dp"
-                android:layout_marginStart="100dp"/>
+                android:layout_marginTop="50dp"
+                android:layout_marginStart="220dp"/>
 
 
             <TextView

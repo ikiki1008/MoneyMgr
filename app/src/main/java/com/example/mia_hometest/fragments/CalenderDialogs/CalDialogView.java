@@ -200,8 +200,11 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
             case R.id.editBtn:
                 if (!mIncome) {
                     Log.d(TAG, "onClick: expense screen");
-                    if (!mItemList.get(0).getDesc().equals("") && !mItemList.get(1).getDesc().equals("")
-                            && !mItemList.get(2).getDesc().equals("")) {
+                    // 리스트의 0, 1, 2번 항목 검사
+                    if (mItemList.get(0) != null && mItemList.get(0).getDesc() != null && !mItemList.get(0).getDesc().isEmpty() &&
+                            mItemList.get(1) != null && mItemList.get(1).getDesc() != null && !mItemList.get(1).getDesc().isEmpty() &&
+                            mItemList.get(2) != null && mItemList.get(2).getDesc() != null && !mItemList.get(2).getDesc().isEmpty()) {
+
                         // 콘솔에 출력하여 저장하려는 데이터 확인
                         Log.d(TAG, "onClick: Saving data: "
                                 + mItemList.get(0).getDesc() + ", "
@@ -211,26 +214,35 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
 
                         saveExpense(mLine1.getText().toString(), mItemList.get(0).getDesc(),
                                 mItemList.get(1).getDesc(), mItemList.get(2).getDesc(),
-                                mItemList.get(3).getDesc());
+                                mItemList.size() > 3 ? mItemList.get(3).getDesc() : null);
+
+                        if (getDialog() != null && getDialog().isShowing()) {
+                            dismiss();
+                        }
                     } else {
                         Toast.makeText(getContext(), R.string.warn_notnull_account, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.d(TAG, "onClick: income screen");
-                    if (!mItemList.get(0).getDesc().equals("") && !mItemList.get(1).getDesc().equals("")) {
+                    // 리스트의 0, 1번 항목 검사
+                    if (mItemList.get(0) != null && mItemList.get(0).getDesc() != null && !mItemList.get(0).getDesc().isEmpty() &&
+                            mItemList.get(1) != null && mItemList.get(1).getDesc() != null && !mItemList.get(1).getDesc().isEmpty()) {
+
+                        // 콘솔에 출력하여 저장하려는 데이터 확인
                         Log.d(TAG, "onClick: Saving data: "
                                 + mItemList.get(0).getDesc() + ", "
                                 + mItemList.get(1).getDesc() + ", "
                                 + (mItemList.size() > 2 ? mItemList.get(2).getDesc() : mContext.getString(R.string.note_desc)));
 
                         saveIncome(mLine1.getText().toString(), mItemList.get(0).getDesc(),
-                                mItemList.get(1).getDesc(), mItemList.get(2).getDesc());
+                                mItemList.get(1).getDesc(), mItemList.size() > 2 ? mItemList.get(2).getDesc() : null);
+
+                        if (getDialog() != null && getDialog().isShowing()) {
+                            dismiss();
+                        }
                     } else {
                         Toast.makeText(getContext(), R.string.warn_notnull_account, Toast.LENGTH_SHORT).show();
                     }
-                }
-                if (getDialog() != null && getDialog().isShowing()) {
-                    dismiss();
                 }
                 break;
             case R.id.cancelBtn:
