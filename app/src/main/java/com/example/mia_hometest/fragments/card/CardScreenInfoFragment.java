@@ -3,6 +3,7 @@ package com.example.mia_hometest.fragments.card;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.example.mia_hometest.R;
 import com.example.mia_hometest.UserMainActivity;
 
-public class CardScreenInfoFragment extends Fragment {
+public class CardScreenInfoFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = CardScreenInfoFragment.class.getSimpleName();
 
     private static final String ARG_TRANS = "trans";
@@ -45,6 +46,8 @@ public class CardScreenInfoFragment extends Fragment {
     private TextView mCateTitle;
     private ImageView mImage;
     private ImageView mGoback;
+    private ImageView mSave;
+    private ImageView mEdit;
 
     public static CardScreenInfoFragment newInstance(String trans, String date, String amount, String account, String note) { //인스턴스를 두개를 만들어 각 용도에 맞춰 다른 인자들을 받는다
         CardScreenInfoFragment fragment = new CardScreenInfoFragment();
@@ -109,6 +112,8 @@ public class CardScreenInfoFragment extends Fragment {
         mAcc = view.findViewById(R.id.acc);
         mImage = view.findViewById(R.id.icon);
         mCateTitle = view.findViewById(R.id.cateTitle);
+        mSave = view.findViewById(R.id.save_list_btn);
+        mEdit = view.findViewById(R.id.edit_list_btn);
 
         if (trans.equals(getString(R.string.income))) {
             Log.d(TAG, "onCreateView: 인컴이라면");
@@ -127,11 +132,11 @@ public class CardScreenInfoFragment extends Fragment {
         mAmount.setText(amount);
         mAcc.setText(account);
         mNote.setText(note);
+        mNote.setInputType(InputType.TYPE_NULL);
 
-        mGoback.setOnClickListener(view1 -> {
-            Log.d(TAG, "onClick: 뒤로가기 눌렀다...");
-            ((UserMainActivity) getActivity()).goBack();
-        });
+        mGoback.setOnClickListener(this);
+        mEdit.setOnClickListener(this);
+        mSave.setOnClickListener(this);
         return view;
     }
 
@@ -185,6 +190,30 @@ public class CardScreenInfoFragment extends Fragment {
             mImage.setImageResource(R.drawable.paperroll);
         } else {
             mImage.setImageResource(R.drawable.shopper);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.back:
+                Log.d(TAG, "onClick: 뒤로가기 눌렀다...");
+                ((UserMainActivity) getActivity()).goBack();
+                break;
+            case R.id.edit_list_btn:
+                Log.d(TAG, "onClick: 수정 모드 시작");
+                mEdit.setVisibility(View.GONE);
+                mSave.setVisibility(View.VISIBLE);
+                mNote.setInputType(InputType.TYPE_CLASS_TEXT);
+                break;
+            case R.id.save_list_btn:
+                Log.d(TAG, "onClick: 수정 완료");
+                mEdit.setVisibility(View.VISIBLE);
+                mSave.setVisibility(View.GONE);
+                mNote.setInputType(InputType.TYPE_NULL);
+                break;
+            default:
+                break;
         }
     }
 }

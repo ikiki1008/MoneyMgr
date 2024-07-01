@@ -26,6 +26,24 @@
             android:gravity="center"
             android:textSize="22sp" />
 
+        <ImageView
+            android:id="@+id/edit_list_btn"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:src="@drawable/pencil"
+            android:layout_marginTop="2dp"
+            android:layout_gravity="end"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/save_list_btn"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:src="@drawable/check"
+            android:layout_gravity="end"
+            android:visibility="gone"/>
+
+
     </FrameLayout>
 
     <RelativeLayout
@@ -37,7 +55,7 @@
         <ImageView
             android:id="@+id/icon"
             android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_height="120dp"
             android:layout_marginTop="30dp"
             android:clipToOutline="true"
             android:scaleType="centerCrop"
