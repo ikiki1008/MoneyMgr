@@ -314,6 +314,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "성공적으로 프사가 업댓됨");
+                            startActivity(new Intent(mContext, UserMainActivity.class));
                         } else {
                             Log.d(TAG, "task failed...");
                         }

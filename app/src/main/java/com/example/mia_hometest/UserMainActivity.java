@@ -2,6 +2,7 @@ package com.example.mia_hometest;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -22,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.anychart.core.Base;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.mia_hometest.fragments.informations.LanguageFragment;
 import com.example.mia_hometest.fragments.informations.UserInfoFragment;
 import com.example.mia_hometest.fragments.informations.UserListFragment;
@@ -29,7 +32,12 @@ import com.example.mia_hometest.fragments.main.CardScreenFragment;
 import com.example.mia_hometest.fragments.main.ChartScreenFragment;
 import com.example.mia_hometest.fragments.main.InfoScreenFragment;
 import com.example.mia_hometest.fragments.main.MainScreenFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.util.Locale;
@@ -45,6 +53,7 @@ public class UserMainActivity extends FragmentActivity{
     private UserInfoFragment mUserInfoFragment = null;
     private ImageView[] mImage = new ImageView[5];
     private Intent mIntent = new Intent();
+    private FirebaseAuth mAuth;
     private SharedPreferences mPreference;
     private SharedPreferences mLanguagePreferene;
     private ActivityResultLauncher<Intent> mImageUpdate;
@@ -74,12 +83,15 @@ public class UserMainActivity extends FragmentActivity{
         Log.d(TAG, "onCreate: ");
         mContext = this;
         mIntent = getIntent();
+        mAuth = FirebaseAuth.getInstance();
         mPreference = getSharedPreferences("theme", MODE_PRIVATE);
         String userColor = mPreference.getString("color", null);
         String themeColor = mIntent.getStringExtra("color");
         mLanguagePreferene = getSharedPreferences("language", MODE_PRIVATE);
         String previousLang = mLanguagePreferene.getString("user_lang", null);
         LocalBroadcastManager.getInstance(this).registerReceiver(mLanguageReceiver, new IntentFilter(CHANGE_LANGUAGE));
+        //프사 설정하기
+        setPfp();
 
         if (previousLang != null) {
             Log.d(TAG, "onCreate: set language as saved");
@@ -149,6 +161,22 @@ public class UserMainActivity extends FragmentActivity{
         super.onDestroy();
         Log.d(TAG, "onDestroy: ");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mLanguageReceiver);
+    }
+
+    private void setPfp() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference reference = storage.getReference();
+        reference.child("profile_images/" + mAuth.getCurrentUser().getUid() + ".jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(mContext).load(uri).circleCrop().into(mImage[4]);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "사용자 프사 로드 실패 ... " + e);
+            }
+        });
     }
 
     private void setLanguage(String lang) {

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.provider.Settings;
@@ -23,10 +24,11 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.ImageViewTarget;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -89,8 +91,17 @@ public class RegisterFragment extends Fragment {
         mName = view.findViewById(R.id.set_name);
         mPass = view.findViewById(R.id.set_pwd);
         mMoneyImg = view.findViewById(R.id.moneyImg);
-        GlideDrawableImageViewTarget gif = new GlideDrawableImageViewTarget(mMoneyImg); //gif setting
-        Glide.with(mContext).load(R.drawable.money_stack).into(gif);
+
+        // Glide 초기화
+        Glide.with(this)
+                .load(R.drawable.money_stack)
+                .into(new ImageViewTarget<Drawable>(mMoneyImg) {
+                    @Override
+                    protected void setResource(@Nullable Drawable resource) {
+                        mMoneyImg.setImageDrawable(resource);
+                    }
+                });
+
         googleSignInit();
 
         mSave.setOnClickListener(new View.OnClickListener() {

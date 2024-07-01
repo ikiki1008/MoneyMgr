@@ -25,14 +25,10 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.example.mia_hometest.common.ThemeItem;
-import com.example.mia_hometest.common.ThemeListAdapter;
 import com.example.mia_hometest.common.UserNameItem;
+import com.example.mia_hometest.common.ThemeListAdapter;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -48,18 +44,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class LoginFragment extends Fragment{
+public class LoginFragment extends Fragment {
     private static final String TAG = LoginFragment.class.getSimpleName();
     private SharedPreferences mSharedPreference;
     private Context mContext = null;
@@ -76,7 +68,7 @@ public class LoginFragment extends Fragment{
     private ThemeListAdapter<UserNameItem> mAdapter;
     private List<UserNameItem> mItemList = new ArrayList<>();
 
-    public LoginFragment (Context context) {
+    public LoginFragment(Context context) {
         mContext = context;
     }
 
@@ -102,8 +94,11 @@ public class LoginFragment extends Fragment{
         mPiggy = view.findViewById(R.id.piggy);
         mGoogleLoginBtn = view.findViewById(R.id.google_login_btn);
 
-        GlideDrawableImageViewTarget gif = new GlideDrawableImageViewTarget(mPiggy); //gif setting
-        Glide.with(mContext).load(R.drawable.piggy_money).into(gif);
+        // Glide 초기화
+        Glide.with(this)
+                .load(R.drawable.piggy_money)
+                .into(mPiggy);
+
         googleSignInit();
 
         mGoogleLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -121,14 +116,11 @@ public class LoginFragment extends Fragment{
 
                 if (email.isEmpty()) {
                     startShake(mEmail);
-                }
-                else if (pwd.isEmpty()) {
-                    Animation shake = AnimationUtils.loadAnimation(mContext, R.anim.shake);
+                } else if (pwd.isEmpty()) {
                     startShake(mPwd);
-                }
-                else {
+                } else {
                     Log.d(TAG, "onClick: 클릭했다 로그인하자");
-                    emailSignIn();
+                    emailSignIn(email, pwd);
                 }
             }
         });
@@ -139,7 +131,7 @@ public class LoginFragment extends Fragment{
                 ((BaseActivity) getActivity()).launchFragment(mRegisFragment);
                 mEmail.setText("");
                 mPwd.setText("");
-            }      
+            }
         });
 
         return view;
@@ -171,7 +163,7 @@ public class LoginFragment extends Fragment{
                                 firebaseAuthGoogle(account);
 
                             } catch (ApiException e) {
-                                Log.d(TAG, " 뭔가 또 실패... " + e);
+                                Log.d(TAG, "뭔가 또 실패... " + e);
                                 throw new RuntimeException(e);
                             }
                         }
@@ -181,7 +173,7 @@ public class LoginFragment extends Fragment{
         mAuth = FirebaseAuth.getInstance();
     }
 
-    private void firebaseAuthGoogle (GoogleSignInAccount account) {
+    private void firebaseAuthGoogle(GoogleSignInAccount account) {
         Log.d(TAG, "firebaseAuthGoogle: ");
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -194,10 +186,9 @@ public class LoginFragment extends Fragment{
                             mEmail.setText(firebaseUser.getEmail());
                             checkGoogleName();
                         } else {
-                            Log.d(TAG, " #### 로그인 실패...");
+                            Log.d(TAG, "#### 로그인 실패...");
                             startShake(mEmail);
                         }
-                        return;
                     }
                 });
     }
@@ -223,7 +214,7 @@ public class LoginFragment extends Fragment{
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user")
-                .whereEqualTo("email" , email)
+                .whereEqualTo("email", email)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -243,10 +234,7 @@ public class LoginFragment extends Fragment{
                 });
     }
 
-    private void emailSignIn() {
-        String email = mEmail.getText().toString();
-        String pwd = mPwd.getText().toString();
-
+    private void emailSignIn(String email, String pwd) {
         mAuth.signInWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener((Activity) mContext, task -> {
                     if (task.isSuccessful()) {
@@ -255,13 +243,10 @@ public class LoginFragment extends Fragment{
                         startActivity(intent);
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: 이유가 뭘까요??? " + e);
-                        startShake(mEmail);
-                        startShake(mPwd);
-                    }
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "onFailure: 이유가 뭘까요??? " + e);
+                    startShake(mEmail);
+                    startShake(mPwd);
                 });
     }
 }
