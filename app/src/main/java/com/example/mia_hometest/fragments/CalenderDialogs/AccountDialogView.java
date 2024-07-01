@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -64,15 +65,21 @@ public class AccountDialogView extends DialogFragment implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.cash || view.getId() == R.id.bank || view.getId() == R.id.credit) {
-            String text = ((TextView) view).getText().toString();
-            mIntent.putExtra("value", text);
-            mlistener.onClicked(mIntent, mType);
-        } else if (view.getId() == R.id.editBtn) {
-            dismiss();
-        } else if (view.getId() == R.id.cancelBtn) {
-            mIntent.putExtra("value", "");
-            mlistener.onClicked(mIntent, mType);
+        switch (view.getId()) {
+            case R.id.cash:
+                case R.id.credit:
+                case R.id.bank:
+                    String text = ((TextView) view).getText().toString();
+                    mIntent.putExtra("value", text);
+                    mlistener.onClicked(mIntent, mType);
+                    break;
+            case R.id.editBtn:
+                dismiss();
+                break;
+            case R.id.cancelBtn:
+                mIntent.putExtra("value", "");
+                mlistener.onClicked(mIntent, mType);
+                break;
         }
     }
 }

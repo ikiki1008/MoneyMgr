@@ -144,6 +144,8 @@
     <string name="income">수입</string>
     <string name="expense">지출</string>
     <string name="all">전체</string>
+    <string name="warn_notnull_price">금액을 입력해 주세요</string>
+    <string name="warn_notnull_account">목록을 입력해 주세요</string>
 
     <string name="btn_month">월</string>
     <string name="btn_week">주</string>
@@ -231,7 +233,7 @@
     <string name="household">생활용품</string>
     <string name="etc">기타</string>
 
-    <string name="note_desc">메모</string>
+    <string name="note_desc">빈 메모 입니다</string>
 
     <string name="register_title">SIGN&#160;UP</string>
     <string name="register_email">Email</string>

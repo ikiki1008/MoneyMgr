@@ -288,12 +288,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     /*
      * CardScreenInfoFragment 의 인스턴스를 두개로 나눈다. income 이냐 expense 냐에 따라 카테고리가 인자로 쓰일지 결정되는 부분이기 떄문이다.
      * */
-    private void startSpecificFragment(String transactions) {
+    private void startSpecificFragment(String transactions, String docId) {
         if (transactions.equals(mContext.getString(R.string.income))) {
-            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, mDate, mAmount, mAcc, mNote);
+            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, docId, mDate, mAmount, mAcc, mNote);
             ((UserMainActivity) getActivity()).launchFragment(fragment);
         } else if (transactions.equals(mContext.getString(R.string.expense))){
-            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, mDate, mAmount, mCate, mAcc, mNote);
+            CardScreenInfoFragment fragment = CardScreenInfoFragment.newInstance(mTrans, docId, mDate, mAmount, mCate, mAcc, mNote);
             ((UserMainActivity) getActivity()).launchFragment(fragment);
         }
     }
@@ -414,7 +414,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                 if (mNote == null) {
                                     mNote = "No Description";
                                 }
-                                startSpecificFragment(mTrans);
+                                startSpecificFragment(mTrans, itemId);
                             } else {
                                 Log.d(TAG, "onSwipeLeft: 인컴에 없음");
                                 mStore.collection("user").document(userId).collection("outcome").document(itemId).get()
@@ -434,7 +434,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                                                         mNote = "No Description";
                                                     }
                                                     Log.d(TAG, "onSwipeLeft: 도큐먼트가 있다면 ... " + mDate + mAmount + mAcc + mCate + mNote + mTrans);
-                                                    startSpecificFragment(mTrans);
+                                                    startSpecificFragment(mTrans, itemId);
                                                 } else {
                                                     Log.d(TAG, "onSwipeLeft: wtf111");
                                                 }

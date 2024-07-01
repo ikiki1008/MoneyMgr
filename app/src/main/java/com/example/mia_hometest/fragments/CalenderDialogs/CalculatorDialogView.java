@@ -42,13 +42,6 @@ public class CalculatorDialogView extends DialogFragment implements View.OnClick
 
         AlertDialog dialog = mBuilder.create();
         dialog.getWindow().setGravity(Gravity.BOTTOM);
-//        Window window = dialog.getWindow();
-//        if (window != null) {
-//            WindowManager.LayoutParams layoutParams = window.getAttributes();
-//            layoutParams.gravity = Gravity.BOTTOM; //다이얼로그 화면 하단에 부착
-//            window.setAttributes(layoutParams);
-//        }
-
         mResult = view.findViewById(R.id.result);
 
         int[] btn = {
@@ -167,6 +160,9 @@ public class CalculatorDialogView extends DialogFragment implements View.OnClick
                 }
                 break;
             case R.id.ok:
+                if (mResult.getText().toString().isEmpty()) {
+                    mResult.setText("0");
+                }
                 int finalValue = Integer.parseInt(mResult.getText().toString());
                 Log.d(TAG, "onClick: 이건 값이 얼마냐 .... = " + finalValue);
                 mIntent.putExtra("value" , finalValue);

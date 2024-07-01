@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -199,29 +200,33 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
             case R.id.editBtn:
                 if (!mIncome) {
                     Log.d(TAG, "onClick: expense screen");
-                    if (mItemList.get(0).getDesc() != null && mItemList.get(1).getDesc() != null
-                            && mItemList.get(2).getDesc() != null) {
+                    if (!mItemList.get(0).getDesc().equals("") && !mItemList.get(1).getDesc().equals("")
+                            && !mItemList.get(2).getDesc().equals("")) {
                         // 콘솔에 출력하여 저장하려는 데이터 확인
                         Log.d(TAG, "onClick: Saving data: "
                                 + mItemList.get(0).getDesc() + ", "
                                 + mItemList.get(1).getDesc() + ", "
                                 + mItemList.get(2).getDesc() + ", "
-                                + (mItemList.size() > 3 ? mItemList.get(3).getDesc() : "null"));
+                                + (mItemList.size() > 3 ? mItemList.get(3).getDesc() : mContext.getString(R.string.note_desc)));
 
                         saveExpense(mLine1.getText().toString(), mItemList.get(0).getDesc(),
                                 mItemList.get(1).getDesc(), mItemList.get(2).getDesc(),
-                                mItemList.size() > 3 ? mItemList.get(3).getDesc() : null);
+                                mItemList.get(3).getDesc());
+                    } else {
+                        Toast.makeText(getContext(), R.string.warn_notnull_account, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.d(TAG, "onClick: income screen");
-                    if (mItemList.get(0).getDesc() != null && mItemList.get(1).getDesc() != null) {
+                    if (!mItemList.get(0).getDesc().equals("") && !mItemList.get(1).getDesc().equals("")) {
                         Log.d(TAG, "onClick: Saving data: "
                                 + mItemList.get(0).getDesc() + ", "
                                 + mItemList.get(1).getDesc() + ", "
-                                + (mItemList.size() > 2 ? mItemList.get(2).getDesc() : "null"));
+                                + (mItemList.size() > 2 ? mItemList.get(2).getDesc() : mContext.getString(R.string.note_desc)));
 
                         saveIncome(mLine1.getText().toString(), mItemList.get(0).getDesc(),
-                                mItemList.get(1).getDesc(), mItemList.size() > 2 ? mItemList.get(2).getDesc() : null);
+                                mItemList.get(1).getDesc(), mItemList.get(2).getDesc());
+                    } else {
+                        Toast.makeText(getContext(), R.string.warn_notnull_account, Toast.LENGTH_SHORT).show();
                     }
                 }
                 if (getDialog() != null && getDialog().isShowing()) {
