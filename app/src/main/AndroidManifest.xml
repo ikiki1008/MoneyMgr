@@ -36,6 +36,11 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".fragments.card.SortCardListService"
+            android:exported="false">
+        </service>
+
     </application>
 
 </manifest>

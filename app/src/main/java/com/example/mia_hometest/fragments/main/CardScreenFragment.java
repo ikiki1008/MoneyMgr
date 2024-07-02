@@ -3,12 +3,15 @@ package com.example.mia_hometest.fragments.main;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.DragEvent;
@@ -30,6 +33,7 @@ import com.example.mia_hometest.common.ListItem;
 import com.example.mia_hometest.common.CardListAdapter;
 import com.example.mia_hometest.common.SpecificListItem;
 import com.example.mia_hometest.fragments.card.CardScreenInfoFragment;
+import com.example.mia_hometest.fragments.card.SortCardListService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -72,6 +76,28 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private FirebaseFirestore mStore;
     private CardScreenInfoFragment mCardScreenInfoFragment = null;
     private AlertDialog mAlertDialog;
+    private SortCardListService mService;
+    private boolean mIsServiceOn = false;
+    private boolean mIsOutcome = false;
+    private boolean mIsAll = true;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            SortCardListService.LocalBinder binder = (SortCardListService.LocalBinder) iBinder;
+            mService = binder.getService();
+            mIsServiceOn = true;
+            if (!mListTitle.getText().equals("") && mIsAll) {
+                mIsOutcome = false;
+                mService.getListString(mListTitle.getText().toString(), "All");
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mService = null;
+            mIsServiceOn = false;
+        }
+    };
 
     @Override
     public void onAttach(Context context) {
@@ -104,11 +130,31 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mExpense.setOnClickListener(this);
         mBtn.setOnClickListener(this);
 
+
         mListTitle.setText(R.string.list_week);
         int themeColor = getThemeColor(android.R.attr.textColor);
         mAll.setTextColor(themeColor);
         fetchData("all");
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        Intent intent = new Intent(mContext, SortCardListService.class); //service class connect!
+        mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+        if (mIsServiceOn) {
+            Log.d(TAG, "onDestroy: 서비스 끄기``");
+            mContext.unbindService(mConnection);
+            mIsServiceOn = false;
+        }
     }
 
     @Override
@@ -119,6 +165,10 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
 
     public CardScreenFragment (Context context) {
         mContext = context;
+    }
+
+    public interface OnListItemClick {
+        void onItemClick (String item);
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -341,40 +391,49 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         switch (view.getId()) {
             case R.id.all:
                 Log.d(TAG, "onClick: all");
+                mIsAll = true;
+                mIsOutcome = false;
                 fetchData("all");
                 mAll.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
+                mService.getListString(mListTitle.getText().toString(), "All");
                 break;
             case R.id.expense:
                 Log.d(TAG, "onClick: expense");
+                mIsAll = false;
+                mIsOutcome = true;
                 fetchData("outcome");
                 mExpense.setTextColor(themeColor);
                 mAll.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
+                mService.getListString(mListTitle.getText().toString(), "outcome");
                 break;
             case R.id.income:
                 Log.d(TAG, "onClick: income");
+                mIsAll = false;
+                mIsOutcome = false;
                 fetchData("income");
                 mIncome.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mAll.setTextColor(secondColor);
+                mService.getListString(mListTitle.getText().toString(), "income");
                 break;
             case R.id.listBtn:
                 showList(new OnListItemClick() {
                     @Override
                     public void onItemClick(String item) {
                         Log.d(TAG, "onItemClick: " + item);
-                        if (item.equals(mContext.getString(R.string.list_year))) {
-                            mListTitle.setText(R.string.list_year);
-                        } else if (item.equals(mContext.getString(R.string.list_month))) {
-                            mListTitle.setText(R.string.list_month);
-                        } else if (item.equals(mContext.getString(R.string.list_week))) {
-                            mListTitle.setText(R.string.list_week);
-                        } else if (item.equals(mContext.getString(R.string.list_day))) {
-                            mListTitle.setText(R.string.list_day);
+                        if (item != null && !item.equals("")) {
+                            mListTitle.setText(item);
+                            if (mIsAll) {
+                                mService.getListString(mListTitle.getText().toString(), "All");
+                            } else if (!mIsAll && mIsOutcome) {
+                                mService.getListString(mListTitle.getText().toString(), "outcome");
+                            } else if (!mIsAll && !mIsOutcome) {
+                                mService.getListString(mListTitle.getText().toString(), "income");
+                            }
                         } else {
-                            Log.d(TAG, "onItemClick: close dialog??");
                             mAlertDialog.dismiss();
                         }
                     }
@@ -384,10 +443,6 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 Log.d(TAG, "onClick: 랄라라라라 디폴트");
                 break;
         }
-    }
-
-    public interface OnListItemClick {
-        void onItemClick (String item);
     }
 
     @Override
