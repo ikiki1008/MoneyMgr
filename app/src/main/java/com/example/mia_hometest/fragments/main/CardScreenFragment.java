@@ -257,28 +257,14 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void showList() {
+    private void showList(final OnListItemClick listener) {
         mlist = getResources().getStringArray(R.array.list_dialog);
         mBuilder = new AlertDialog.Builder(mContext);
         mBuilder.setItems(mlist, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.d(TAG, " ### you clicked = " + mlist[i]);
-                if (mlist[i].equals("Annually")) {
-                    mListTitle.setText(R.string.list_year);
-                }
-                else if (mlist[i].equals("Monthly")) {
-                    mListTitle.setText(R.string.list_month);
-                }
-                else if (mlist[i].equals("Weekly")) {
-                    mListTitle.setText(R.string.list_week);
-                }
-                else if (mlist[i].equals("Daily")) {
-                    mListTitle.setText(R.string.list_day);
-                }
-                else {
-                    Log.d(TAG, "onClick: close dialog");
-                }
+                String item = mlist[i];
+                listener.onItemClick(item);
             }
         });
         AlertDialog alertDialog = mBuilder.create();
@@ -375,13 +361,33 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mAll.setTextColor(secondColor);
                 break;
             case R.id.listBtn:
-                Log.d(TAG, "onClick: 리스트 버튼 클릭했음");
-                showList();
+                showList(new OnListItemClick() {
+                    @Override
+                    public void onItemClick(String item) {
+                        Log.d(TAG, "onItemClick: " + item);
+                        if (item.equals(mContext.getString(R.string.list_year))) {
+                            mListTitle.setText(R.string.list_year);
+                        } else if (item.equals(mContext.getString(R.string.list_month))) {
+                            mListTitle.setText(R.string.list_month);
+                        } else if (item.equals(mContext.getString(R.string.list_week))) {
+                            mListTitle.setText(R.string.list_week);
+                        } else if (item.equals(mContext.getString(R.string.list_day))) {
+                            mListTitle.setText(R.string.list_day);
+                        } else {
+                            Log.d(TAG, "onItemClick: close dialog??");
+                            mAlertDialog.dismiss();
+                        }
+                    }
+                });
                 break;
             default:
                 Log.d(TAG, "onClick: 랄라라라라 디폴트");
                 break;
         }
+    }
+
+    public interface OnListItemClick {
+        void onItemClick (String item);
     }
 
     @Override
