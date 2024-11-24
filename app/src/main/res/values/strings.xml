@@ -198,6 +198,9 @@
     <string name="list_week">주별</string>
     <string name="list_day">하루</string>
 
+    <string name="array_date_left">left</string>
+    <string name="array_date_right">right</string>
+
     <string name="budeng">&lt;</string>
     <string name="budeng2">&gt;</string>
 

@@ -54,12 +54,12 @@ public class SortCardListService extends Service {
             return SortCardListService.this;
         }
     }
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
-    
+
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate: ");
@@ -68,7 +68,7 @@ public class SortCardListService extends Service {
         mDb = FirebaseFirestore.getInstance();
         mStore = FirebaseFirestore.getInstance();
     }
-    
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -198,7 +198,7 @@ public class SortCardListService extends Service {
 
         }
 
-        
+
     }
 
     private String[] getDateRange(String date) {
@@ -210,34 +210,34 @@ public class SortCardListService extends Service {
         switch (date) {
             case "하루":
             case "daily":
-                startDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                startDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(new Date());
                 endDate = startDate;
                 Log.d(TAG, "getDateRange: " + startDate);
                 break;
             case "주별":
             case "weekly":
                 calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-                startDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
+                startDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
                 calendar.add(Calendar.DAY_OF_WEEK, 6);
-                endDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
+                endDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
                 Log.d(TAG, "getDateRange: " + startDate + ", " + endDate);
                 break;
             case "월별":
             case "Monthly":
                 calendar.set(Calendar.DAY_OF_MONTH, 1);
-                startDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
+                startDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
                 calendar.add(Calendar.MONTH, 1);
                 calendar.add(Calendar.DAY_OF_MONTH, -1);
-                endDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
+                endDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
                 Log.d(TAG, "getDateRange: " + startDate + ", " + endDate);
                 break;
             case "연별":
             case "Yearly":
                 calendar.set(Calendar.DAY_OF_YEAR, 1);
-                startDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
+                startDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
                 calendar.add(Calendar.YEAR, 1);
                 calendar.add(Calendar.DAY_OF_YEAR, -1);
-                endDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
+                endDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
                 Log.d(TAG, "getDateRange: " + startDate + ", " + endDate);
                 break;
             default:

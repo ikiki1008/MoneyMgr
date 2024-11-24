@@ -90,6 +90,9 @@
     <string name="bank">통장</string>
     <string name="credit">신용카드</string>
 
+    <string name="array_date_left">left</string>
+    <string name="array_date_right">right</string>
+
     <string name="food">음식</string>
     <string name="shopping">쇼핑</string>
     <string name="rent">집세</string>

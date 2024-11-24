@@ -49,10 +49,13 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class CardScreenFragment extends Fragment implements View.OnClickListener, CardListAdapter.OnSwipeListener, CardListAdapter.OnListClickListener {
     private final String TAG = CardScreenFragment.class.getSimpleName();
@@ -62,6 +65,9 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private TextView mIncome = null;
     private TextView mListTitle = null;
     private ImageView mBtn = null;
+    private ImageView mLeftArrow = null;
+    private ImageView mRightArrow= null;
+    private TextView mArrayDate = null;
     private String[] mlist;
     private String mDate;
     private String mAmount;
@@ -80,6 +86,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private boolean mIsServiceOn = false;
     private boolean mIsOutcome = false;
     private boolean mIsAll = true;
+    private Calendar mCalender = Calendar.getInstance();
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -117,6 +124,9 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mIncome = view.findViewById(R.id.income);
         mBtn = view.findViewById(R.id.listBtn);
         mListTitle = view.findViewById(R.id.listText);
+        mLeftArrow = view.findViewById(R.id.arrow_left);
+        mRightArrow = view.findViewById(R.id.arrow_right);
+        mArrayDate = view.findViewById(R.id.array_dates);
 
         mAdapter = new CardListAdapter(mContext);
         mAdapter.setSwipeListener(this);
@@ -129,12 +139,14 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mIncome.setOnClickListener(this);
         mExpense.setOnClickListener(this);
         mBtn.setOnClickListener(this);
-
+        mLeftArrow.setOnClickListener(this);
+        mRightArrow.setOnClickListener(this);
 
         mListTitle.setText(R.string.list_week);
         int themeColor = getThemeColor(android.R.attr.textColor);
         mAll.setTextColor(themeColor);
         fetchData("all");
+
         return view;
     }
 
@@ -142,8 +154,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: ");
-        Intent intent = new Intent(mContext, SortCardListService.class); //service class connect!
+        Intent intent = new Intent(mContext, SortCardListService.class); // service class connect!
         mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+        String currentDate = dateFormat.format(Calendar.getInstance().getTime());
+        mArrayDate.setText(currentDate); // 날짜 텍스트 설정
     }
 
     @Override
@@ -151,7 +167,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         super.onPause();
         Log.d(TAG, "onPause: ");
         if (mIsServiceOn) {
-            Log.d(TAG, "onDestroy: 서비스 끄기``");
+            Log.d(TAG, "onPause: 서비스 끄기``");
             mContext.unbindService(mConnection);
             mIsServiceOn = false;
         }
@@ -383,6 +399,76 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mBuilder.show();
     }
 
+    private void updateArrayText(String item) {
+
+        //리스트를 클릭시 마다 달력 초기화 하기
+        if (item.equals("연별") || item.equals("Yearly") ||
+                item.equals("월별") || item.equals("Monthly") ||
+                item.equals("주별") || item.equals("Weekly") ||
+                item.equals("하루") || item.equals("Daily")) {
+            mCalender = Calendar.getInstance();
+        }
+
+        switch (item) {
+            case "연별":
+            case "Yearly":
+                mArrayDate.setText(getFormattedDate("yyyy", Calendar.getInstance())); // 현재 연도 텍스트 설정
+                break;
+            case "월별":
+            case "Monthly":
+                mArrayDate.setText(getFormattedDate("yyyy/MM", Calendar.getInstance())); // 월 텍스트 설정
+                break;
+            case "하루":
+            case "주별":
+            case "Daily":
+            case "Weekly":
+                mArrayDate.setText(getFormattedDate("yyyy/MM/dd", Calendar.getInstance())); // 날짜 텍스트 설정
+                break;
+            case "left":
+                updateDate(-1); // 이전 날짜로 업데이트
+                break;
+            case "right":
+                updateDate(1); // 다음 날짜로 업데이트
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void updateDate(int increment) {
+        // mListTitle의 텍스트에 따라 날짜 증감 처리
+        switch (mListTitle.getText().toString()) {
+            case "연별":
+            case "list_year": // 연도 단위로 증감
+                mCalender.add(Calendar.YEAR, increment);
+                mArrayDate.setText(getFormattedDate("yyyy", mCalender));
+                break;
+            case "월별":
+            case "list_month": // 월 단위로 증감
+                mCalender.add(Calendar.MONTH, increment);
+                mArrayDate.setText(getFormattedDate("yyyy/MM", mCalender));
+                break;
+            case "주별":
+            case "list_week": // 주 단위로 증감
+                mCalender.add(Calendar.WEEK_OF_YEAR, increment);
+                mArrayDate.setText(getFormattedDate("yyyy/MM/dd", mCalender));
+                break;
+            case "하루":
+            case "list_day": // 일 단위로 증감
+                mCalender.add(Calendar.DAY_OF_YEAR, increment);
+                mArrayDate.setText(getFormattedDate("yyyy/MM/dd", mCalender));
+                break;
+            default:
+                break;
+        }
+    }
+
+    // 날짜 형식에 따라 포맷된 문자열을 반환하는 메서드
+    private String getFormattedDate(String format, Calendar calendar) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
+        return dateFormat.format(calendar.getTime());
+    }
+
     @Override
     public void onClick(View view) {
         int themeColor = getThemeColor(android.R.attr.textColor);
@@ -419,6 +505,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mAll.setTextColor(secondColor);
                 mService.getListString(mListTitle.getText().toString(), "income");
                 break;
+            case R.id.arrow_left:
+                updateArrayText(mContext.getString(R.string.array_date_left));
+                break;
+            case R.id.arrow_right:
+                updateArrayText(mContext.getString(R.string.array_date_right));
+                break;
             case R.id.listBtn:
                 showList(new OnListItemClick() {
                     @Override
@@ -426,6 +518,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                         Log.d(TAG, "onItemClick: " + item);
                         if (item != null && !item.equals("")) {
                             mListTitle.setText(item);
+                            updateArrayText(item);
                             if (mIsAll) {
                                 mService.getListString(mListTitle.getText().toString(), "All");
                             } else if (!mIsAll && mIsOutcome) {
