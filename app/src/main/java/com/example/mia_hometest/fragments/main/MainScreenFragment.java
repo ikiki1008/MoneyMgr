@@ -22,6 +22,7 @@ import com.example.mia_hometest.common.WeekdaysDecorator;
 import com.example.mia_hometest.common.CardListAdapter;
 import com.example.mia_hometest.common.WeekendDecorator;
 import com.example.mia_hometest.fragments.CalenderDialogs.CalDialogView;
+import com.example.mia_hometest.fragments.CalenderDialogs.TodayTransDialog;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -42,6 +43,7 @@ public class MainScreenFragment extends Fragment {
     private WeekdaysDecorator mDecorate;
     private WeekendDecorator mWeekendDaco;
     private CalDialogView mDialog;
+    private TodayTransDialog mTodayTransDialog;
     private AnyChartView mPieView;
     private Pie mPie;
 
@@ -71,6 +73,7 @@ public class MainScreenFragment extends Fragment {
         mDecorate = new WeekdaysDecorator(mContext);
         mWeekendDaco = new WeekendDecorator(mContext);
         mDialog = new CalDialogView(mContext);
+        mTodayTransDialog = new TodayTransDialog(mContext);
 
         mCal.addDecorator(mWeekendDaco);
         mCal.addDecorator(mDecorate);
@@ -98,13 +101,15 @@ public class MainScreenFragment extends Fragment {
                 if (selected) {
                     Bundle args = new Bundle();
                     args.putParcelable("selectedDay", date);
-                    mDialog.setArguments(args);
+//                    mDialog.setArguments(args);
+                    mTodayTransDialog.setArguments(args);
                     assert getFragmentManager() != null;
-                    mDialog.show(getFragmentManager(), "tag");
+                    mTodayTransDialog.show(getFragmentManager(), "tag");
 
                 } else {
                     Log.d(TAG, " 메인 스크린 화면에서 다이얼로그뷰를 끈다");
-                    mDialog.dismiss();
+                    //mDialog.dismiss();
+                    mTodayTransDialog.dismiss();
                 }
             }
         });

@@ -28,20 +28,20 @@
                     android:id="@+id/selected_month_year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
                     android:textAppearance="?android:textAppearanceMedium"
-                    android:textSize="14dp"
                     android:textColor="@android:color/white"
-                    android:layout_marginStart="45dp" />
+                    android:textSize="14dp" />
 
                 <TextView
                     android:id="@+id/selected_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
-                    android:textSize="14dp"
-                    android:textColor="@android:color/white"
                     android:layout_marginStart="45dp"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_marginTop="20dp"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@android:color/white"
+                    android:textSize="14dp" />
 
         </FrameLayout>
 

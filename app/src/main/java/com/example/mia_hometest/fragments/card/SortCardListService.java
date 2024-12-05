@@ -13,9 +13,11 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.credentials.playservices.CredentialProviderMetadataHolder;
 
 import com.example.mia_hometest.R;
+import com.example.mia_hometest.common.CardListAdapter;
 import com.example.mia_hometest.common.ListItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,6 +50,8 @@ public class SortCardListService extends Service {
     private String mAcc;
     private String mNote;
     private Drawable mImage;
+    private CardListAdapter mAdapter;
+    private List<ListItem> itemList = new ArrayList<>();
 
     public class LocalBinder extends Binder {
         public SortCardListService getService() {
@@ -67,6 +71,7 @@ public class SortCardListService extends Service {
         mContext = getApplicationContext();
         mDb = FirebaseFirestore.getInstance();
         mStore = FirebaseFirestore.getInstance();
+        mAdapter = new CardListAdapter(mContext);
     }
 
     @Override
@@ -86,16 +91,17 @@ public class SortCardListService extends Service {
         Log.d(TAG, "searchData: type = " + list + ", date = " + type);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String[] dateRange = getDateRange(list);
+        List<ListItem> items = new ArrayList<>();
 
         if (user != null) {
             String userId = user.getUid();
-            List<ListItem> items = new ArrayList<>();
 
             if (type.equals("All")) {
                 mStore.collection("user").document(userId).collection("income")
                         .whereGreaterThanOrEqualTo("date", dateRange[0])
                         .whereLessThanOrEqualTo("date", dateRange[1])
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @SuppressLint("UseCompatLoadingForDrawables")
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 Log.d(TAG, "onComplete: ");
@@ -108,8 +114,11 @@ public class SortCardListService extends Service {
                                         mDate = documentSnapshot.getString("date");
                                         String id = documentSnapshot.getId();
                                         mAmount = "+" + mAmount;
+
                                         items.add(new ListItem(mImage, id, mCate, mAmount, mDate));
                                         Log.d(TAG, " 최종 리스트 아이템 11" + items);
+                                        Collections.sort(items, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
+                                        setItems(items);
                                     }
                                     mStore.collection("user").document(userId).collection("outcome")
                                             .whereGreaterThanOrEqualTo("date", dateRange[0])
@@ -121,14 +130,17 @@ public class SortCardListService extends Service {
                                                     if (task.isSuccessful()) {
                                                         Log.d(TAG, "onComplete: 성공");
                                                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                                            mImage = mContext.getDrawable(R.drawable.bunny);
                                                             mCate = documentSnapshot.getString("category");
+                                                            getImage(mCate);
                                                             mAmount = documentSnapshot.getString("amount");
                                                             mDate = documentSnapshot.getString("date");
                                                             String id = documentSnapshot.getId();
-                                                            mAmount = "+" + mAmount;
+                                                            mAmount = "-" + mAmount;
+
                                                             items.add(new ListItem(mImage, id, mCate, mAmount, mDate));
                                                             Log.d(TAG, " 최종 리스트 아이템 22" + items);
+                                                            Collections.sort(items, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
+                                                            setItems(items);
                                                         }
                                                     } else {
                                                         Log.d(TAG, "onComplete: 실패");
@@ -155,6 +167,7 @@ public class SortCardListService extends Service {
                         .whereGreaterThanOrEqualTo("date", dateRange[0])
                         .whereLessThanOrEqualTo("date", dateRange[1])
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @SuppressLint("UseCompatLoadingForDrawables")
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -166,7 +179,10 @@ public class SortCardListService extends Service {
                                         mDate = documentSnapshot.getString("date");
                                         String id = documentSnapshot.getId();
                                         mAmount = "+" + mAmount;
+
                                         items.add(new ListItem(mImage, id, mCate, mAmount, mDate));
+                                        Collections.sort(items, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
+                                        setItems(items);
                                     }
                                     Log.d(TAG, "onComplete: 여기는 몇개일까요 " + items);
                                 }
@@ -177,28 +193,75 @@ public class SortCardListService extends Service {
                         .whereGreaterThanOrEqualTo("date", dateRange[0])
                         .whereLessThanOrEqualTo("date", dateRange[1])
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @SuppressLint("UseCompatLoadingForDrawables")
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "onComplete: 성공");
                                     for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                        mImage = mContext.getDrawable(R.drawable.bunny);
                                         mCate = documentSnapshot.getString("category");
+                                        getImage(mCate);
                                         mAmount = documentSnapshot.getString("amount");
                                         mDate = documentSnapshot.getString("date");
                                         String id = documentSnapshot.getId();
-                                        mAmount = "+" + mAmount;
+                                        mAmount = "-" + mAmount;
+
                                         items.add(new ListItem(mImage, id, mCate, mAmount, mDate));
+                                        Collections.sort(items, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
+                                        setItems(items);
                                     }
                                     Log.d(TAG, "onComplete: 여기는 몇개일까요 2222" + items);
                                 }
                             }
                         });
             }
-
         }
+    }
 
+    private int compare (String date1, String date2) {
+        return date2.compareTo(date1);
+    }
 
+    private void getImage(String category) {
+        if (category.equals(mContext.getString(R.string.shopping))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.shopper);
+        } else if (category.equals(mContext.getString(R.string.hospital))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.hospital);
+        } else if (category.equals(mContext.getString(R.string.food))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.donut);
+        } else if (category.equals(mContext.getString(R.string.rent))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.house_fee);
+        } else if (category.equals(mContext.getString(R.string.phone))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.mobile_text);
+        } else if (category.equals(mContext.getString(R.string.card))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.shopping);
+        } else if (category.equals(mContext.getString(R.string.social))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.confetti);
+        } else if (category.equals(mContext.getString(R.string.hobby))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.artist);
+        } else if (category.equals(mContext.getString(R.string.ott))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.netflix);
+        } else if (category.equals(mContext.getString(R.string.household))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.paperroll);
+        } else if (category.equals(mContext.getString(R.string.trans))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.vehicles);
+        } else if (category.equals(mContext.getString(R.string.sports))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.physical);
+        } else if (category.equals(mContext.getString(R.string.loan))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.tax);
+        } else if (category.equals(mContext.getString(R.string.edu))) {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.book);
+        } else {
+            mImage = ContextCompat.getDrawable(mContext, R.drawable.options);
+        }
+    }
+
+    public void setItems(List<ListItem> list) {
+        this.itemList = list;
+    }
+
+    public List<ListItem> getItems() {
+        return itemList;
     }
 
     private String[] getDateRange(String date) {

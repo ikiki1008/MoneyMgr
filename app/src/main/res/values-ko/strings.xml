@@ -70,6 +70,7 @@
     <string name="list_month">월별</string>
     <string name="list_week">주별</string>
     <string name="list_day">하루</string>
+    <string name="add_new_item">추가</string>
 
     <string name="budeng">&lt;</string>
     <string name="budeng2">&gt;</string>

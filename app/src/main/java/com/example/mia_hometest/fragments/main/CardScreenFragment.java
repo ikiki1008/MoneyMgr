@@ -96,6 +96,9 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
             if (!mListTitle.getText().equals("") && mIsAll) {
                 mIsOutcome = false;
                 mService.getListString(mListTitle.getText().toString(), "All");
+                List<ListItem> listItems = mService.getItems();
+                mAdapter.setItems(listItems);
+                Log.d(TAG, "onServiceConnected: 리스트 아이템들은 ... " + listItems);
             }
         }
 
@@ -145,8 +148,6 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mListTitle.setText(R.string.list_week);
         int themeColor = getThemeColor(android.R.attr.textColor);
         mAll.setTextColor(themeColor);
-        fetchData("all");
-
         return view;
     }
 
@@ -187,139 +188,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         void onItemClick (String item);
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    public void fetchData(String type) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (type.equals("all")) {
-            if (user != null) {
-                String userId = user.getUid();
-                List<ListItem> listItems = new ArrayList<>();
-
-                // Fetch income data
-                mStore.collection("user").document(userId).collection("income")
-                        .get().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    mImage = mContext.getDrawable(R.drawable.bunny);
-                                    mCate = mContext.getString(R.string.income);
-                                    mAmount = documentSnapshot.getString("amount");
-                                    mDate = documentSnapshot.getString("date");
-                                    String id = documentSnapshot.getId();
-                                    mAmount = "+" + mAmount;
-                                    listItems.add(new ListItem(mImage, id, mCate, mAmount, mDate));
-                                }
-
-                                // After fetching all income data, fetch outcome data
-                                mStore.collection("user").document(userId).collection("outcome")
-                                        .get().addOnCompleteListener(outcomeTask -> {
-                                            if (outcomeTask.isSuccessful()) {
-                                                for (QueryDocumentSnapshot documentSnapshot : outcomeTask.getResult()) {
-                                                    mCate = documentSnapshot.getString("category");
-                                                    getImage(mCate);
-                                                    mAmount = documentSnapshot.getString("amount");
-                                                    mDate = documentSnapshot.getString("date");
-                                                    String id = documentSnapshot.getId();
-                                                    mAmount = "-" + mAmount;
-                                                    listItems.add(new ListItem(mImage,id, mCate, mAmount, mDate));
-                                                }
-
-                                                // Sort listItems by date in descending order
-                                                Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
-
-                                                // Set items to adapter
-                                                mAdapter.setItems(listItems);
-                                            }
-                                        });
-                            }
-                        });
-            }
-        } else if (type.equals("income")) {
-            String userId = user.getUid();
-            mStore.collection("user").document(userId).collection("income")
-                    .get().addOnCompleteListener(task -> {
-                        List<ListItem> listItems = new ArrayList<>();
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                Drawable image = mContext.getDrawable(R.drawable.bunny);
-                                String cate = mContext.getString(R.string.income);
-                                String amount = documentSnapshot.getString("amount");
-                                String date = documentSnapshot.getString("date");
-                                String id = documentSnapshot.getId();
-                                amount = "+" + amount;
-                                listItems.add(new ListItem(image,id, cate, amount, date));
-                            }
-                        }
-                        Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
-                        mAdapter.setItems(listItems);
-                    });
-        } else {
-            String userId = user.getUid();
-            mStore.collection("user").document(userId).collection("outcome")
-                    .get().addOnCompleteListener(task -> {
-                        List<ListItem> listItems = new ArrayList<>();
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                String cate = documentSnapshot.getString("category");
-                                getImage(cate);
-                                Drawable image = mImage;
-                                String amount = documentSnapshot.getString("amount");
-                                String date = documentSnapshot.getString("date");
-                                String id = documentSnapshot.getId();
-                                amount = "-" + amount;
-                                listItems.add(new ListItem(image, id, cate, amount, date));
-                            }
-                        }
-                        Collections.sort(listItems, (item1, item2) -> compare(item1.getDate(), item2.getDate()));
-                        mAdapter.setItems(listItems);
-                    });
-        }
-    }
-
-    private int compare (String date1, String date2) {
-        return date2.compareTo(date1);
-    }
-
     private int getThemeColor(int attr) {
         TypedValue typedValue = new TypedValue();
         if (mContext.getTheme().resolveAttribute(attr, typedValue, true)) {
             return typedValue.data;
         } else {
             throw new IllegalArgumentException("Attribute not found in theme");
-        }
-    }
-
-    private void getImage(String category) {
-        if (category.equals(mContext.getString(R.string.shopping))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.shopper);
-        } else if (category.equals(mContext.getString(R.string.hospital))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.hospital);
-        } else if (category.equals(mContext.getString(R.string.food))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.donut);
-        } else if (category.equals(mContext.getString(R.string.rent))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.house_fee);
-        } else if (category.equals(mContext.getString(R.string.phone))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.mobile_text);
-        } else if (category.equals(mContext.getString(R.string.card))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.shopping);
-        } else if (category.equals(mContext.getString(R.string.social))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.confetti);
-        } else if (category.equals(mContext.getString(R.string.hobby))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.artist);
-        } else if (category.equals(mContext.getString(R.string.ott))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.netflix);
-        } else if (category.equals(mContext.getString(R.string.household))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.paperroll);
-        } else if (category.equals(mContext.getString(R.string.trans))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.vehicles);
-        } else if (category.equals(mContext.getString(R.string.sports))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.physical);
-        } else if (category.equals(mContext.getString(R.string.loan))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.tax);
-        } else if (category.equals(mContext.getString(R.string.edu))) {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.book);
-        } else {
-            mImage = ContextCompat.getDrawable(mContext, R.drawable.options);
         }
     }
 
@@ -400,7 +274,6 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     }
 
     private void updateArrayText(String item) {
-
         //리스트를 클릭시 마다 달력 초기화 하기
         if (item.equals("연별") || item.equals("Yearly") ||
                 item.equals("월별") || item.equals("Monthly") ||
@@ -473,37 +346,41 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         int themeColor = getThemeColor(android.R.attr.textColor);
         int secondColor = getThemeColor(android.R.attr.textColorSecondary);
+        List<ListItem> listItems = new ArrayList<>();
 
         switch (view.getId()) {
             case R.id.all:
                 Log.d(TAG, "onClick: all");
                 mIsAll = true;
                 mIsOutcome = false;
-                fetchData("all");
                 mAll.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
                 mService.getListString(mListTitle.getText().toString(), "All");
+                listItems = mService.getItems();
+                mAdapter.setItems(listItems);
                 break;
             case R.id.expense:
                 Log.d(TAG, "onClick: expense");
                 mIsAll = false;
                 mIsOutcome = true;
-                fetchData("outcome");
                 mExpense.setTextColor(themeColor);
                 mAll.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
                 mService.getListString(mListTitle.getText().toString(), "outcome");
+                listItems = mService.getItems();
+                mAdapter.setItems(listItems);
                 break;
             case R.id.income:
                 Log.d(TAG, "onClick: income");
                 mIsAll = false;
                 mIsOutcome = false;
-                fetchData("income");
                 mIncome.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mAll.setTextColor(secondColor);
                 mService.getListString(mListTitle.getText().toString(), "income");
+                listItems = mService.getItems();
+                mAdapter.setItems(listItems);
                 break;
             case R.id.arrow_left:
                 updateArrayText(mContext.getString(R.string.array_date_left));
@@ -519,13 +396,13 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                         if (item != null && !item.equals("")) {
                             mListTitle.setText(item);
                             updateArrayText(item);
-                            if (mIsAll) {
+                            /*if (mIsAll) {
                                 mService.getListString(mListTitle.getText().toString(), "All");
                             } else if (!mIsAll && mIsOutcome) {
                                 mService.getListString(mListTitle.getText().toString(), "outcome");
                             } else if (!mIsAll && !mIsOutcome) {
                                 mService.getListString(mListTitle.getText().toString(), "income");
-                            }
+                            }*/
                         } else {
                             mAlertDialog.dismiss();
                         }
