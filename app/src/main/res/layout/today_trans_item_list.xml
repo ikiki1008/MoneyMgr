@@ -46,7 +46,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/scrollView"
+        android:id="@+id/incomeView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
@@ -87,14 +87,29 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/scrollView_second"
+        android:id="@+id/income_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@id/incomeView">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/outcome_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintTop_toBottomOf="@id/scrollView">
+        app:layout_constraintTop_toBottomOf="@id/income_detail">
 
         <TextView
             android:id="@+id/outcome"
@@ -128,11 +143,26 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/outcome_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@id/outcome_view">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/btnWeight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="100dp"
-        app:layout_constraintTop_toBottomOf="@id/scrollView_second">
+        android:layout_margin="40dp"
+        app:layout_constraintTop_toBottomOf="@id/outcome_detail">
 
         <TextView
             android:id="@+id/addBtn"
@@ -142,10 +172,8 @@
             android:textSize="18sp"
             android:layout_gravity="right"
             android:textColor="@color/normal"
-            />
+            android:layout_marginBottom="30dp" />
 
     </FrameLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
