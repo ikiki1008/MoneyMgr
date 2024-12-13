@@ -117,6 +117,6 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
     }
 
     private void checkTodayMoney() {
-
+        //오늘날짜에 저장된 목록을 가져온다
     }
 }
