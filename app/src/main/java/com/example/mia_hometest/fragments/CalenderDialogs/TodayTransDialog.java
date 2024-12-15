@@ -1,8 +1,12 @@
 package com.example.mia_hometest.fragments.CalenderDialogs;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +15,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mia_hometest.R;
+import com.example.mia_hometest.common.CardListAdapter;
+import com.example.mia_hometest.common.ListItem;
+import com.example.mia_hometest.fragments.card.SortCardListService;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class TodayTransDialog extends DialogFragment implements View.OnClickListener {
 
@@ -32,8 +43,23 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
     private FrameLayout mCheckOutcome;
     private FrameLayout income_detail;
     private FrameLayout outcome_detail;
+    private CardListAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private SortCardListService mService = null;
     private boolean isIncomeVisible = false;
     private boolean isOutcomeVisible = false;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            SortCardListService.LocalBinder binder = (SortCardListService.LocalBinder) iBinder;
+            mService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mService = null;
+        }
+    };
 
     public TodayTransDialog (Context context) {
         mContext = context;
@@ -57,11 +83,14 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
         mDay = view.findViewById(R.id.selected_day);
         mIncome = view.findViewById(R.id.income_price);
         mOutcome = view.findViewById(R.id.outcome_price);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
         income_detail = view.findViewById(R.id.income_detail);
         outcome_detail = view.findViewById(R.id.outcome_detail);
         mCheckIncome = view.findViewById(R.id.incomeView);
         mCheckOutcome = view.findViewById(R.id.outcome_view);
 
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerView.setAdapter(mAdapter);
         income_detail.setVisibility(View.GONE);
         outcome_detail.setVisibility(View.GONE);
 
@@ -69,10 +98,26 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
         mYearMonth.setText(yearMonth);
         mDay.setText(dayOfWeek);
 
+        mAdapter = new CardListAdapter(mContext);
         mCheckIncome.setOnClickListener(this);
         mCheckOutcome.setOnClickListener(this);
 
         return mBuilder.create();
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+        Intent intent = new Intent(mContext, SortCardListService.class);
+        mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+        mContext.unbindService(mConnection);
     }
 
     @Override
@@ -81,23 +126,23 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
             case R.id.incomeView:
                 ImageView incomeArrow = view.findViewById(R.id.check_income);
                 if (!isIncomeVisible) {
-                    Log.d(TAG, "onClick: wtf");
                     incomeArrow.setRotation(90);
                     income_detail.setVisibility(View.VISIBLE);
                     isIncomeVisible = true;
+                    checkTodayMoney("income");
                 } else {
                     incomeArrow.setRotation(0);
                     income_detail.setVisibility(View.GONE);
-                    isOutcomeVisible = false;
+                    isIncomeVisible = false;
                 }
                 break;
             case R.id.outcome_view:
                 ImageView outcomeArrow = view.findViewById(R.id.check_outcome);
                 if (!isOutcomeVisible) {
-                    Log.d(TAG, "onClick: wtfffffff");
                     outcomeArrow.setRotation(90);
                     outcome_detail.setVisibility(View.VISIBLE);
                     isOutcomeVisible = true;
+                    checkTodayMoney("outcome");
                 } else {
                     outcomeArrow.setRotation(0);
                     outcome_detail.setVisibility(View.GONE);
@@ -116,7 +161,21 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
         return new DateFormatSymbols().getShortWeekdays()[dayOfWeek];
     }
 
-    private void checkTodayMoney() {
+    private void checkTodayMoney(String value) {
         //오늘날짜에 저장된 목록을 가져온다
+        List<ListItem> listItems = new ArrayList<>();
+        if (value.equals("income")) {
+            //mService.getListString(String.valueOf(R.string.list_day), "income");
+            listItems = mService.getItems(); // 수입 항목 가져오기
+        } else {
+            //mService.getListString(String.valueOf(R.string.list_day), "outcome");
+            listItems = mService.getItems(); // 지출 항목 가져오기
+        }
+
+        if (listItems != null && !listItems.isEmpty()) {
+            mAdapter.setItems(listItems);
+        } else {
+            System.out.println("목록이 비어 있습니다.");
+        }
     }
 }

@@ -41,6 +41,7 @@ public class SortCardListService extends Service {
     private String mList;
     private String mType;
     private Context mContext;
+    private String[] mDateRange;
     private final Binder mBinder = new LocalBinder();
     private FirebaseFirestore mDb;
     private FirebaseFirestore mStore;
@@ -80,17 +81,20 @@ public class SortCardListService extends Service {
         Log.d(TAG, "onDestroy: ");
     }
 
-    public void getListString (String list, String type) {
+
+    //조회해야할 날짜, 리스트 타입, income 혹은 outcome 타입 총 3가지를 확인해야 한다...
+    public void getListString (String date, String list, String type) {
         mList = list;
         mType = type;
-        Log.d(TAG, "list ==" + mList + ", type ==" + type);
+        Log.d(TAG, "list ==" + mList + ", type ==" + type + " date == " + date);
+        mDateRange = getDateRange(date, list);
         searchData(mList, mType);
     }
 
     private void searchData(String list, String type) {
         Log.d(TAG, "searchData: type = " + list + ", date = " + type);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String[] dateRange = getDateRange(list);
+        //String[] dateRange = getDateRange(list);
         List<ListItem> items = new ArrayList<>();
 
         if (user != null) {
@@ -98,8 +102,8 @@ public class SortCardListService extends Service {
 
             if (type.equals("All")) {
                 mStore.collection("user").document(userId).collection("income")
-                        .whereGreaterThanOrEqualTo("date", dateRange[0])
-                        .whereLessThanOrEqualTo("date", dateRange[1])
+                        .whereGreaterThanOrEqualTo("date", mDateRange[0])
+                        .whereLessThanOrEqualTo("date", mDateRange[1])
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @SuppressLint("UseCompatLoadingForDrawables")
                             @Override
@@ -121,8 +125,8 @@ public class SortCardListService extends Service {
                                         setItems(items);
                                     }
                                     mStore.collection("user").document(userId).collection("outcome")
-                                            .whereGreaterThanOrEqualTo("date", dateRange[0])
-                                            .whereLessThanOrEqualTo("date", dateRange[1])
+                                            .whereGreaterThanOrEqualTo("date", mDateRange[0])
+                                            .whereLessThanOrEqualTo("date", mDateRange[1])
                                             .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -164,8 +168,8 @@ public class SortCardListService extends Service {
                         });
             } else if (type.equals("income")) {
                 mStore.collection("user").document(userId).collection("income")
-                        .whereGreaterThanOrEqualTo("date", dateRange[0])
-                        .whereLessThanOrEqualTo("date", dateRange[1])
+                        .whereGreaterThanOrEqualTo("date", mDateRange[0])
+                        .whereLessThanOrEqualTo("date", mDateRange[1])
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @SuppressLint("UseCompatLoadingForDrawables")
                             @Override
@@ -190,8 +194,8 @@ public class SortCardListService extends Service {
                         });
             } else {
                 mStore.collection("user").document(userId).collection("outcome")
-                        .whereGreaterThanOrEqualTo("date", dateRange[0])
-                        .whereLessThanOrEqualTo("date", dateRange[1])
+                        .whereGreaterThanOrEqualTo("date", mDateRange[0])
+                        .whereLessThanOrEqualTo("date", mDateRange[1])
                         .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @SuppressLint("UseCompatLoadingForDrawables")
                             @Override
@@ -264,49 +268,86 @@ public class SortCardListService extends Service {
         return itemList;
     }
 
-    private String[] getDateRange(String date) {
-        Log.d(TAG, "getDateRange: " + date);
-        String startDate = "";
-        String endDate = "";
+    private String[] getDateRange(String date, String type) {
+        Log.d(TAG, "getDateRange: " + date + ", type: " + type);
+        String startDate;
+        String endDate;
         Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
 
-        switch (date) {
-            case "하루":
-            case "daily":
-                startDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(new Date());
-                endDate = startDate;
-                Log.d(TAG, "getDateRange: " + startDate);
-                break;
-            case "주별":
-            case "weekly":
-                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-                startDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
-                calendar.add(Calendar.DAY_OF_WEEK, 6);
-                endDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
-                Log.d(TAG, "getDateRange: " + startDate + ", " + endDate);
-                break;
-            case "월별":
-            case "Monthly":
-                calendar.set(Calendar.DAY_OF_MONTH, 1);
-                startDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
-                calendar.add(Calendar.MONTH, 1);
-                calendar.add(Calendar.DAY_OF_MONTH, -1);
-                endDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
-                Log.d(TAG, "getDateRange: " + startDate + ", " + endDate);
-                break;
-            case "연별":
-            case "Yearly":
-                calendar.set(Calendar.DAY_OF_YEAR, 1);
-                startDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
-                calendar.add(Calendar.YEAR, 1);
-                calendar.add(Calendar.DAY_OF_YEAR, -1);
-                endDate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(calendar.getTime());
-                Log.d(TAG, "getDateRange: " + startDate + ", " + endDate);
-                break;
-            default:
-                break;
+        try {
+            // 날짜 포맷 파싱
+            if (date.matches("\\d{4}")) { // yyyy
+                calendar.set(Integer.parseInt(date), Calendar.JANUARY, 1); // 연도의 첫날
+            } else if (date.matches("\\d{4}/\\d{2}")) { // yyyy/MM
+                String[] parts = date.split("/");
+                calendar.set(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]) - 1, 1); // 연도와 월의 첫날
+            } else if (date.matches("\\d{4}/\\d{2}/\\d{2}")) { // yyyy/MM/dd
+                Date parsedDate = sdf.parse(date);
+                calendar.setTime(parsedDate); // 정확한 날짜 설정
+            } else {
+                throw new IllegalArgumentException("Invalid date format");
+            }
+
+            // 시작 날짜 초기화
+            startDate = sdf.format(calendar.getTime());
+
+            // 범위 계산
+            switch (type) {
+                case "하루":
+                case "daily":
+                    endDate = startDate; // 하루 단위는 시작과 종료가 동일
+                    break;
+
+                case "주별":
+                case "weekly":
+                    // 현재 주의 시작 (기본: 월요일 시작)
+                    calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+                    startDate = sdf.format(calendar.getTime());
+
+                    // 현재 주의 끝
+                    calendar.add(Calendar.DAY_OF_WEEK, 6);
+                    endDate = sdf.format(calendar.getTime());
+                    break;
+
+                case "월별":
+                case "Monthly":
+                    // 현재 달의 시작
+                    calendar.set(Calendar.DAY_OF_MONTH, 1);
+                    startDate = sdf.format(calendar.getTime());
+
+                    // 현재 달의 마지막 날
+                    calendar.add(Calendar.MONTH, 1);
+                    calendar.add(Calendar.DAY_OF_MONTH, -1);
+                    endDate = sdf.format(calendar.getTime());
+                    break;
+
+                case "연별":
+                case "Yearly":
+                    // 연도의 첫날
+                    calendar.set(Calendar.DAY_OF_YEAR, 1);
+                    startDate = sdf.format(calendar.getTime());
+
+                    // 연도의 마지막 날
+                    calendar.add(Calendar.YEAR, 1);
+                    calendar.add(Calendar.DAY_OF_YEAR, -1);
+                    endDate = sdf.format(calendar.getTime());
+                    break;
+
+                default:
+                    startDate = "";
+                    endDate = "";
+                    Log.e(TAG, " ??? Invalid type provided: " + type);
+                    break;
+            }
+
+            Log.d(TAG, "getDateRange result: StartDate=" + startDate + ", EndDate=" + endDate);
+            return new String[]{startDate, endDate};
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error parsing date or calculating range: " + e.getMessage());
+            return new String[]{"", ""}; // 잘못된 입력값 처리
         }
-        return new String[]{startDate, endDate};
     }
 }
 

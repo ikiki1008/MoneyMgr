@@ -95,7 +95,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
             mIsServiceOn = true;
             if (!mListTitle.getText().equals("") && mIsAll) {
                 mIsOutcome = false;
-                mService.getListString(mListTitle.getText().toString(), "All");
+                //mService.getListString(mListTitle.getText().toString(), "All");
                 List<ListItem> listItems = mService.getItems();
                 mAdapter.setItems(listItems);
                 Log.d(TAG, "onServiceConnected: 리스트 아이템들은 ... " + listItems);
@@ -342,6 +342,13 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         return dateFormat.format(calendar.getTime());
     }
 
+    private void checkDateAndItem (String type) {
+        List<ListItem> listItems = new ArrayList<>();
+        mService.getListString(mArrayDate.getText().toString(), mListTitle.getText().toString(), type);
+        listItems = mService.getItems();
+        mAdapter.setItems(listItems);
+    }
+
     @Override
     public void onClick(View view) {
         int themeColor = getThemeColor(android.R.attr.textColor);
@@ -356,9 +363,10 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mAll.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
-                mService.getListString(mListTitle.getText().toString(), "All");
-                listItems = mService.getItems();
-                mAdapter.setItems(listItems);
+                checkDateAndItem("all");
+//                mService.getListString(mListTitle.getText().toString(), "All");
+//                listItems = mService.getItems();
+//                mAdapter.setItems(listItems);
                 break;
             case R.id.expense:
                 Log.d(TAG, "onClick: expense");
@@ -367,9 +375,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mExpense.setTextColor(themeColor);
                 mAll.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
-                mService.getListString(mListTitle.getText().toString(), "outcome");
-                listItems = mService.getItems();
-                mAdapter.setItems(listItems);
+                checkDateAndItem("outcome");
                 break;
             case R.id.income:
                 Log.d(TAG, "onClick: income");
@@ -378,15 +384,27 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mIncome.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mAll.setTextColor(secondColor);
-                mService.getListString(mListTitle.getText().toString(), "income");
-                listItems = mService.getItems();
-                mAdapter.setItems(listItems);
+                checkDateAndItem("income");
                 break;
             case R.id.arrow_left:
                 updateArrayText(mContext.getString(R.string.array_date_left));
+                if (mIsAll && !mIsOutcome) {
+                    checkDateAndItem("all");
+                } else if (!mIsAll && mIsOutcome) {
+                    checkDateAndItem("outcome");
+                } else {
+                    checkDateAndItem("income");
+                }
                 break;
             case R.id.arrow_right:
                 updateArrayText(mContext.getString(R.string.array_date_right));
+                if (mIsAll && !mIsOutcome) {
+                    checkDateAndItem("all");
+                } else if (!mIsAll && mIsOutcome) {
+                    checkDateAndItem("outcome");
+                } else {
+                    checkDateAndItem("income");
+                }
                 break;
             case R.id.listBtn:
                 showList(new OnListItemClick() {
@@ -396,13 +414,6 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                         if (item != null && !item.equals("")) {
                             mListTitle.setText(item);
                             updateArrayText(item);
-                            /*if (mIsAll) {
-                                mService.getListString(mListTitle.getText().toString(), "All");
-                            } else if (!mIsAll && mIsOutcome) {
-                                mService.getListString(mListTitle.getText().toString(), "outcome");
-                            } else if (!mIsAll && !mIsOutcome) {
-                                mService.getListString(mListTitle.getText().toString(), "income");
-                            }*/
                         } else {
                             mAlertDialog.dismiss();
                         }
