@@ -39,14 +39,12 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
     private TextView mDate;
     private TextView mYearMonth;
     private TextView mDay;
-    private TextView mIncome;
-    private TextView mOutcome;
-    private FrameLayout mCheckIncome;
-    private FrameLayout mCheckOutcome;
+    private TextView price;
+    private FrameLayout mCheck;
     private CardListAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private SortCardListService mService = null;
-    private boolean isOutcomeVisible = false;
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -81,11 +79,9 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
         mDate = view.findViewById(R.id.selected_date);
         mYearMonth = view.findViewById(R.id.selected_month_year);
         mDay = view.findViewById(R.id.selected_day);
-        mIncome = view.findViewById(R.id.income_price);
-        mOutcome = view.findViewById(R.id.outcome_price);
+        price = view.findViewById(R.id.detail_price);
         mRecyclerView = view.findViewById(R.id.recyclerView);
-        mCheckIncome = view.findViewById(R.id.incomeView);
-        mCheckOutcome = view.findViewById(R.id.outcome_view);
+        mCheck = view.findViewById(R.id.detailView);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new CardListAdapter(mContext);
@@ -94,8 +90,7 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
         mYearMonth.setText(yearMonth);
         mDay.setText(dayOfWeek);
 
-        mCheckIncome.setOnClickListener(this);
-        mCheckOutcome.setOnClickListener(this);
+        mCheck.setOnClickListener(this);
 
         return mBuilder.create();
     }
@@ -124,24 +119,10 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.incomeView:
-                ImageView incomeArrow = view.findViewById(R.id.check_income);
+            case R.id.detailView:
+                ImageView incomeArrow = view.findViewById(R.id.check);
                 incomeArrow.setRotation(90);
-                checkTodayMoney("income");
-                break;
-            case R.id.outcome_view:
-                ImageView outcomeArrow = view.findViewById(R.id.check_outcome);
-                outcomeArrow.setRotation(90);
-                checkTodayMoney("outcome");
-                /*if (!isOutcomeVisible) {
-                    outcomeArrow.setRotation(90);
-                    isOutcomeVisible = true;
-                    checkTodayMoney("outcome");
-                } else {
-                    outcomeArrow.setRotation(0);
-                  //  outcome_detail.setVisibility(View.GONE);
-                    isOutcomeVisible = false;
-                }*/
+                checkTodayMoney("all");
                 break;
             default:
                 break;
@@ -156,23 +137,15 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
     }
 
     private void checkTodayMoney(String value) {
-        //오늘날짜에 저장된 목록을 가져온다
         List<ListItem> listItems = new ArrayList<>();
 
         String yearMonth = mYearMonth.getText().toString().replace("-","/");
         String today = yearMonth + "/" + mDate.getText().toString();
         Log.d(TAG, "checkTodayMoney: 오늘의 날짜는 " + today);
 
-        if (value.equals("income")) {
-            mService.getListString(today, mContext.getText(R.string.list_day).toString(), value);
-            listItems = mService.getItems();
-            Log.d(TAG, "checkTodayMoney: " + listItems);
-            mAdapter.setItems(listItems);
-        } else {
-            mService.getListString(today, mContext.getText(R.string.list_day).toString(), value);
-            listItems = mService.getItems(); // 지출 항목 가져오기
-            Log.d(TAG, "checkTodayMoney 22 : " + listItems);
-            mAdapter.setItems(listItems);
-        }
+        mService.getListString(today, mContext.getText(R.string.list_day).toString(), value);
+        listItems = mService.getItems();
+        Log.d(TAG, "checkTodayMoney: " + listItems);
+        mAdapter.setItems(listItems);
     }
 }
