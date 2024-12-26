@@ -25,14 +25,16 @@ import com.example.mia_hometest.fragments.card.SortCardListService;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class TodayTransDialog extends DialogFragment implements View.OnClickListener {
 
     private final String TAG = TodayTransDialog.class.getSimpleName();
-    private Context mContext = null;
+    private Context mContext;
     private AlertDialog.Builder mBuilder;
     private TextView mDate;
     private TextView mYearMonth;
@@ -41,12 +43,9 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
     private TextView mOutcome;
     private FrameLayout mCheckIncome;
     private FrameLayout mCheckOutcome;
-    private FrameLayout income_detail;
-    private FrameLayout outcome_detail;
     private CardListAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private SortCardListService mService = null;
-    private boolean isIncomeVisible = false;
     private boolean isOutcomeVisible = false;
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -74,8 +73,9 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
         mBuilder.setCancelable(true);
 
         String dateString = day.getDate().toString();
-        String date = dateString.substring(dateString.lastIndexOf("-")+1);
-        String yearMonth = dateString.substring(0, dateString.lastIndexOf("-")); // 년/월 추출 (예: 2025-04)
+        String formatDate = dateString.replace("-","/");
+        String date = formatDate.substring(formatDate.lastIndexOf("/")+1);
+        String yearMonth = dateString.substring(0, formatDate.lastIndexOf("/")); // 년/월 추출 (예: 2025-04)
         String dayOfWeek = getDayOfWeek(day.getYear(), day.getMonth(), Integer.parseInt(date)); // 요일 추출
 
         mDate = view.findViewById(R.id.selected_date);
@@ -84,25 +84,26 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
         mIncome = view.findViewById(R.id.income_price);
         mOutcome = view.findViewById(R.id.outcome_price);
         mRecyclerView = view.findViewById(R.id.recyclerView);
-        income_detail = view.findViewById(R.id.income_detail);
-        outcome_detail = view.findViewById(R.id.outcome_detail);
         mCheckIncome = view.findViewById(R.id.incomeView);
         mCheckOutcome = view.findViewById(R.id.outcome_view);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mAdapter = new CardListAdapter(mContext);
         mRecyclerView.setAdapter(mAdapter);
-        income_detail.setVisibility(View.GONE);
-        outcome_detail.setVisibility(View.GONE);
-
         mDate.setText(date);
         mYearMonth.setText(yearMonth);
         mDay.setText(dayOfWeek);
 
-        mAdapter = new CardListAdapter(mContext);
         mCheckIncome.setOnClickListener(this);
         mCheckOutcome.setOnClickListener(this);
 
         return mBuilder.create();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
     
     @Override
@@ -125,29 +126,22 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
         switch (view.getId()) {
             case R.id.incomeView:
                 ImageView incomeArrow = view.findViewById(R.id.check_income);
-                if (!isIncomeVisible) {
-                    incomeArrow.setRotation(90);
-                    income_detail.setVisibility(View.VISIBLE);
-                    isIncomeVisible = true;
-                    checkTodayMoney("income");
-                } else {
-                    incomeArrow.setRotation(0);
-                    income_detail.setVisibility(View.GONE);
-                    isIncomeVisible = false;
-                }
+                incomeArrow.setRotation(90);
+                checkTodayMoney("income");
                 break;
             case R.id.outcome_view:
                 ImageView outcomeArrow = view.findViewById(R.id.check_outcome);
-                if (!isOutcomeVisible) {
+                outcomeArrow.setRotation(90);
+                checkTodayMoney("outcome");
+                /*if (!isOutcomeVisible) {
                     outcomeArrow.setRotation(90);
-                    outcome_detail.setVisibility(View.VISIBLE);
                     isOutcomeVisible = true;
                     checkTodayMoney("outcome");
                 } else {
                     outcomeArrow.setRotation(0);
-                    outcome_detail.setVisibility(View.GONE);
+                  //  outcome_detail.setVisibility(View.GONE);
                     isOutcomeVisible = false;
-                }
+                }*/
                 break;
             default:
                 break;
@@ -164,18 +158,21 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
     private void checkTodayMoney(String value) {
         //오늘날짜에 저장된 목록을 가져온다
         List<ListItem> listItems = new ArrayList<>();
-        if (value.equals("income")) {
-            //mService.getListString(String.valueOf(R.string.list_day), "income");
-            listItems = mService.getItems(); // 수입 항목 가져오기
-        } else {
-            //mService.getListString(String.valueOf(R.string.list_day), "outcome");
-            listItems = mService.getItems(); // 지출 항목 가져오기
-        }
 
-        if (listItems != null && !listItems.isEmpty()) {
+        String yearMonth = mYearMonth.getText().toString().replace("-","/");
+        String today = yearMonth + "/" + mDate.getText().toString();
+        Log.d(TAG, "checkTodayMoney: 오늘의 날짜는 " + today);
+
+        if (value.equals("income")) {
+            mService.getListString(today, mContext.getText(R.string.list_day).toString(), value);
+            listItems = mService.getItems();
+            Log.d(TAG, "checkTodayMoney: " + listItems);
             mAdapter.setItems(listItems);
         } else {
-            System.out.println("목록이 비어 있습니다.");
+            mService.getListString(today, mContext.getText(R.string.list_day).toString(), value);
+            listItems = mService.getItems(); // 지출 항목 가져오기
+            Log.d(TAG, "checkTodayMoney 22 : " + listItems);
+            mAdapter.setItems(listItems);
         }
     }
 }

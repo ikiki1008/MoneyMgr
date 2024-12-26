@@ -87,12 +87,12 @@ public class SortCardListService extends Service {
         mList = list;
         mType = type;
         Log.d(TAG, "list ==" + mList + ", type ==" + type + " date == " + date);
-        mDateRange = getDateRange(date, list);
+        mDateRange = getDateRange(date, mList);
         searchData(mList, mType);
     }
 
     private void searchData(String list, String type) {
-        Log.d(TAG, "searchData: type = " + list + ", date = " + type);
+        Log.d(TAG, "searchData: list = " + list + ", type = " + type);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         //String[] dateRange = getDateRange(list);
         List<ListItem> items = new ArrayList<>();
@@ -100,7 +100,7 @@ public class SortCardListService extends Service {
         if (user != null) {
             String userId = user.getUid();
 
-            if (type.equals("All")) {
+            if (type.equals("all")) {
                 mStore.collection("user").document(userId).collection("income")
                         .whereGreaterThanOrEqualTo("date", mDateRange[0])
                         .whereLessThanOrEqualTo("date", mDateRange[1])
@@ -268,8 +268,8 @@ public class SortCardListService extends Service {
         return itemList;
     }
 
-    private String[] getDateRange(String date, String type) {
-        Log.d(TAG, "getDateRange: " + date + ", type: " + type);
+    private String[] getDateRange(String date, String list) {
+        Log.d(TAG, "getDateRange: " + date + ", list: " + list);
         String startDate;
         String endDate;
         Calendar calendar = Calendar.getInstance();
@@ -293,7 +293,7 @@ public class SortCardListService extends Service {
             startDate = sdf.format(calendar.getTime());
 
             // 범위 계산
-            switch (type) {
+            switch (list) {
                 case "하루":
                 case "daily":
                     endDate = startDate; // 하루 단위는 시작과 종료가 동일
@@ -337,7 +337,7 @@ public class SortCardListService extends Service {
                 default:
                     startDate = "";
                     endDate = "";
-                    Log.e(TAG, " ??? Invalid type provided: " + type);
+                    Log.e(TAG, " ??? Invalid type provided: " + list);
                     break;
             }
 
@@ -346,7 +346,7 @@ public class SortCardListService extends Service {
 
         } catch (Exception e) {
             Log.e(TAG, "Error parsing date or calculating range: " + e.getMessage());
-            return new String[]{"", ""}; // 잘못된 입력값 처리
+            return new String[]{"", ""};
         }
     }
 }
