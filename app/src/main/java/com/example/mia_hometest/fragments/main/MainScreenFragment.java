@@ -18,6 +18,7 @@ import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
 import com.example.mia_hometest.R;
+import com.example.mia_hometest.common.ListItem;
 import com.example.mia_hometest.common.WeekdaysDecorator;
 import com.example.mia_hometest.common.CardListAdapter;
 import com.example.mia_hometest.common.WeekendDecorator;
@@ -39,6 +40,7 @@ public class MainScreenFragment extends Fragment {
     private Context mContext = null;
     private RecyclerView mRecyclerView;
     private CardListAdapter mAdapter;
+    List<ListItem> mListItem = new ArrayList<>();
     MaterialCalendarView mCal;
     private WeekdaysDecorator mDecorate;
     private WeekendDecorator mWeekendDaco;
@@ -95,17 +97,23 @@ public class MainScreenFragment extends Fragment {
         pie.background().fill("#252525");
         mPieView.setChart(pie);
 
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+
         mCal.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 if (selected) {
                     Bundle args = new Bundle();
                     args.putParcelable("selectedDay", date);
-//                    mDialog.setArguments(args);
                     mTodayTransDialog.setArguments(args);
                     assert getFragmentManager() != null;
                     mTodayTransDialog.show(getFragmentManager(), "tag");
-
                 } else {
                     Log.d(TAG, " 메인 스크린 화면에서 다이얼로그뷰를 끈다");
                     //mDialog.dismiss();
@@ -114,13 +122,18 @@ public class MainScreenFragment extends Fragment {
             }
         });
 
-        return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
     }
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, " MainScreenFragment 끌게요");
         super.onDestroy();
+        Log.d(TAG, " MainScreenFragment 끌게요");
     }
 
     public MainScreenFragment (Context context) {

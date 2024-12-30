@@ -1,29 +1,20 @@
 package com.example.mia_hometest.fragments.main;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,30 +22,16 @@ import com.example.mia_hometest.R;
 import com.example.mia_hometest.UserMainActivity;
 import com.example.mia_hometest.common.ListItem;
 import com.example.mia_hometest.common.CardListAdapter;
-import com.example.mia_hometest.common.SpecificListItem;
 import com.example.mia_hometest.fragments.card.CardScreenInfoFragment;
-import com.example.mia_hometest.fragments.card.SortCardListService;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.example.mia_hometest.fragments.card.SortCardListViewModel;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Locale;
 
 public class CardScreenFragment extends Fragment implements View.OnClickListener, CardListAdapter.OnSwipeListener, CardListAdapter.OnListClickListener {
@@ -75,6 +52,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private String mAcc;
     private String mNote;
     private String mTrans;
+    private String mCurrentDate;
     private Drawable mImage;
     private AlertDialog.Builder mBuilder;
     private RecyclerView mRecyclerView;
@@ -82,32 +60,10 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     private FirebaseFirestore mStore;
     private CardScreenInfoFragment mCardScreenInfoFragment = null;
     private AlertDialog mAlertDialog;
-    private SortCardListService mService;
-    private boolean mIsServiceOn = false;
+    private SortCardListViewModel mViewModel;
     private boolean mIsOutcome = false;
     private boolean mIsAll = true;
     private Calendar mCalender = Calendar.getInstance();
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            SortCardListService.LocalBinder binder = (SortCardListService.LocalBinder) iBinder;
-            mService = binder.getService();
-            mIsServiceOn = true;
-            if (!mListTitle.getText().equals("") && mIsAll) {
-                mIsOutcome = false;
-                //mService.getListString(mListTitle.getText().toString(), "All");
-                List<ListItem> listItems = mService.getItems();
-                mAdapter.setItems(listItems);
-                Log.d(TAG, "onServiceConnected: 리스트 아이템들은 ... " + listItems);
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mService = null;
-            mIsServiceOn = false;
-        }
-    };
 
     @Override
     public void onAttach(Context context) {
@@ -137,6 +93,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mRecyclerView.setAdapter(mAdapter);
+        mViewModel = new ViewModelProvider(this).get(SortCardListViewModel.class);
 
         mAll.setOnClickListener(this);
         mIncome.setOnClickListener(this);
@@ -148,6 +105,12 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mListTitle.setText(R.string.list_week);
         int themeColor = getThemeColor(android.R.attr.textColor);
         mAll.setTextColor(themeColor);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+        mCurrentDate = dateFormat.format(Calendar.getInstance().getTime());
+        mArrayDate.setText(mCurrentDate); // 날짜 텍스트 설정
+
+        mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "all", mContext);
+
         return view;
     }
 
@@ -155,23 +118,19 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume: ");
-        Intent intent = new Intent(mContext, SortCardListService.class); // service class connect!
-        mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        observeData();
+    }
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
-        String currentDate = dateFormat.format(Calendar.getInstance().getTime());
-        mArrayDate.setText(currentDate); // 날짜 텍스트 설정
+    private void observeData() {
+        mViewModel.getItems().observe(this, items -> {
+            mAdapter.setItems(items);
+        });
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause: ");
-        if (mIsServiceOn) {
-            Log.d(TAG, "onPause: 서비스 끄기``");
-            mContext.unbindService(mConnection);
-            mIsServiceOn = false;
-        }
     }
 
     @Override
@@ -342,18 +301,10 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         return dateFormat.format(calendar.getTime());
     }
 
-    private void checkDateAndItem (String type) {
-        List<ListItem> listItems = new ArrayList<>();
-        mService.getListString(mArrayDate.getText().toString(), mListTitle.getText().toString(), type);
-        listItems = mService.getItems();
-        mAdapter.setItems(listItems);
-    }
-
     @Override
     public void onClick(View view) {
         int themeColor = getThemeColor(android.R.attr.textColor);
         int secondColor = getThemeColor(android.R.attr.textColorSecondary);
-        List<ListItem> listItems = new ArrayList<>();
 
         switch (view.getId()) {
             case R.id.all:
@@ -363,10 +314,8 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mAll.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
-                checkDateAndItem("all");
-//                mService.getListString(mListTitle.getText().toString(), "All");
-//                listItems = mService.getItems();
-//                mAdapter.setItems(listItems);
+                mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "all", mContext);
+
                 break;
             case R.id.expense:
                 Log.d(TAG, "onClick: expense");
@@ -375,7 +324,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mExpense.setTextColor(themeColor);
                 mAll.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
-                checkDateAndItem("outcome");
+                mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "outcome", mContext);
                 break;
             case R.id.income:
                 Log.d(TAG, "onClick: income");
@@ -384,26 +333,26 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mIncome.setTextColor(themeColor);
                 mExpense.setTextColor(secondColor);
                 mAll.setTextColor(secondColor);
-                checkDateAndItem("income");
+                mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "income", mContext);
                 break;
             case R.id.arrow_left:
                 updateArrayText(mContext.getString(R.string.array_date_left));
                 if (mIsAll && !mIsOutcome) {
-                    checkDateAndItem("all");
+                    mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "all", mContext);
                 } else if (!mIsAll && mIsOutcome) {
-                    checkDateAndItem("outcome");
+                    mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "outcome", mContext);
                 } else {
-                    checkDateAndItem("income");
+                    mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "income", mContext);
                 }
                 break;
             case R.id.arrow_right:
                 updateArrayText(mContext.getString(R.string.array_date_right));
                 if (mIsAll && !mIsOutcome) {
-                    checkDateAndItem("all");
+                    mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "all", mContext);
                 } else if (!mIsAll && mIsOutcome) {
-                    checkDateAndItem("outcome");
+                    mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "outcome", mContext);
                 } else {
-                    checkDateAndItem("income");
+                    mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "income", mContext);
                 }
                 break;
             case R.id.listBtn:

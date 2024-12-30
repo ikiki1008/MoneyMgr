@@ -1,23 +1,17 @@
 package com.example.mia_hometest.fragments.card;
 
-import static java.lang.CharSequence.compare;
-
 import android.annotation.SuppressLint;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Binder;
-import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.credentials.playservices.CredentialProviderMetadataHolder;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.mia_hometest.R;
-import com.example.mia_hometest.common.CardListAdapter;
 import com.example.mia_hometest.common.ListItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,13 +30,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class SortCardListService extends Service {
-    public String TAG = SortCardListService.class.getSimpleName();
+public class SortCardListViewModel extends ViewModel {
+    public String TAG = SortCardListViewModel.class.getSimpleName();
     private String mList;
     private String mType;
     private Context mContext;
+    private final MutableLiveData<List<ListItem>> mItemList = new MutableLiveData<>();
     private String[] mDateRange;
-    private final Binder mBinder = new LocalBinder();
     private FirebaseFirestore mDb;
     private FirebaseFirestore mStore;
     private String mDate;
@@ -51,44 +45,27 @@ public class SortCardListService extends Service {
     private String mAcc;
     private String mNote;
     private Drawable mImage;
-    private CardListAdapter mAdapter;
-    private List<ListItem> itemList = new ArrayList<>();
-
-    public class LocalBinder extends Binder {
-        public SortCardListService getService() {
-            return SortCardListService.this;
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    @Override
-    public void onCreate() {
-        Log.d(TAG, "onCreate: ");
-        super.onCreate();
-        mContext = getApplicationContext();
-        mDb = FirebaseFirestore.getInstance();
-        mStore = FirebaseFirestore.getInstance();
-        mAdapter = new CardListAdapter(mContext);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: ");
-    }
 
 
     //조회해야할 날짜, 리스트 타입, income 혹은 outcome 타입 총 3가지를 확인해야 한다...
-    public void getListString (String date, String list, String type) {
+    public void getListString (String date, String list, String type, Context context) {
+        mContext = context;
+        mDb = FirebaseFirestore.getInstance();
+        mStore = FirebaseFirestore.getInstance();
+
         mList = list;
         mType = type;
         Log.d(TAG, "list ==" + mList + ", type ==" + type + " date == " + date);
         mDateRange = getDateRange(date, mList);
         searchData(mList, mType);
+    }
+
+    public void setItems(List<ListItem> list) {
+        mItemList.setValue(list);
+    }
+
+    public LiveData<List<ListItem>> getItems() {
+        return mItemList;
     }
 
     private void searchData(String list, String type) {
@@ -258,14 +235,6 @@ public class SortCardListService extends Service {
         } else {
             mImage = ContextCompat.getDrawable(mContext, R.drawable.options);
         }
-    }
-
-    public void setItems(List<ListItem> list) {
-        this.itemList = list;
-    }
-
-    public List<ListItem> getItems() {
-        return itemList;
     }
 
     private String[] getDateRange(String date, String list) {
