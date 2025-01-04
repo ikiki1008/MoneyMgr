@@ -102,7 +102,10 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
         mLeftArrow.setOnClickListener(this);
         mRightArrow.setOnClickListener(this);
 
-        mListTitle.setText(R.string.list_week);
+        if (mListTitle == null || mListTitle.getText().toString().isEmpty()) {
+            mListTitle.setText(R.string.list_day);
+        }
+
         int themeColor = getThemeColor(android.R.attr.textColor);
         mAll.setTextColor(themeColor);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
@@ -315,7 +318,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mExpense.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
                 mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "all", mContext);
-
+                observeData();
                 break;
             case R.id.expense:
                 Log.d(TAG, "onClick: expense");
@@ -325,6 +328,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mAll.setTextColor(secondColor);
                 mIncome.setTextColor(secondColor);
                 mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "outcome", mContext);
+                observeData();
                 break;
             case R.id.income:
                 Log.d(TAG, "onClick: income");
@@ -334,6 +338,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 mExpense.setTextColor(secondColor);
                 mAll.setTextColor(secondColor);
                 mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "income", mContext);
+                observeData();
                 break;
             case R.id.arrow_left:
                 updateArrayText(mContext.getString(R.string.array_date_left));
@@ -344,6 +349,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 } else {
                     mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "income", mContext);
                 }
+                observeData();
                 break;
             case R.id.arrow_right:
                 updateArrayText(mContext.getString(R.string.array_date_right));
@@ -354,6 +360,7 @@ public class CardScreenFragment extends Fragment implements View.OnClickListener
                 } else {
                     mViewModel.getListString(mCurrentDate, mListTitle.getText().toString(), "income", mContext);
                 }
+                observeData();
                 break;
             case R.id.listBtn:
                 showList(new OnListItemClick() {

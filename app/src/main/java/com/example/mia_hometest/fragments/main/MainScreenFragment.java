@@ -38,9 +38,6 @@ import java.util.List;
 public class MainScreenFragment extends Fragment {
     private final String TAG = MainScreenFragment.class.getSimpleName();
     private Context mContext = null;
-    private RecyclerView mRecyclerView;
-    private CardListAdapter mAdapter;
-    List<ListItem> mListItem = new ArrayList<>();
     MaterialCalendarView mCal;
     private WeekdaysDecorator mDecorate;
     private WeekendDecorator mWeekendDaco;
@@ -113,7 +110,7 @@ public class MainScreenFragment extends Fragment {
                     args.putParcelable("selectedDay", date);
                     mTodayTransDialog.setArguments(args);
                     assert getFragmentManager() != null;
-                    mTodayTransDialog.show(getFragmentManager(), "tag");
+                    mTodayTransDialog.show(getFragmentManager(), "todayTransactionItemPage");
                 } else {
                     Log.d(TAG, " 메인 스크린 화면에서 다이얼로그뷰를 끈다");
                     //mDialog.dismiss();

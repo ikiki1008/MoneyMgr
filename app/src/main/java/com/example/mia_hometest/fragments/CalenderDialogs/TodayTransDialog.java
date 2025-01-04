@@ -21,7 +21,7 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
-public class TodayTransDialog extends DialogFragment {
+public class TodayTransDialog extends DialogFragment implements View.OnClickListener {
 
     private final String TAG = TodayTransDialog.class.getSimpleName();
     private Context mContext;
@@ -29,9 +29,12 @@ public class TodayTransDialog extends DialogFragment {
     private TextView mDate;
     private TextView mYearMonth;
     private TextView mDay;
+    private TextView mAddNewItem;
+    private CalendarDay mToday;
     private CardListAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private SortCardListViewModel mViewModel;
+    private boolean mNewItemPage = false;
 
     public TodayTransDialog (Context context) {
         mContext = context;
@@ -50,12 +53,14 @@ public class TodayTransDialog extends DialogFragment {
         mYearMonth = view.findViewById(R.id.selected_month_year);
         mDay = view.findViewById(R.id.selected_day);
         mRecyclerView = view.findViewById(R.id.recyclerView);
+        mAddNewItem = view.findViewById(R.id.addBtn);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new CardListAdapter(mContext);
         mRecyclerView.setAdapter(mAdapter);
-        CalendarDay day = getArguments().getParcelable("selectedDay");
-        setupDateViews(day);
+        mToday = getArguments().getParcelable("selectedDay");
+        setupDateViews(mToday);
+        mAddNewItem.setOnClickListener(this);
 
         String yearMonth = mYearMonth.getText().toString().replace("-","/");
         String today = yearMonth + "/" + mDate.getText().toString();
@@ -96,4 +101,23 @@ public class TodayTransDialog extends DialogFragment {
         });
     }
 
+    @Override
+    public void onClick(View view) {
+        CalDialogView calDialogView = new CalDialogView(mContext);
+        if (view.getId() == R.id.addBtn) {
+           //다른 프래그먼트 불러오기
+            Log.d(TAG, "onClick: clickclick");
+            Bundle args = new Bundle();
+            args.putParcelable("selectedDay", mToday);
+            calDialogView.setArguments(args);
+            calDialogView.show(getParentFragmentManager(), "selectedDay");
+            mNewItemPage = true;
+        } else {
+            if (mNewItemPage) {
+               calDialogView.dismiss();
+               mNewItemPage = false;
+            }
+        }
+
+    }
 }
