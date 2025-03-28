@@ -1,7 +1,10 @@
 package com.example.mia_hometest.fragments.CalenderDialogs;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +39,17 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
     private RecyclerView mRecyclerView;
     private SortCardListViewModel mViewModel;
     private boolean mNewItemPage = false;
+    private final String CHECK = "android.intent.action.CHECK_NEW_ITEM";
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(CHECK)) {
+                Log.d(TAG, "onReceive: 리시버 받았다!!!!");
+                observeDate();
+            }
+        }
+    };
 
     public TodayTransDialog (Context context) {
         mContext = context;
@@ -66,6 +81,7 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
         String today = yearMonth + "/" + mDate.getText().toString();
         Log.d(TAG, "checkTodayMoney: 오늘의 날짜는 " + today);
         mViewModel.getListString(today, mContext.getText(R.string.list_day).toString(), "all", mContext);
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(mReceiver, new IntentFilter(CHECK));
 
         return mBuilder.create();
     }
@@ -86,6 +102,12 @@ public class TodayTransDialog extends DialogFragment implements View.OnClickList
     public void onResume() {
         super.onResume();
         observeDate();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mReceiver);
     }
 
     private String getDayOfWeek(int year, int month, int day) {

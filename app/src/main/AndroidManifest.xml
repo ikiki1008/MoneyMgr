@@ -32,6 +32,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.DELETE_DATA" />
+                <action android:name="android.intent.action.CHECK_NEW_ITEM" />
             </intent-filter>
         </activity>
 

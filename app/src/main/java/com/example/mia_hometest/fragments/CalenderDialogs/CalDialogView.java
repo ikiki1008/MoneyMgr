@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,7 +35,7 @@ import java.util.Map;
 
 public class CalDialogView extends DialogFragment implements View.OnClickListener, CalCulListener, DialogListAdapter.OnItemClickListener {
     private final String TAG = CalDialogView.class.getSimpleName();
-    private Context mContext = null;
+    private Context mContext;
     private RecyclerView mRecyclerView;
     private DialogListAdapter mAdapter;
     private CalculatorDialogView mCalDialog;
@@ -51,6 +52,7 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
     private TextView mLine1;
     private List<DialogItem> mItemList = new ArrayList<>();
     private boolean mIncome = false;
+    private final String CHECK = "android.intent.action.CHECK_NEW_ITEM";
 
     public CalDialogView (Context context) {
         mContext = context;
@@ -217,7 +219,10 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                                 mItemList.size() > 3 ? mItemList.get(3).getDesc() : null);
 
                         if (getDialog() != null && getDialog().isShowing()) {
+                            Intent intent = new Intent(CHECK);
+                            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                             dismiss();
+                            Log.d(TAG, "onClick: 이거 뭐임...");
                         }
                     } else {
                         Toast.makeText(getContext(), R.string.warn_notnull_account, Toast.LENGTH_SHORT).show();
@@ -238,7 +243,10 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                                 mItemList.get(1).getDesc(), mItemList.size() > 2 ? mItemList.get(2).getDesc() : null);
 
                         if (getDialog() != null && getDialog().isShowing()) {
+                            Intent intent = new Intent(CHECK);
+                            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                             dismiss();
+                            Log.d(TAG, "onClick: 이거 뭐임...");
                         }
                     } else {
                         Toast.makeText(getContext(), R.string.warn_notnull_account, Toast.LENGTH_SHORT).show();
@@ -247,7 +255,10 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                 break;
             case R.id.cancelBtn:
                 if (getDialog() != null && getDialog().isShowing()) {
+                    Intent intent = new Intent(CHECK);
+                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                     dismiss();
+                    Log.d(TAG, "onClick: 이거 뭐임...");
                 }
                 break;
             case R.id.income:
@@ -284,15 +295,15 @@ public class CalDialogView extends DialogFragment implements View.OnClickListene
                 mAdapter.notifyItemChanged(0);
                 break;
             case "category" :
-                    String cate = intent.getStringExtra("value");
-                    if (cate.equals(" ") || cate.isEmpty()) {
-                        Log.d(TAG, "onClicked: 1");
-                        mItemList.get(1).setDesc(null);
-                    } else {
-                        Log.d(TAG, "onClicked: 2");
-                        mItemList.get(1).setDesc(cate);
-                    }
-                    mAdapter.notifyItemChanged(1);
+                String cate = intent.getStringExtra("value");
+                if (cate.equals(" ") || cate.isEmpty()) {
+                    Log.d(TAG, "onClicked: 1");
+                    mItemList.get(1).setDesc(null);
+                } else {
+                    Log.d(TAG, "onClicked: 2");
+                    mItemList.get(1).setDesc(cate);
+                }
+                mAdapter.notifyItemChanged(1);
                 break;
             case "account" :
                 String acc = intent.getStringExtra("value");
